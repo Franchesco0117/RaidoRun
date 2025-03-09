@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "363596102596",
+    "project_id": "raidorun-bf091",
+    "storage_bucket": "raidorun-bf091.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363596102596:android:547c4ed23cbe8f57828291",
+        "android_client_info": {
+          "package_name": "com.francisco.raidorun"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzJmMEDRe2X1Osspc6nT7mfCDh8KQZmHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

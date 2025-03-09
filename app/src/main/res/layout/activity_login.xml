@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    android:background="@color/gray_dark"
+    android:orientation="vertical"
+    tools:context=".LoginActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="15dp"
+        android:src="@mipmap/banner" />
+
+    <TextView
+        android:id="@+id/tvInvitation"
+        style="@style/ViewCustom"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="20dp"
+        android:text="@string/tv_login_title"
+        android:textColor="@color/orange_dark"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        style="@style/ViewCustom"
+        android:layout_margin="10dp"
+        android:hint="@string/et_email"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray_light_trans" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        style="@style/ViewCustom"
+        android:layout_margin="10dp"
+        android:hint="@string/et_password"
+        android:inputType="textPassword"
+        android:textColor="@color/white"
+        android:textColorHint="@color/gray_light_trans" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        style="@style/ViewCustom"
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@color/green"
+        android:text="@string/btn_login"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvForgotPassword"
+        style="@style/ViewCustom"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="@string/tv_forgot_password"
+        android:textColor="@color/gray"
+        android:textSize="14sp" />
+
+    <LinearLayout
+        android:id="@+id/lyTemsConditions"
+        style="@style/ViewCustom"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cbAcceptTermsConditions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_terms"
+            android:textColor="@color/gray"
+            app:centerIfNoTextEnabled="false" />
+
+        <TextView
+            android:id="@+id/tvTermsConditions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/tv_conditions"
+            android:textColor="@color/orange" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSignGoogle"
+        style="@style/ViewCustom"
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/google"
+        android:text="@string/btn_sign_google"
+        android:textAlignment="textStart"
+        android:textAllCaps="true"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:iconGravity="start" />
+
+    <Button
+        android:id="@+id/btnSignFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:backgroundTint="@color/white"
+        android:drawableLeft="@drawable/facebook"
+        android:text="@string/btn_sign_facebook"
+        android:textAlignment="textStart"
+        android:textAllCaps="true"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:iconGravity="start" />
+</LinearLayout>
