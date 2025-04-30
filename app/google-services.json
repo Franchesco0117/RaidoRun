@@ -12,7 +12,20 @@
           "package_name": "com.francisco.raidorun"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "363596102596-ppvassskk42tjc6a9al1kpd6s39gd3gq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.francisco.raidorun",
+            "certificate_hash": "b1073c7db81761f44da0264f80169d9dc42fc78e"
+          }
+        },
+        {
+          "client_id": "363596102596-5n373j25iaiprbe9ovl7ccfvjbeag4rs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAzJmMEDRe2X1Osspc6nT7mfCDh8KQZmHA"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363596102596-5n373j25iaiprbe9ovl7ccfvjbeag4rs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -1,6 +1,7 @@
 package com.francisco.raidorun
 
 import android.content.Intent
+import android.credentials.CredentialManager
 import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
@@ -19,9 +20,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doOnTextChanged
+import androidx.credentials.GetCredentialRequest
 import androidx.transition.Visibility
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.coroutineScope
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -42,6 +46,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var lyTermsConditions: LinearLayout
     private lateinit var tvForgotPassword: TextView
     private lateinit var tvTermsConditions: TextView
+    private lateinit var btnSignGoogle: Button
 
     private lateinit var mAuth: FirebaseAuth
 
@@ -58,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         tvForgotPassword = findViewById(R.id.tvForgotPassword)
         tvTermsConditions = findViewById(R.id.tvTermsConditions)
+        btnSignGoogle = findViewById(R.id.btnSignGoogle)
 
         btnLogin.setOnClickListener {
             loginUser()
@@ -72,6 +78,10 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btnSignGoogle.setOnClickListener {
+            signInGoogle()
+        }
+
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val startIntent = Intent(Intent.ACTION_MAIN)
@@ -84,6 +94,10 @@ class LoginActivity : AppCompatActivity() {
         manageLogin()
         etEmail.doOnTextChanged { text, start, before, count -> manageLogin()}
         etPassword.doOnTextChanged { text, start, before, count -> manageLogin()}
+    }
+
+    private fun signInGoogle() {
+        TODO("Not yet implemented")
     }
 
     private fun manageLogin() {
