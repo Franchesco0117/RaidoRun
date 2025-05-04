@@ -1324,110 +1324,109 @@
                     </LinearLayout>
 
                     <!-- Tracks del audio -->
-                    <LinearLayout
-                        android:id="@+id/lyTracks"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/gray_dark"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:id="@+id/lyTracks"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:background="@color/gray_dark"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                        <LinearLayout
-                            android:id="@+id/lyHardTrack"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/gray_dark"
-                            android:gravity="center"
-                            android:orientation="vertical">
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/lyHardTrack"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@color/gray_dark"-->
+<!--                            android:gravity="center"-->
+<!--                            android:orientation="vertical">-->
 
-                            <SeekBar
-                                android:id="@+id/sbHardTrack"
-                                android:layout_width="350dp"
-                                android:layout_height="21dp"
-                                android:layout_marginTop="30dp"
-                                android:progress="0"
-                                android:progressBackgroundTint="@color/gray"
-                                android:progressTint="@color/white"
-                                android:thumbTint="@color/white" />
+<!--                            <SeekBar-->
+<!--                                android:id="@+id/sbHardTrack"-->
+<!--                                android:layout_width="350dp"-->
+<!--                                android:layout_height="21dp"-->
+<!--                                android:layout_marginTop="30dp"-->
+<!--                                android:progress="0"-->
+<!--                                android:progressBackgroundTint="@color/gray"-->
+<!--                                android:progressTint="@color/white"-->
+<!--                                android:thumbTint="@color/white" />-->
 
-                            <RelativeLayout
-                                android:id="@+id/relativeLayoutsbHardMusic"
-                                android:layout_width="350dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="0dp"
-                                android:layout_marginRight="15dp">
+<!--                            <RelativeLayout-->
+<!--                                android:id="@+id/relativeLayoutsbHardMusic"-->
+<!--                                android:layout_width="350dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginLeft="15dp"-->
+<!--                                android:layout_marginTop="0dp"-->
+<!--                                android:layout_marginRight="15dp">-->
 
-                                <TextView
-                                    android:id="@+id/tvHardPosition"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/hard_position"
-                                    android:textColor="@color/white"
-                                    android:textSize="10sp" />
-
-
-                                <TextView
-                                    android:id="@+id/tvHardRemaining"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_marginEnd="0dp"
-                                    android:text="@string/hard_duration"
-                                    android:textColor="@color/white"
-                                    android:textSize="10dp" />
-
-                            </RelativeLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/lySoftTrack"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/gray_dark"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <SeekBar
-                                android:id="@+id/sbSoftTrack"
-                                android:layout_width="350dp"
-                                android:layout_height="21dp"
-                                android:layout_marginTop="10dp"
-                                android:progress="0"
-                                android:progressBackgroundTint="@color/gray"
-                                android:progressTint="@color/white"
-                                android:thumbTint="@color/white" />
-
-                            <RelativeLayout
-                                android:id="@+id/lysbSoftMusic"
-                                android:layout_width="350dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="15dp"
-                                android:layout_marginTop="0dp"
-                                android:layout_marginRight="15dp">
-
-                                <TextView
-                                    android:id="@+id/tvSoftPosition"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/soft_position"
-                                    android:textColor="@color/white"
-                                    android:textSize="10sp" />
+<!--                                <TextView-->
+<!--                                    android:id="@+id/tvHardPosition"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="@string/hard_position"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:textSize="10sp" />-->
 
 
-                                <TextView
-                                    android:id="@+id/tvSoftRemaining"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_marginEnd="0dp"
-                                    android:text="@string/soft_duration"
-                                    android:textColor="@color/white"
-                                    android:textSize="10dp" />
+<!--                                <TextView-->
+<!--                                    android:id="@+id/tvHardRemaining"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_alignParentEnd="true"-->
+<!--                                    android:layout_marginEnd="0dp"-->
+<!--                                    android:text="@string/hard_duration"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:textSize="10dp" />-->
 
-                            </RelativeLayout>
-                        </LinearLayout>
-                    </LinearLayout>
+<!--                            </RelativeLayout>-->
+<!--                        </LinearLayout>-->
+
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/lySoftTrack"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:background="@color/gray_dark"-->
+<!--                            android:gravity="center"-->
+<!--                            android:orientation="vertical">-->
+
+<!--                            <SeekBar-->
+<!--                                android:id="@+id/sbSoftTrack"-->
+<!--                                android:layout_width="350dp"-->
+<!--                                android:layout_height="21dp"-->
+<!--                                android:layout_marginTop="10dp"-->
+<!--                                android:progress="0"-->
+<!--                                android:progressBackgroundTint="@color/gray"-->
+<!--                                android:progressTint="@color/white"-->
+<!--                                android:thumbTint="@color/white" />-->
+
+<!--                            <RelativeLayout-->
+<!--                                android:id="@+id/lysbSoftMusic"-->
+<!--                                android:layout_width="350dp"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginLeft="15dp"-->
+<!--                                android:layout_marginTop="0dp"-->
+<!--                                android:layout_marginRight="15dp">-->
+
+<!--                                <TextView-->
+<!--                                    android:id="@+id/tvSoftPosition"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="@string/soft_position"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:textSize="10sp" />-->
+<!--                                -->
+<!--                                <TextView-->
+<!--                                    android:id="@+id/tvSoftRemaining"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:layout_alignParentEnd="true"-->
+<!--                                    android:layout_marginEnd="0dp"-->
+<!--                                    android:text="@string/soft_duration"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:textSize="10dp" />-->
+
+<!--                            </RelativeLayout>-->
+<!--                        </LinearLayout>-->
+<!--                    </LinearLayout>-->
 
                 </LinearLayout>
 
