@@ -770,7 +770,6 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-
                         <Switch
                             android:id="@+id/swIntervalMode"
                             android:layout_width="match_parent"
@@ -1195,132 +1194,132 @@
                             </LinearLayout>
                         </LinearLayout>
 
-                        <Switch
-                            android:id="@+id/swVolumes"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="30dp"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginRight="30dp"
-                            android:background="@color/gray_dark"
-                            android:checked="false"
-                            android:onClick="inflateVolumnes"
-                            android:paddingTop="24dp"
-                            android:text="Ajustes de audio"
-                            android:textColor="@color/white"
-                            android:textColorHighlight="@color/orange_dark"
-                            android:textSize="18dp"
-                            android:thumbTint="@color/orange"
-                            android:trackTint="@color/orange_dark"
-                            tools:ignore="UseSwitchCompatOrMaterialXml" />
+<!--                        <Switch-->
+<!--                            android:id="@+id/swVolumes"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginLeft="30dp"-->
+<!--                            android:layout_marginTop="0dp"-->
+<!--                            android:layout_marginRight="30dp"-->
+<!--                            android:background="@color/gray_dark"-->
+<!--                            android:checked="false"-->
+<!--                            android:onClick="inflateVolumnes"-->
+<!--                            android:paddingTop="24dp"-->
+<!--                            android:text="Ajustes de audio"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textColorHighlight="@color/orange_dark"-->
+<!--                            android:textSize="18dp"-->
+<!--                            android:thumbTint="@color/orange"-->
+<!--                            android:trackTint="@color/orange_dark"-->
+<!--                            tools:ignore="UseSwitchCompatOrMaterialXml" />-->
 
-                        <LinearLayout
-                            android:id="@+id/lySettingsVolumesSpace"
-                            android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:background="@color/gray_dark"
-                            android:orientation="vertical"
-                            android:padding="10dp">
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/lySettingsVolumesSpace"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="200dp"-->
+<!--                            android:background="@color/gray_dark"-->
+<!--                            android:orientation="vertical"-->
+<!--                            android:padding="10dp">-->
 
-                            <!-- android:translationY="-300dp"> -->
-                            <LinearLayout
-                                android:id="@+id/lySettingsVolumes"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/gray_dark"
-                                android:gravity="left"
-                                android:orientation="vertical"
-                                android:translationY="0dp"
-                                android:translationZ="-10dp">
+<!--                            &lt;!&ndash; android:translationY="-300dp"> &ndash;&gt;-->
+<!--                            <LinearLayout-->
+<!--                                android:id="@+id/lySettingsVolumes"-->
+<!--                                android:layout_width="match_parent"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:background="@color/gray_dark"-->
+<!--                                android:gravity="left"-->
+<!--                                android:orientation="vertical"-->
+<!--                                android:translationY="0dp"-->
+<!--                                android:translationZ="-10dp">-->
 
-                                <LinearLayout
-                                    android:id="@+id/lyHardVolume"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="left"
-                                    android:orientation="vertical">
+<!--                                <LinearLayout-->
+<!--                                    android:id="@+id/lyHardVolume"-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:gravity="left"-->
+<!--                                    android:orientation="vertical">-->
 
-                                    <TextView
-                                        android:id="@+id/tvHardVolumen"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="35dp"
-                                        android:layout_marginTop="20dp"
-                                        android:text="@string/hard_volumen"
-                                        android:textColor="@color/white" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/tvHardVolumen"-->
+<!--                                        android:layout_width="wrap_content"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:layout_marginLeft="35dp"-->
+<!--                                        android:layout_marginTop="20dp"-->
+<!--                                        android:text="@string/hard_volumen"-->
+<!--                                        android:textColor="@color/white" />-->
 
-                                    <SeekBar
-                                        android:id="@+id/sbHardVolume"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="20dp"
-                                        android:layout_marginRight="20dp"
-                                        android:max="100"
-                                        android:progress="100"
-                                        android:progressBackgroundTint="@color/pastel_yellow"
-                                        android:progressTint="@color/white"
-                                        android:thumbTint="@color/white" />
-                                </LinearLayout>
+<!--                                    <SeekBar-->
+<!--                                        android:id="@+id/sbHardVolume"-->
+<!--                                        android:layout_width="match_parent"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:layout_marginLeft="20dp"-->
+<!--                                        android:layout_marginRight="20dp"-->
+<!--                                        android:max="100"-->
+<!--                                        android:progress="100"-->
+<!--                                        android:progressBackgroundTint="@color/pastel_yellow"-->
+<!--                                        android:progressTint="@color/white"-->
+<!--                                        android:thumbTint="@color/white" />-->
+<!--                                </LinearLayout>-->
 
-                                <LinearLayout
-                                    android:id="@+id/lySoftVolume"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="left"
-                                    android:orientation="vertical">
+<!--                                <LinearLayout-->
+<!--                                    android:id="@+id/lySoftVolume"-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:gravity="left"-->
+<!--                                    android:orientation="vertical">-->
 
-                                    <TextView
-                                        android:id="@+id/tvSoftVolumen"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="35dp"
-                                        android:layout_marginTop="20dp"
-                                        android:text="@string/soft_volumen"
-                                        android:textColor="@color/white" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/tvSoftVolumen"-->
+<!--                                        android:layout_width="wrap_content"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:layout_marginLeft="35dp"-->
+<!--                                        android:layout_marginTop="20dp"-->
+<!--                                        android:text="@string/soft_volumen"-->
+<!--                                        android:textColor="@color/white" />-->
 
-                                    <SeekBar
-                                        android:id="@+id/sbSoftVolume"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="20dp"
-                                        android:layout_marginRight="20dp"
-                                        android:max="100"
-                                        android:progress="100"
-                                        android:progressBackgroundTint="@color/pastel_yellow"
-                                        android:progressTint="@color/white"
-                                        android:thumbTint="@color/white" />
-                                </LinearLayout>
+<!--                                    <SeekBar-->
+<!--                                        android:id="@+id/sbSoftVolume"-->
+<!--                                        android:layout_width="match_parent"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:layout_marginLeft="20dp"-->
+<!--                                        android:layout_marginRight="20dp"-->
+<!--                                        android:max="100"-->
+<!--                                        android:progress="100"-->
+<!--                                        android:progressBackgroundTint="@color/pastel_yellow"-->
+<!--                                        android:progressTint="@color/white"-->
+<!--                                        android:thumbTint="@color/white" />-->
+<!--                                </LinearLayout>-->
 
-                                <LinearLayout
-                                    android:id="@+id/lyNotifyVolume"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="left"
-                                    android:orientation="vertical">
+<!--                                <LinearLayout-->
+<!--                                    android:id="@+id/lyNotifyVolume"-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:gravity="left"-->
+<!--                                    android:orientation="vertical">-->
 
-                                    <TextView
-                                        android:id="@+id/tvNotifyVolumen"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="35dp"
-                                        android:layout_marginTop="20dp"
-                                        android:text="@string/notification_volumen"
-                                        android:textColor="@color/white" />
+<!--                                    <TextView-->
+<!--                                        android:id="@+id/tvNotifyVolumen"-->
+<!--                                        android:layout_width="wrap_content"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:layout_marginLeft="35dp"-->
+<!--                                        android:layout_marginTop="20dp"-->
+<!--                                        android:text="@string/notification_volumen"-->
+<!--                                        android:textColor="@color/white" />-->
 
-                                    <SeekBar
-                                        android:id="@+id/sbNotifyVolume"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="20dp"
-                                        android:layout_marginRight="20dp"
-                                        android:max="100"
-                                        android:progress="100"
-                                        android:progressBackgroundTint="@color/pastel_yellow"
-                                        android:progressTint="@color/white"
-                                        android:thumbTint="@color/white" />
-                                </LinearLayout>
-                            </LinearLayout>
-                        </LinearLayout>
+<!--                                    <SeekBar-->
+<!--                                        android:id="@+id/sbNotifyVolume"-->
+<!--                                        android:layout_width="match_parent"-->
+<!--                                        android:layout_height="wrap_content"-->
+<!--                                        android:layout_marginLeft="20dp"-->
+<!--                                        android:layout_marginRight="20dp"-->
+<!--                                        android:max="100"-->
+<!--                                        android:progress="100"-->
+<!--                                        android:progressBackgroundTint="@color/pastel_yellow"-->
+<!--                                        android:progressTint="@color/white"-->
+<!--                                        android:thumbTint="@color/white" />-->
+<!--                                </LinearLayout>-->
+<!--                            </LinearLayout>-->
+<!--                        </LinearLayout>-->
                     </LinearLayout>
 
                     <!-- Tracks del audio -->
