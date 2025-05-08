@@ -198,13 +198,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     var set: Int = 0
                     var p = progress.toInt()
 
-                    if (p%STEPS_UX != 0) {
-                        while (p >= 60) p -= 60
-                        while (p >= STEPS_UX) p -= STEPS_UX
-                        if (STEPS_UX - p > STEPS_UX / 2) set = -1 * p
-                        else set = STEPS_UX - p
+                    var limit = 60
+                    if (ROUND_INTERVAL > 1800) {
+                        limit = 300
+                    }
 
-                        csbRunWalk.progress = csbRunWalk.progress + set
+                    if (p%STEPS_UX != 0 && progress != csbRunWalk.max) {
+                        while (p >= limit) p -= limit
+                        while (p >= STEPS_UX) p -= STEPS_UX
+                        if (STEPS_UX - p > STEPS_UX / 2) {
+                            set = -1 * p
+                        } else {
+                            set = STEPS_UX - p
+                        }
+
+                        if (csbRunWalk.progress + set > csbRunWalk.max) {
+                            csbRunWalk.progress = csbRunWalk.max
+                        } else {
+                            csbRunWalk.progress = csbRunWalk.progress + set
+                        }
                     }
                 }
 
