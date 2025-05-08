@@ -106,6 +106,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lyChronoProgressBg.translationX = widthAnimations.toFloat()
         lyRoundProgressBg.translationX = widthAnimations.toFloat()
 
+        val tvReset: TextView = findViewById(R.id.tvReset)
+        tvReset.setOnClickListener {
+            resetClick()
+        }
+
     }
 
     private fun hideLayouts() {
@@ -472,6 +477,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun manageRun() {
+        if (timeInSeconds.toInt() == 0) {
+            tvChrono.setTextColor(ContextCompat.getColor(this, R.color.chrono_running))
+        }
+
         if (!startButtonClicked) {
 
             startButtonClicked = true
@@ -538,6 +547,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun updateStopWatch() {
         tvChrono.text = getFormattedStopWatch(timeInSeconds * 1000)
+    }
+
+    private fun resetClick() {
+        resetVariablesRun()
+        resetTimeView()
+    }
+
+    private fun resetVariablesRun() {
+        timeInSeconds = 0
+        initStopWatch()
+    }
+
+    private fun resetTimeView() {
+        manageEnableButtonRun(false, true)
+
+        tvChrono.setTextColor(ContextCompat.getColor(this, R.color.white))
     }
 
     private fun initNavigationView() {
