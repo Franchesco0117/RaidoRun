@@ -44,16 +44,34 @@ object Utility {
         params.height = value
         ly.layoutParams = params
     }
+
     fun animateViewOfInt(v: View, attr: String, value: Int, time: Long){
         ObjectAnimator.ofInt(v, attr, value).apply{
             duration = time
             start()
         }
     }
+
     fun animateViewOfFloat(v: View, attr: String, value: Float, time: Long){
         ObjectAnimator.ofFloat(v, attr, value).apply{
             duration = time
             start()
         }
+    }
+
+    fun roundNumber(data: String, decimals: Int) : String {
+        var d : String = data
+        var p = d.indexOf(".", 0)
+
+        if (p != null) {
+            var limit: Int = p + decimals + 1
+            if (d.length <= p + decimals + 1) {
+                limit = d.length // -1
+            }
+
+            d = d.subSequence(0, limit).toString()
+        }
+
+        return d
     }
 }

@@ -1,6 +1,13 @@
 package com.francisco.raidorun
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -11,25 +18,47 @@ import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.Switch
 import android.widget.TextView
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
+import com.francisco.raidorun.Constants.INTERVAL_LOCATION
 import com.francisco.raidorun.LoginActivity.Companion.userEmail
 import com.francisco.raidorun.Utility.animateViewOfFloat
 import com.francisco.raidorun.Utility.animateViewOfInt
 import com.francisco.raidorun.Utility.getFormattedStopWatch
 import com.francisco.raidorun.Utility.getSecFromWatch
+import com.francisco.raidorun.Utility.roundNumber
 import com.francisco.raidorun.Utility.setHeightLinearLayout
+import com.google.android.gms.common.api.GoogleApi.Settings
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import org.w3c.dom.Text
+import kotlin.math.round
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    companion object {
+        val REQUIRED_PERMISSIONS_GPS =
+            arrayOf(
+                android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            )
+    }
 
     private lateinit var drawer: DrawerLayout
 
@@ -80,7 +109,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var mInterval = 1000
 
     private var timeInSeconds = 0L
+    private var rounds: Int = 1
     private var startButtonClicked = false
+
+    private lateinit var fbCamera: FloatingActionButton
+
+    private var activatedGPS: Boolean = true
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val PERMISSION_IO = 42
+    private var flagSavedLocation = false
+
+    private var latitude: Double = 0.0
+    private var longitude: Double = 0.0
+    private var init_lt: Double = 0.0
+    private var init_ln: Double = 0.0
+
+    private var distance: Double = 0.0
+    private var maxSpeed: Double = 0.0
+    private var avgSpeed: Double = 0.0
+    private var speed: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +135,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         initToolBar()
         initNavigationView()
+
         initObjects()
+
+        initPermissionGPS()
     }
 
     private fun initChrono() {
@@ -103,14 +153,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val lyChronoProgressBg = findViewById<LinearLayout>(R.id.lyChronoProgressBg)
         val lyRoundProgressBg = findViewById<LinearLayout>(R.id.lyRoundProgressBg)
-        lyChronoProgressBg.translationX = widthAnimations.toFloat()
-        lyRoundProgressBg.translationX = widthAnimations.toFloat()
+        lyChronoProgressBg.translationX = -widthAnimations.toFloat()
+        lyRoundProgressBg.translationX = -widthAnimations.toFloat()
 
         val tvReset: TextView = findViewById(R.id.tvReset)
         tvReset.setOnClickListener {
-            resetClick()
+            resetClicked()
         }
 
+        fbCamera = findViewById(R.id.fbCamera)
+        fbCamera.isVisible = false
     }
 
     private fun hideLayouts() {
@@ -361,6 +413,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 500
             )
 
+            var tvRunningTime = findViewById<TextView>(R.id.tvRunningTime)
+            TIME_RUNING = getSecFromWatch(tvRunningTime.text.toString())
+
         } else {
             swIntervalMode.setTextColor(ContextCompat.getColor(this, R.color.white))
             setHeightLinearLayout(lyIntervalModeSpace, 0)
@@ -473,12 +528,259 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun startOrStopButtonClicked(v: View) {
-        manageRun()
+        manageStartStop()
+    }
+
+    private fun initPermissionGPS() {
+        if (allPermissionGrantedGPS()) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        } else {
+            requestPermissionLocation()
+        }
+
+    }
+
+    private fun allPermissionGrantedGPS() = REQUIRED_PERMISSIONS_GPS.all {
+        ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
+
+    }
+
+    private fun requestPermissionLocation() {
+        ActivityCompat.requestPermissions(this, arrayOf(
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_IO)
+    }
+
+    private fun activationLocation() {
+        val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        startActivity(intent)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun requestNewLocationData() {
+        var myLocationRequest = LocationRequest()
+        myLocationRequest.priority = PRIORITY_HIGH_ACCURACY
+        myLocationRequest.interval = 0
+        myLocationRequest.fastestInterval = 0
+        myLocationRequest.numUpdates = 1
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        fusedLocationClient.requestLocationUpdates(myLocationRequest, myLocationCallBack, Looper.myLooper())
+    }
+
+    private fun calculateDistance(n_lt: Double, n_lg: Double): Double {
+        val radioTierra = 6371.0 //en Kilometros
+
+        val dLat = Math.toRadians(n_lt - latitude)
+        val dLng = Math.toRadians(n_lg - longitude)
+        val sindLat = Math.sin(dLat / 2)
+        val sindLng = Math.sin(dLng / 2)
+
+        val va1 =
+            Math.pow(sindLat, 2.0) + (Math.pow(sindLng, 2.0)
+                    * Math.cos(Math.toRadians(latitude)) * Math.cos(
+                        Math.toRadians( n_lt )
+                    ))
+        val va2 = 2 * Math.atan2(Math.sqrt(va1), Math.sqrt(1 - va1))
+        var n_distance = radioTierra * va2
+
+//        if (n_distance < LIMIT_DISTANCE_ACCEPTED) {
+//            distance += n_distance
+//        }
+
+        distance += n_distance
+        return n_distance
+    }
+
+    private fun updateSpeeds(d: Double) {
+        // La distancia se calcula en km, asi que la pasamos a metros para el calculo de valocidad
+        // Convertimos m/s a km/h multiplicando por 3.6
+        speed = ((d * 1000) / INTERVAL_LOCATION) * 3.6
+        if (speed > maxSpeed) {
+            maxSpeed = speed
+        }
+
+        avgSpeed = ((distance * 1000) / timeInSeconds) * 3.6
+    }
+
+    private fun refreshInterfaceData() {
+        var tvCurrentDistance = findViewById<TextView>(R.id.tvCurrentDistance)
+        var tvCurrentAvgSpeed = findViewById<TextView>(R.id.tvCurrentAvgSpeed)
+        var tvCurrentSpeed = findViewById<TextView>(R.id.tvCurrentSpeed)
+        tvCurrentDistance.text = roundNumber(distance.toString(), 2)
+        tvCurrentAvgSpeed.text = roundNumber(avgSpeed.toString(), 1)
+        tvCurrentSpeed.text = roundNumber(speed.toString(), 1)
+
+//        if (distance > totalsSelectedSport.recordDistance!!) {
+//            tvDistanceRecord.text = roundNumber(distance.toString(), 1)
+//            csbCurrentDistance.max =distance.toFloat()
+//            csbCurrentDistance.progress = distance.toFloat()
+//
+//            tvDistanceRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
+//        }
+
+        csbCurrentDistance.progress = distance.toFloat()
+
+//        if (avgSpeed > totalsSelectedSport.recordAvgSpeed!!) {
+//            tvAvgSpeedRecord.text = roundNumber(avgSpeed.toString(), 1)
+//            csbRecordAvgSpeed.max = avgSpeed.toFloat()
+//            csbRecordAvgSpeed.progress = avgSpeed.toFloat()
+//            csbCurrentAvgSpeed.max = avgSpeed.toFloat()
+//
+//            totalsSelectedSport.recordAvgSpeed = avgSpeed
+//            tvAvgSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
+//        }
+        csbCurrentAvgSpeed.progress = avgSpeed.toFloat()
+
+//        if (speed > totalsSelectedSport.recordSpeed!!) {
+//            tvMaxSpeedRecord.text = roundNumber(speed.toString(), 1)
+//            tvMaxSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
+//
+//            totalsSelectedSport.recordSpeed = speed
+//
+//            csbRecordSpeed.max = speed.toFloat()
+//            csbRecordSpeed.progress = speed.toFloat()
+//
+//            csbCurrentMaxSpeed.max = speed.toFloat()
+//            csbCurrentMaxSpeed.progress = speed.toFloat()
+//
+//            csbCurrentSpeed.max = speed.toFloat()
+//        } else {
+//            if (speed == maxSpeed) {
+//                csbCurrentSpeed.max = csbRecordSpeed.max
+//                csbCurrentMaxSpeed.progress = speed.toFloat()
+//
+//                csbCurrentSpeed.max = csbRecordSpeed.max
+//            }
+//        }
+
+        csbCurrentSpeed.progress = speed.toFloat()
+
+        if (speed == maxSpeed) {
+            csbCurrentMaxSpeed.max = csbRecordSpeed.max
+            csbCurrentMaxSpeed.progress = speed.toFloat()
+
+            csbCurrentSpeed.max = csbRecordSpeed.max
+        }
+    }
+
+    private fun registerNewLocation(location: Location) {
+        var new_latitude: Double = location.latitude
+        var new_longitude: Double = location.longitude
+
+        if (flagSavedLocation) {
+            if (timeInSeconds >= INTERVAL_LOCATION) {
+                var distanceInterval = calculateDistance(new_latitude, new_longitude)
+
+                updateSpeeds(distanceInterval)
+                refreshInterfaceData()
+            }
+        }
+
+        latitude = new_latitude
+        longitude = new_longitude
+    }
+
+    private val myLocationCallBack = object: LocationCallback () {
+        override fun onLocationResult(locationResult: LocationResult) {
+            var myLastLocation : Location? = locationResult.lastLocation
+
+            if (myLastLocation != null) {
+                init_lt = myLastLocation.latitude
+                init_ln = myLastLocation.longitude
+
+                if (timeInSeconds > 0L) {
+                    registerNewLocation(myLastLocation)
+                }
+            }
+        }
+    }
+
+    private fun checkPermission(): Boolean {
+        return (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun manageLocation() {
+        if (checkPermission()) {
+
+            if (isLocationEnabled()) {
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        this,
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED) {
+
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                        requestNewLocationData()
+                    }
+                }
+            } else {
+                activationLocation()
+            }
+
+        } else {
+            requestPermissionLocation()
+        }
+    }
+
+    private fun isLocationEnabled(): Boolean {
+        var locationManager: LocationManager
+        = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    private fun manageStartStop() {
+        if (timeInSeconds == 0L && isLocationEnabled() == false) {
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.alertActivationGPSTitle))
+                .setMessage(getString(R.string.alertActivationGPSDescription))
+                .setPositiveButton(R.string.acceptActivationGPS,
+                    DialogInterface.OnClickListener { dialog, which ->
+                        activationLocation()
+                    })
+                .setNegativeButton(R.string.ignoreActivationGPS,
+                    DialogInterface.OnClickListener { dialog, which ->
+                        activatedGPS = false
+                        manageRun()
+                    })
+                .setCancelable(true)
+                .show()
+        } else {
+            manageRun()
+        }
     }
 
     private fun manageRun() {
+
         if (timeInSeconds.toInt() == 0) {
+
+            fbCamera.isVisible = true
+
+            swIntervalMode.isClickable = false
+            npDurationInterval.isEnabled = false
+            csbRunWalk.isEnabled = false
+
+            swChallenges.isClickable = false
+            npChallengeDistance.isEnabled = false
+            npChallengeDurationHH.isEnabled = false
+            npChallengeDurationMM.isEnabled = false
+            npChallengeDurationSS.isEnabled = false
+
             tvChrono.setTextColor(ContextCompat.getColor(this, R.color.chrono_running))
+
+            if (activatedGPS) {
+                flagSavedLocation = false
+                manageLocation()
+                flagSavedLocation = true
+                manageLocation()
+            }
         }
 
         if (!startButtonClicked) {
@@ -536,6 +838,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var chronometer: Runnable = object : Runnable {
         override fun run() {
             try {
+                if (activatedGPS && timeInSeconds.toInt() % INTERVAL_LOCATION == 0) {
+                    manageLocation()
+                }
+
+                if (swIntervalMode.isChecked) {
+                    checkStopRun(timeInSeconds)
+                    checkNewRound(timeInSeconds)
+                }
+
                 timeInSeconds += 1
                 updateStopWatch()
 
@@ -549,13 +860,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvChrono.text = getFormattedStopWatch(timeInSeconds * 1000)
     }
 
-    private fun resetClick() {
+    private fun resetClicked() {
         resetVariablesRun()
         resetTimeView()
+        resetInterface()
     }
 
     private fun resetVariablesRun() {
         timeInSeconds = 0
+        rounds = 1
+
+        challengeDistance = 0f
+        challengeDuration = 0
+
+        activatedGPS = true
+        flagSavedLocation = false
         initStopWatch()
     }
 
@@ -563,6 +882,95 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         manageEnableButtonRun(false, true)
 
         tvChrono.setTextColor(ContextCompat.getColor(this, R.color.white))
+    }
+
+    private fun resetInterface() {
+        fbCamera.isVisible = false
+
+        val tvCurrentDistance: TextView = findViewById(R.id.tvCurrentDistance)
+        val tvCurrentAvgSpeed: TextView = findViewById(R.id.tvCurrentAvgSpeed)
+        val tvCurrentSpeed: TextView = findViewById(R.id.tvCurrentSpeed)
+        tvCurrentDistance.text = "0.0"
+        tvCurrentAvgSpeed.text = "0.0"
+        tvCurrentSpeed.text = "0.0"
+
+        tvDistanceRecord.setTextColor(ContextCompat.getColor(this, R.color.gray_dark))
+        tvAvgSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.gray_dark))
+        tvMaxSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.gray_dark))
+
+        csbCurrentDistance.progress = 0f
+        csbCurrentAvgSpeed.progress = 0f
+        csbCurrentSpeed.progress = 0f
+        csbCurrentMaxSpeed.progress = 0f
+
+        val lyChronoProgressBg = findViewById<LinearLayout>(R.id.lyChronoProgressBg)
+        val lyRoundProgressBg = findViewById<LinearLayout>(R.id.lyRoundProgressBg)
+        lyChronoProgressBg.translationX = -widthAnimations.toFloat()
+        lyRoundProgressBg.translationX = -widthAnimations.toFloat()
+
+        swIntervalMode.isClickable = true
+        npDurationInterval.isEnabled = true
+        csbRunWalk.isEnabled = true
+
+        swChallenges.isClickable = true
+        npChallengeDistance.isEnabled = true
+        npChallengeDurationHH.isEnabled = true
+        npChallengeDurationMM.isEnabled = true
+        npChallengeDurationSS.isEnabled = true
+
+    }
+
+    private fun checkStopRun(secs: Long) {
+        var secAux: Long = secs
+        while (secAux.toInt() > ROUND_INTERVAL) {
+            secAux -= ROUND_INTERVAL
+        }
+
+        if (secAux.toInt() == TIME_RUNING) {
+            tvChrono.setTextColor(ContextCompat.getColor(this, R.color.chrono_walking))
+
+            val lyRoundProgressBg = findViewById<LinearLayout>(R.id.lyRoundProgressBg)
+            lyRoundProgressBg.setBackgroundColor(ContextCompat.getColor(this, R.color.chrono_walking))
+            lyRoundProgressBg.translationX = -widthAnimations.toFloat()
+        } else {
+            updateProgressBarRound(secs)
+        }
+    }
+
+    private fun checkNewRound(secs: Long) {
+        if (secs.toInt() % ROUND_INTERVAL == 0 && secs.toInt() > 0) {
+            val tvRounds: TextView = findViewById(R.id.tvRounds) as TextView
+            rounds++
+            tvRounds.text = "Round $rounds"
+
+            tvChrono.setTextColor(ContextCompat.getColor(this, R.color.chrono_running))
+            val lyRoundProgressBg = findViewById<LinearLayout>(R.id.lyRoundProgressBg)
+            lyRoundProgressBg.setBackgroundColor(ContextCompat.getColor(this, R.color.chrono_running))
+            lyRoundProgressBg.translationX = -widthAnimations.toFloat()
+        } else {
+            updateProgressBarRound(secs)
+        }
+    }
+
+    private fun updateProgressBarRound(secs: Long) {
+        var seconds = secs.toInt()
+        while (seconds >= ROUND_INTERVAL) {
+            seconds -= ROUND_INTERVAL
+        }
+
+        seconds++
+
+        var lyRoundProgressBg = findViewById<LinearLayout>(R.id.lyRoundProgressBg)
+        if (tvChrono.getCurrentTextColor() == ContextCompat.getColor(this, R.color.chrono_running)) {
+            var movement = -1 * (widthAnimations - (seconds * widthAnimations / TIME_RUNING)).toFloat()
+            animateViewOfFloat(lyRoundProgressBg, "translationX", movement, 1000L)
+        }
+
+        if (tvChrono.getCurrentTextColor() == ContextCompat.getColor(this, R.color.chrono_walking)) {
+            seconds -= TIME_RUNING
+            var movement = -1 * (widthAnimations - (seconds * widthAnimations / (ROUND_INTERVAL - TIME_RUNING))).toFloat()
+            animateViewOfFloat(lyRoundProgressBg, "translationX", movement, 1000L)
+        }
     }
 
     private fun initNavigationView() {

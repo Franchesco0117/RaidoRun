@@ -62,4 +62,7 @@ dependencies {
 
     // Seekbar circle
     implementation libs.circularseekbar
+
+    // Geolocation
+    implementation libs.play.services.location
 }
