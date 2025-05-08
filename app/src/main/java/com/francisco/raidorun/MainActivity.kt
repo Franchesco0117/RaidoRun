@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import com.francisco.raidorun.LoginActivity.Companion.userEmail
 import com.francisco.raidorun.Utility.animateViewOfFloat
@@ -67,6 +68,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var ROUND_INTERVAL = 300
     private var TIME_RUNING: Int = 0
 
+    private lateinit var lyPopUpRun: LinearLayout
+
+    private var widthScreenPixels: Int = 0
+    private var heightScreenPixels: Int = 0
+    private var widthAnimations: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -80,6 +87,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvChrono = findViewById(R.id.tvChrono)
         tvChrono.setTextColor(ContextCompat.getColor(this, R.color.white))
         initStopWatch()
+
+        widthScreenPixels = resources.displayMetrics.widthPixels
+        heightScreenPixels = resources.displayMetrics.heightPixels
+
+        widthAnimations = widthScreenPixels
+
+        val lyChronoProgressBg = findViewById<LinearLayout>(R.id.lyChronoProgressBg)
+        val lyRoundProgressBg = findViewById<LinearLayout>(R.id.lyRoundProgressBg)
+        lyChronoProgressBg.translationX = widthAnimations.toFloat()
+        lyRoundProgressBg.translationX = widthAnimations.toFloat()
+
     }
 
     private fun hideLayouts() {
@@ -159,24 +177,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             TIME_RUNING = ROUND_INTERVAL / 2
         }
 
+        csbRunWalk.max = 300f
+        csbRunWalk.progress = 150f
+
         csbRunWalk.setOnSeekBarChangeListener(object : CircularSeekBar.OnCircularSeekBarChangeListener {
             override fun onProgressChanged(
                 circularSeekBar: CircularSeekBar?,
                 progress: Float,
                 fromUser: Boolean
             ) {
-                var STEPS_UX: Int = 15
-                var set: Int = 0
-                var p = progress.toInt()
 
-                if (p%STEPS_UX != 0) {
-                    while (p >= 60) p -= 60
-                    while (p >= STEPS_UX) p -= STEPS_UX
-                    if (STEPS_UX - p > STEPS_UX / 2) set = -1 * p
-                    else set = STEPS_UX - p
+                if (fromUser) {
+                    var STEPS_UX: Int = 15
+                    if (ROUND_INTERVAL > 600) {
+                        STEPS_UX = 60
+                    }
+                    if (ROUND_INTERVAL > 1800) {
+                        STEPS_UX = 300
+                    }
+                    var set: Int = 0
+                    var p = progress.toInt()
 
-                    csbRunWalk.progress = csbRunWalk.progress + set
+                    if (p%STEPS_UX != 0) {
+                        while (p >= 60) p -= 60
+                        while (p >= STEPS_UX) p -= STEPS_UX
+                        if (STEPS_UX - p > STEPS_UX / 2) set = -1 * p
+                        else set = STEPS_UX - p
+
+                        csbRunWalk.progress = csbRunWalk.progress + set
+                    }
                 }
+
+                tvRunningTime.text = getFormattedStopWatch((csbRunWalk.progress.toInt() * 1000).toLong()).subSequence(3, 8)
+                tvWalkingTime.text = getFormattedStopWatch(((ROUND_INTERVAL - csbRunWalk.progress.toInt()) * 1000).toLong()).subSequence(3, 8)
+                TIME_RUNING = getSecFromWatch(tvRunningTime.text.toString())
             }
 
             override fun onStartTrackingTouch(seekBar: CircularSeekBar?) {
@@ -245,6 +279,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun hidePopUpRun() {
+        var lyWindow = findViewById<LinearLayout>(R.id.lyWindow)
+        lyWindow.translationX = 400f
+
+        lyPopUpRun = findViewById(R.id.lyPopupRun)
+        lyPopUpRun.isVisible = false
+    }
+
     private fun initObjects() {
         initChrono()
         hideLayouts()
@@ -252,6 +294,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         initSwitches()
         initIntervalMode()
         initChallengeMode()
+
+        hidePopUpRun()
 
     }
 

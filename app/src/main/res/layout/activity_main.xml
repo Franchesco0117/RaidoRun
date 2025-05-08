@@ -20,7 +20,6 @@
         android:layout_gravity="start"
         app:menu="@menu/activity_main_drawer" />
 
-
     <RelativeLayout
         android:id="@+id/rlMain"
         android:layout_width="match_parent"
@@ -1457,7 +1456,7 @@
         android:background="@color/gray_light_trans"
         android:gravity="center|center"
         android:orientation="vertical"
-        android:visibility="invisible">>
+        android:visibility="visible">
 
         <!--
     android:translationX="400dp"
@@ -2239,7 +2238,6 @@
 
                 </RelativeLayout>
             </RelativeLayout>
-
 
             <LinearLayout
                 android:id="@+id/lyPopUpOptionsRun"
