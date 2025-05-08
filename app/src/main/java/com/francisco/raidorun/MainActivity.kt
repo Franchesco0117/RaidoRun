@@ -2,6 +2,8 @@ package com.francisco.raidorun
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -73,6 +75,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var widthScreenPixels: Int = 0
     private var heightScreenPixels: Int = 0
     private var widthAnimations: Int = 0
+
+    private var mHandler: Handler? = null
+    private var mInterval = 1000
+
+    private var timeInSeconds = 0L
+    private var startButtonClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -164,13 +172,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         npDurationInterval.maxValue = 60
         npDurationInterval.value = 5
         npDurationInterval.wrapSelectorWheel = true
-        npDurationInterval.setFormatter(NumberPicker.Formatter{ i -> String.format("%02d", i)})
+        npDurationInterval.setFormatter(NumberPicker.Formatter { i -> String.format("%02d", i) })
 
         npDurationInterval.setOnValueChangedListener { picker, olvValue, newValue ->
             csbRunWalk.max = (newValue * 60).toFloat()
             csbRunWalk.progress = csbRunWalk.max / 2
 
-            tvRunningTime.text = getFormattedStopWatch(((newValue * 60 / 2) * 1000).toLong()).subSequence(3, 8)
+            tvRunningTime.text =
+                getFormattedStopWatch(((newValue * 60 / 2) * 1000).toLong()).subSequence(3, 8)
             tvWalkingTime.text = tvRunningTime.text
 
             ROUND_INTERVAL = newValue * 60
@@ -180,7 +189,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         csbRunWalk.max = 300f
         csbRunWalk.progress = 150f
 
-        csbRunWalk.setOnSeekBarChangeListener(object : CircularSeekBar.OnCircularSeekBarChangeListener {
+        csbRunWalk.setOnSeekBarChangeListener(object :
+            CircularSeekBar.OnCircularSeekBarChangeListener {
             override fun onProgressChanged(
                 circularSeekBar: CircularSeekBar?,
                 progress: Float,
@@ -203,7 +213,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                         limit = 300
                     }
 
-                    if (p%STEPS_UX != 0 && progress != csbRunWalk.max) {
+                    if (p % STEPS_UX != 0 && progress != csbRunWalk.max) {
                         while (p >= limit) p -= limit
                         while (p >= STEPS_UX) p -= STEPS_UX
                         if (STEPS_UX - p > STEPS_UX / 2) {
@@ -220,8 +230,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
 
-                tvRunningTime.text = getFormattedStopWatch((csbRunWalk.progress.toInt() * 1000).toLong()).subSequence(3, 8)
-                tvWalkingTime.text = getFormattedStopWatch(((ROUND_INTERVAL - csbRunWalk.progress.toInt()) * 1000).toLong()).subSequence(3, 8)
+                if (csbRunWalk.progress == 0f) {
+                    manageEnableButtonRun(false, false)
+                } else {
+                    manageEnableButtonRun(false, true)
+                }
+
+                tvRunningTime.text =
+                    getFormattedStopWatch((csbRunWalk.progress.toInt() * 1000).toLong()).subSequence(3, 8)
+                tvWalkingTime.text =
+                    getFormattedStopWatch(((ROUND_INTERVAL - csbRunWalk.progress.toInt()) * 1000).toLong()).subSequence(3, 8)
                 TIME_RUNING = getSecFromWatch(tvRunningTime.text.toString())
             }
 
@@ -449,11 +467,85 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         showChallenge("distance")
     }
 
+    fun startOrStopButtonClicked(v: View) {
+        manageRun()
+    }
+
+    private fun manageRun() {
+        if (!startButtonClicked) {
+
+            startButtonClicked = true
+            startTime()
+            manageEnableButtonRun(false, true)
+        } else {
+
+            startButtonClicked = false
+            stopTime()
+            manageEnableButtonRun(true, true)
+        }
+    }
+
+    private fun manageEnableButtonRun(e_reset: Boolean, e_run: Boolean) {
+        val tvReset = findViewById<TextView>(R.id.tvReset)
+        val btStart = findViewById<LinearLayout>(R.id.btStart)
+        val btStartLabel = findViewById<TextView>(R.id.btStartLabel)
+
+        tvReset.setEnabled(e_reset)
+        btStart.setEnabled(e_run)
+
+        if (e_reset) {
+            tvReset.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
+            animateViewOfFloat(tvReset, "translationY", 0f, 500)
+        } else {
+            tvReset.setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+            animateViewOfFloat(tvReset, "translationY", 150f, 500)
+        }
+
+        if (e_run) {
+            if (startButtonClicked) {
+                btStart.background = getDrawable(R.drawable.circle_background_topause)
+                btStartLabel.setText(R.string.stop)
+            } else {
+                btStart.background = getDrawable(R.drawable.circle_background_toplay)
+                btStartLabel.setText(R.string.start)
+            }
+        } else {
+            btStart.background = getDrawable(R.drawable.circle_background_todisable)
+        }
+
+    }
+
+    private fun startTime() {
+        mHandler = Handler(Looper.getMainLooper())
+        chronometer.run()
+    }
+
+    private fun stopTime() {
+        mHandler?.removeCallbacks(chronometer)
+    }
+
+    private var chronometer: Runnable = object : Runnable {
+        override fun run() {
+            try {
+                timeInSeconds += 1
+                updateStopWatch()
+
+            } finally {
+                mHandler!!.postDelayed(this, mInterval.toLong())
+            }
+        }
+    }
+
+    private fun updateStopWatch() {
+        tvChrono.text = getFormattedStopWatch(timeInSeconds * 1000)
+    }
+
     private fun initNavigationView() {
         var navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
-        var headerView: View = LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false)
+        var headerView: View =
+            LayoutInflater.from(this).inflate(R.layout.nav_header_main, navigationView, false)
         navigationView.removeHeaderView(headerView)
         navigationView.addHeaderView(headerView)
 
@@ -467,14 +559,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer = findViewById(R.id.drawer_layout)
         val toggle = ActionBarDrawerToggle(
-            this, drawer, toolBar, R.string.bar_title, R.string.navigation_drawer_close)
+            this, drawer, toolBar, R.string.bar_title, R.string.navigation_drawer_close
+        )
 
         drawer.addDrawerListener(toggle)
         toggle.syncState()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.nav_item_record -> callRecordActivity()
             R.id.nav_item_signOut -> signOut()
         }
@@ -485,7 +578,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
-        startActivity(Intent (this, LoginActivity::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 
     private fun showExitConfirmationDialog() {
