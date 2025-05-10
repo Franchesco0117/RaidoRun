@@ -64,5 +64,5 @@ dependencies {
     implementation libs.circularseekbar
 
     // Geolocation
-    implementation libs.play.services.location
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
 }

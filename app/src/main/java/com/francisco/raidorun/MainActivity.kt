@@ -40,9 +40,9 @@ import com.google.android.gms.common.api.GoogleApi.Settings
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     companion object {
         val REQUIRED_PERMISSIONS_GPS =
             arrayOf(
-                android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
     }
 
@@ -547,8 +547,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun requestPermissionLocation() {
         ActivityCompat.requestPermissions(this, arrayOf(
-            android.Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_IO)
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_IO)
     }
 
     private fun activationLocation() {
@@ -568,21 +568,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fusedLocationClient.requestLocationUpdates(myLocationRequest, myLocationCallBack, Looper.myLooper())
     }
 
-    private fun calculateDistance(n_lt: Double, n_lg: Double): Double {
-        val radioTierra = 6371.0 //en Kilometros
+    private fun calculateDistance(n_lt: Double, n_lg: Double): Double{
+        val radioTierra = 6371.0 //en kilómetros
 
         val dLat = Math.toRadians(n_lt - latitude)
         val dLng = Math.toRadians(n_lg - longitude)
         val sindLat = Math.sin(dLat / 2)
         val sindLng = Math.sin(dLng / 2)
-
         val va1 =
             Math.pow(sindLat, 2.0) + (Math.pow(sindLng, 2.0)
                     * Math.cos(Math.toRadians(latitude)) * Math.cos(
-                        Math.toRadians( n_lt )
-                    ))
+                Math.toRadians( n_lt )
+            ))
         val va2 = 2 * Math.atan2(Math.sqrt(va1), Math.sqrt(1 - va1))
-        var n_distance = radioTierra * va2
+        var n_distance =  radioTierra * va2
 
 //        if (n_distance < LIMIT_DISTANCE_ACCEPTED) {
 //            distance += n_distance
@@ -593,13 +592,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun updateSpeeds(d: Double) {
-        // La distancia se calcula en km, asi que la pasamos a metros para el calculo de valocidad
-        // Convertimos m/s a km/h multiplicando por 3.6
+        //la distancia se calcula en km, asi que la pasamos a metros para el calculo de velocidadr
+        //convertirmos m/s a km/h multiplicando por 3.6
         speed = ((d * 1000) / INTERVAL_LOCATION) * 3.6
-        if (speed > maxSpeed) {
-            maxSpeed = speed
-        }
-
+        if (speed > maxSpeed) maxSpeed = speed
         avgSpeed = ((distance * 1000) / timeInSeconds) * 3.6
     }
 
@@ -630,6 +626,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //            totalsSelectedSport.recordAvgSpeed = avgSpeed
 //            tvAvgSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
 //        }
+
         csbCurrentAvgSpeed.progress = avgSpeed.toFloat()
 
 //        if (speed > totalsSelectedSport.recordSpeed!!) {
@@ -661,6 +658,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             csbCurrentMaxSpeed.progress = speed.toFloat()
 
             csbCurrentSpeed.max = csbRecordSpeed.max
+            csbCurrentSpeed.max = csbRecordSpeed.max
         }
     }
 
@@ -683,23 +681,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private val myLocationCallBack = object: LocationCallback () {
         override fun onLocationResult(locationResult: LocationResult) {
-            var myLastLocation : Location? = locationResult.lastLocation
+            var myLastLocation : Location = locationResult.lastLocation
 
-            if (myLastLocation != null) {
-                init_lt = myLastLocation.latitude
-                init_ln = myLastLocation.longitude
+            init_lt = myLastLocation.latitude
+            init_ln = myLastLocation.longitude
 
-                if (timeInSeconds > 0L) {
-                    registerNewLocation(myLastLocation)
-                }
+            if (timeInSeconds > 0L) {
+                registerNewLocation(myLastLocation)
             }
+
         }
     }
 
     private fun checkPermission(): Boolean {
-        return (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+        return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED)
     }
 
@@ -707,13 +704,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (checkPermission()) {
 
             if (isLocationEnabled()) {
-                if (ActivityCompat.checkSelfPermission(
-                        this,
-                        android.Manifest.permission.ACCESS_FINE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                        this,
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION
-                    ) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                    PackageManager.PERMISSION_GRANTED) {
 
                     fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                         requestNewLocationData()
@@ -722,7 +718,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             } else {
                 activationLocation()
             }
-
         } else {
             requestPermissionLocation()
         }
