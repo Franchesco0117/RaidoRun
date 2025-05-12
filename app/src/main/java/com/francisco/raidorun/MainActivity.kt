@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -18,6 +19,7 @@ import android.widget.LinearLayout
 import android.widget.NumberPicker
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -29,6 +31,24 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import com.francisco.raidorun.Constants.INTERVAL_LOCATION
+import com.francisco.raidorun.Constants.key_challengeAutoFinish
+import com.francisco.raidorun.Constants.key_intervalDuration
+import com.francisco.raidorun.Constants.key_maxCircularSeekBar
+import com.francisco.raidorun.Constants.key_modeInterval
+import com.francisco.raidorun.Constants.key_progressCircularSeekBar
+import com.francisco.raidorun.Constants.key_modeChallenge
+import com.francisco.raidorun.Constants.key_runningTime
+import com.francisco.raidorun.Constants.key_walkingTime
+import com.francisco.raidorun.Constants.key_modeChallengeDuration
+import com.francisco.raidorun.Constants.key_challengeDurationHH
+import com.francisco.raidorun.Constants.key_challengeDurationMM
+import com.francisco.raidorun.Constants.key_challengeDurationSS
+import com.francisco.raidorun.Constants.key_modeChallengeDistance
+import com.francisco.raidorun.Constants.key_challengeDistance
+import com.francisco.raidorun.Constants.key_challengeNotify
+import com.francisco.raidorun.Constants.key_provider
+import com.francisco.raidorun.Constants.key_selectedSport
+import com.francisco.raidorun.Constants.key_userApp
 import com.francisco.raidorun.LoginActivity.Companion.userEmail
 import com.francisco.raidorun.Utility.animateViewOfFloat
 import com.francisco.raidorun.Utility.animateViewOfInt
@@ -128,6 +148,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var maxSpeed: Double = 0.0
     private var avgSpeed: Double = 0.0
     private var speed: Double = 0.0
+
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -384,6 +407,108 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         hidePopUpRun()
 
+        initPreferences()
+        recoveryPreferences()
+    }
+
+    private fun initPreferences() {
+        sharedPreferences = getSharedPreferences("sharedPrefs_$userEmail", MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+    }
+
+    private fun recoveryPreferences() {
+        if (sharedPreferences.getString(key_userApp, "null") == userEmail) {
+            //sportSelected = sharedPreferences.getString(key_selectedSport, "Running").toString()
+
+            swIntervalMode.isChecked = sharedPreferences.getBoolean(key_modeInterval, false)
+            if (swIntervalMode.isChecked) {
+                npDurationInterval.value = sharedPreferences.getInt(key_intervalDuration, 5)
+                ROUND_INTERVAL = npDurationInterval.value * 60
+                csbRunWalk.progress = sharedPreferences.getFloat(key_progressCircularSeekBar, 150.0f)
+                csbRunWalk.max = sharedPreferences.getFloat(key_maxCircularSeekBar, 300.0f)
+                tvRunningTime.text = sharedPreferences.getString(key_runningTime, "2:30")
+                tvWalkingTime.text = sharedPreferences.getString(key_walkingTime, "2:30")
+                swIntervalMode.callOnClick()
+            }
+
+            swChallenges.isChecked = sharedPreferences.getBoolean(key_modeChallenge, false)
+            if (swChallenges.isChecked) {
+                swChallenges.callOnClick()
+                if (sharedPreferences.getBoolean(key_modeChallengeDuration, false)) {
+                    npChallengeDurationHH.value = sharedPreferences.getInt(key_challengeDurationHH, 1)
+                    npChallengeDurationMM.value = sharedPreferences.getInt(key_challengeDurationMM, 0)
+                    npChallengeDurationSS.value = sharedPreferences.getInt(key_challengeDurationSS, 0)
+                    getChallengeDuration(npChallengeDurationHH.value, npChallengeDurationMM.value, npChallengeDurationSS.value)
+                    challengeDistance = 0f
+
+                    showChallenge("duration")
+                }
+
+                if (sharedPreferences.getBoolean(key_modeChallengeDistance, false)) {
+                    npChallengeDistance.value = sharedPreferences.getInt(key_challengeDistance, 10)
+                    challengeDistance = npChallengeDistance.value.toFloat()
+                    challengeDuration = 0
+
+                    showChallenge("distance")
+                }
+            }
+
+            // cbNotify.isChecked = sharedPreferences.getBoolean(key_challengeNotify, true)
+            // cbAutoFinish.isChecked = sharedPreferences.getBoolean(key_challengeAutoFinish, false)
+        }
+
+    }
+
+    private fun savePreferences() {
+        editor.clear()
+
+        editor.apply{
+
+            putString(key_userApp, userEmail)
+            //putString(key_provider, providerSession)
+
+            //putString(key_selectedSport, sportSelected)
+
+            putBoolean(key_modeInterval, swIntervalMode.isChecked)
+            putInt(key_intervalDuration, npDurationInterval.value)
+            putFloat(key_progressCircularSeekBar, csbRunWalk.progress)
+            putFloat(key_maxCircularSeekBar, csbRunWalk.max)
+            putString(key_runningTime, tvRunningTime.text.toString())
+            putString(key_walkingTime, tvWalkingTime.text.toString())
+
+            putBoolean(key_modeChallenge, swChallenges.isChecked)
+            putBoolean(key_modeChallengeDuration, !(challengeDuration == 0))
+            putInt(key_challengeDurationHH, npChallengeDurationMM.value)
+            putInt(key_challengeDurationMM, npChallengeDurationMM.value)
+            putInt(key_challengeDurationSS, npChallengeDurationSS.value)
+            putBoolean(key_modeChallengeDistance, !(challengeDistance == 0f))
+            putInt(key_challengeDistance, npChallengeDistance.value)
+
+            //putBoolean(key_challengeNotify, cbNotify.isChecked)
+            //putBoolean(key_challengeAutoFinish, cbAutoFinish.isChecked)
+
+        }.apply()
+    }
+
+    private fun alertClearPreferences() {
+        AlertDialog.Builder(this)
+            .setTitle(R.string.alertClearPreferencesTitle)
+            .setMessage(R.string.alertClearPreferencesDescription)
+            .setPositiveButton(android.R.string.ok,
+                DialogInterface.OnClickListener { dialog, which ->
+                    callClearPreferences()
+                })
+            .setNegativeButton(android.R.string.cancel,
+                DialogInterface.OnClickListener{ dialog, which ->
+
+                })
+            .setCancelable(true)
+            .show()
+    }
+
+    private fun callClearPreferences() {
+        editor.clear().apply()
+        Toast.makeText(this, "Tus ajustes han sido restablecidos :)", Toast.LENGTH_LONG).show()
     }
 
     private fun initStopWatch() {
@@ -603,6 +728,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var tvCurrentDistance = findViewById<TextView>(R.id.tvCurrentDistance)
         var tvCurrentAvgSpeed = findViewById<TextView>(R.id.tvCurrentAvgSpeed)
         var tvCurrentSpeed = findViewById<TextView>(R.id.tvCurrentSpeed)
+
         tvCurrentDistance.text = roundNumber(distance.toString(), 2)
         tvCurrentAvgSpeed.text = roundNumber(avgSpeed.toString(), 1)
         tvCurrentSpeed.text = roundNumber(speed.toString(), 1)
@@ -773,6 +899,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (activatedGPS) {
                 flagSavedLocation = false
                 manageLocation()
+
                 flagSavedLocation = true
                 manageLocation()
             }
@@ -856,6 +983,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun resetClicked() {
+
+        savePreferences()
+
         resetVariablesRun()
         resetTimeView()
         resetInterface()
@@ -997,6 +1127,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_item_record -> callRecordActivity()
+            R.id.nav_item_clearPreferences -> alertClearPreferences()
             R.id.nav_item_signOut -> signOut()
         }
 
