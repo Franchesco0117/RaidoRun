@@ -1,6 +1,7 @@
 package com.francisco.raidorun
 
 import android.Manifest
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
@@ -12,11 +13,14 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.NumberPicker
+import android.widget.RelativeLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
@@ -24,6 +28,8 @@ import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsService
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
@@ -31,6 +37,9 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import com.francisco.raidorun.Constants.INTERVAL_LOCATION
+import com.francisco.raidorun.Constants.LIMIT_DISTANCE_ACCEPTED_BIKE
+import com.francisco.raidorun.Constants.LIMIT_DISTANCE_ACCEPTED_ROLLERSKATE
+import com.francisco.raidorun.Constants.LIMIT_DISTANCE_ACCEPTED_RUNNING
 import com.francisco.raidorun.Constants.key_challengeAutoFinish
 import com.francisco.raidorun.Constants.key_intervalDuration
 import com.francisco.raidorun.Constants.key_maxCircularSeekBar
@@ -49,6 +58,7 @@ import com.francisco.raidorun.Constants.key_challengeNotify
 import com.francisco.raidorun.Constants.key_provider
 import com.francisco.raidorun.Constants.key_selectedSport
 import com.francisco.raidorun.Constants.key_userApp
+import com.francisco.raidorun.LoginActivity.Companion.providerSession
 import com.francisco.raidorun.LoginActivity.Companion.userEmail
 import com.francisco.raidorun.Utility.animateViewOfFloat
 import com.francisco.raidorun.Utility.animateViewOfInt
@@ -68,11 +78,14 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import org.w3c.dom.Text
+import kotlin.math.max
 import kotlin.math.round
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     companion object {
+        lateinit var mainContext: Context
+
         val REQUIRED_PERMISSIONS_GPS =
             arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -149,12 +162,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var avgSpeed: Double = 0.0
     private var speed: Double = 0.0
 
+    private var minAltitude: Double? = null
+    private var maxAltitude: Double? = null
+    private var minLatitude: Double? = null
+    private var maxLatitude: Double? = null
+    private var minLongitude: Double? = null
+    private var maxLongitude: Double? = null
+
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
+
+    private var LIMIT_DISTANCE_ACCEPTED: Double = 0.0
+    private lateinit var sportSelected : String
+
+    private lateinit var cbNotify: CheckBox
+    private lateinit var cbAutoFinish: CheckBox
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        mainContext = this
 
         initToolBar()
         initNavigationView()
@@ -387,14 +414,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         npChallengeDurationSS.setOnValueChangedListener { picker, oldValue, newValue ->
             getChallengeDuration(npChallengeDurationHH.value, npChallengeDurationMM.value, newValue)
         }
-    }
 
-    private fun hidePopUpRun() {
-        var lyWindow = findViewById<LinearLayout>(R.id.lyWindow)
-        lyWindow.translationX = 400f
-
-        lyPopUpRun = findViewById(R.id.lyPopupRun)
-        lyPopUpRun.isVisible = false
+        cbNotify = findViewById<CheckBox>(R.id.cbNotify)
+        cbAutoFinish = findViewById<CheckBox>(R.id.cbAutoFinish)
     }
 
     private fun initObjects() {
@@ -418,7 +440,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun recoveryPreferences() {
         if (sharedPreferences.getString(key_userApp, "null") == userEmail) {
-            //sportSelected = sharedPreferences.getString(key_selectedSport, "Running").toString()
+            sportSelected = sharedPreferences.getString(key_selectedSport, "Running").toString()
 
             swIntervalMode.isChecked = sharedPreferences.getBoolean(key_modeInterval, false)
             if (swIntervalMode.isChecked) {
@@ -453,8 +475,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
 
-            // cbNotify.isChecked = sharedPreferences.getBoolean(key_challengeNotify, true)
-            // cbAutoFinish.isChecked = sharedPreferences.getBoolean(key_challengeAutoFinish, false)
+            cbNotify.isChecked = sharedPreferences.getBoolean(key_challengeNotify, true)
+            cbAutoFinish.isChecked = sharedPreferences.getBoolean(key_challengeAutoFinish, false)
         }
 
     }
@@ -465,9 +487,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         editor.apply{
 
             putString(key_userApp, userEmail)
-            //putString(key_provider, providerSession)
+            putString(key_provider, providerSession)
 
-            //putString(key_selectedSport, sportSelected)
+            putString(key_selectedSport, sportSelected)
 
             putBoolean(key_modeInterval, swIntervalMode.isChecked)
             putInt(key_intervalDuration, npDurationInterval.value)
@@ -484,8 +506,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             putBoolean(key_modeChallengeDistance, !(challengeDistance == 0f))
             putInt(key_challengeDistance, npChallengeDistance.value)
 
-            //putBoolean(key_challengeNotify, cbNotify.isChecked)
-            //putBoolean(key_challengeAutoFinish, cbAutoFinish.isChecked)
+            putBoolean(key_challengeNotify, cbNotify.isChecked)
+            putBoolean(key_challengeAutoFinish, cbAutoFinish.isChecked)
 
         }.apply()
     }
@@ -708,11 +730,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val va2 = 2 * Math.atan2(Math.sqrt(va1), Math.sqrt(1 - va1))
         var n_distance =  radioTierra * va2
 
-//        if (n_distance < LIMIT_DISTANCE_ACCEPTED) {
-//            distance += n_distance
-//        }
+        if (n_distance < LIMIT_DISTANCE_ACCEPTED) {
+            distance += n_distance
+        }
 
-        distance += n_distance
+        //distance += n_distance
         return n_distance
     }
 
@@ -722,6 +744,49 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         speed = ((d * 1000) / INTERVAL_LOCATION) * 3.6
         if (speed > maxSpeed) maxSpeed = speed
         avgSpeed = ((distance * 1000) / timeInSeconds) * 3.6
+    }
+
+    fun selectBike(v: View) {
+        if (timeInSeconds.toInt() == 0) selectSport("Bike")
+    }
+
+    fun selectRollerSkate(v: View) {
+        if (timeInSeconds.toInt() == 0) selectSport("RollerSkate")
+    }
+
+    fun selectRunning(v: View) {
+        if (timeInSeconds.toInt() == 0) selectSport("Running")
+    }
+
+    private fun selectSport(sport: String) {
+        sportSelected = sport
+
+        var lySportBike = findViewById<LinearLayout>(R.id.lySportBike)
+        var lySportRollerSkate = findViewById<LinearLayout>(R.id.lySportRollerSkate)
+        var lySportRunning = findViewById<LinearLayout>(R.id.lySportRunning)
+
+        when(sport) {
+            "Bike" -> {
+                LIMIT_DISTANCE_ACCEPTED = LIMIT_DISTANCE_ACCEPTED_BIKE
+                lySportBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
+                lySportRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+            }
+
+            "RollerSkate" -> {
+                LIMIT_DISTANCE_ACCEPTED = LIMIT_DISTANCE_ACCEPTED_ROLLERSKATE
+                lySportBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
+                lySportRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+            }
+
+            "Running" -> {
+                LIMIT_DISTANCE_ACCEPTED = LIMIT_DISTANCE_ACCEPTED_RUNNING
+                lySportBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
+            }
+        }
     }
 
     private fun refreshInterfaceData() {
@@ -796,13 +861,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (timeInSeconds >= INTERVAL_LOCATION) {
                 var distanceInterval = calculateDistance(new_latitude, new_longitude)
 
-                updateSpeeds(distanceInterval)
-                refreshInterfaceData()
+                if (distanceInterval <= LIMIT_DISTANCE_ACCEPTED) {
+                    updateSpeeds(distanceInterval)
+                    refreshInterfaceData()
+                }
             }
         }
 
         latitude = new_latitude
         longitude = new_longitude
+
+        /*
+        // condicional para centrar mapa
+
+        if (minLatitude == null) {
+            minLatitude = latitude
+            maxLatitude = latitude
+            minLongitude = longitude
+            maxLongitude = longitude
+        }
+
+        if (latitude < minLatitude!!) minLatitude = latitude
+        if (latitude > maxLatitude!!) maxLatitude = latitude
+        if (longitude < minLongitude!!) minLongitude = longitude
+        if (longitude > maxLongitude!!) maxLongitude = longitude
+
+        if (location.hasAltitude()) {
+            if (maxAltitude == null) {
+                maxAltitude = location.altitude
+                minAltitude = location.altitude
+            }
+
+            if (location.latitude > maxAltitude!!) maxAltitude = location.altitude
+            if (location.latitude > minAltitude!!) minAltitude = location.altitude
+        }
+        */
     }
 
     private val myLocationCallBack = object: LocationCallback () {
@@ -986,7 +1079,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         savePreferences()
 
-        resetVariablesRun()
+        showPopUp()
+
         resetTimeView()
         resetInterface()
     }
@@ -995,11 +1089,23 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         timeInSeconds = 0
         rounds = 1
 
+        distance = 0.0
+        maxSpeed = 0.0
+        avgSpeed = 0.0
+
+        minAltitude = null
+        maxAltitude = null
+        minLatitude = null
+        maxLatitude = null
+        minLongitude = null
+        maxLongitude = null
+
         challengeDistance = 0f
         challengeDuration = 0
 
         activatedGPS = true
         flagSavedLocation = false
+
         initStopWatch()
     }
 
@@ -1165,5 +1271,121 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun callRecordActivity() {
         val intent = Intent(this, RecordActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun hidePopUpRun() {
+        var lyWindow = findViewById<LinearLayout>(R.id.lyWindow)
+        lyWindow.translationX = 400f
+
+        lyPopUpRun = findViewById(R.id.lyPopupRun)
+        lyPopUpRun.isVisible = false
+    }
+
+    fun closePopUp(v: View) {
+        closePopUpRun()
+    }
+
+    private fun closePopUpRun() {
+        hidePopUpRun()
+        val rlMain = findViewById<RelativeLayout>(R.id.rlMain)
+        rlMain.isEnabled = true
+
+        resetVariablesRun()
+    }
+
+    private fun showPopUp() {
+        val rlMain = findViewById<RelativeLayout>(R.id.rlMain)
+        rlMain.isEnabled = false
+
+        lyPopUpRun.isVisible = true
+
+        var lyWindow = findViewById<LinearLayout>(R.id.lyWindow)
+        ObjectAnimator.ofFloat(lyWindow, "translationX", 0f).apply {
+            duration = 350L
+            start()
+        }
+
+        loadDataPopUp()
+    }
+
+    private fun loadDataPopUp() {
+
+        showHeaderPopUp()
+        showMedals()
+        showDataRun()
+    }
+
+    private fun showHeaderPopUp() {
+
+    }
+
+    private fun showMedals() {
+        if (activatedGPS) {
+            // TODO
+        } else {
+            val lyMedalsRun = findViewById<LinearLayout>(R.id.lyMedalsRun)
+            setHeightLinearLayout(lyMedalsRun, 0)
+        }
+    }
+
+    private fun showDataRun() {
+        var tvDurationRun = findViewById<TextView>(R.id.tvDurationRun)
+        var lyChallengeDurationRun = findViewById<LinearLayout>(R.id.lyChallengeDurationRun)
+        var tvChallengeDurationRun = findViewById<TextView>(R.id.tvChallengeDurationRun)
+        var lyIntervalRun = findViewById<LinearLayout>(R.id.lyIntervalRun)
+        var tvIntervalRun = findViewById<TextView>(R.id.tvIntervalRun)
+        var lyCurrentDistance = findViewById<LinearLayout>(R.id.lyCurrentDistance)
+        var tvDistanceRun = findViewById<TextView>(R.id.tvDistanceRun)
+        var lyChallengeDistancePopUp = findViewById<LinearLayout>(R.id.lyChallengeDistancePopUp)
+        var tvChallengeDistanceRun = findViewById<TextView>(R.id.tvChallengeDistanceRun)
+        var lyUnevennessRun = findViewById<LinearLayout>(R.id.lyUnevennessRun)
+        var tvMaxUnevennessRun = findViewById<TextView>(R.id.tvMaxUnevennessRun)
+        var tvMinUnevennessRun = findViewById<TextView>(R.id.tvMinUnevennessRun)
+        var lyCurrentSpeeds = findViewById<LinearLayout>(R.id.lyCurrentSpeeds)
+        var tvAvgSpeedRun = findViewById<TextView>(R.id.tvAvgSpeedRun)
+        var tvMaxSpeedRun = findViewById<TextView>(R.id.tvMaxSpeedRun)
+
+        tvDurationRun.setText(tvChrono.text)
+        if (challengeDuration > 0) {
+            setHeightLinearLayout(lyChallengeDurationRun, 120)
+            tvChallengeDurationRun.setText(getFormattedStopWatch((challengeDuration * 1000).toLong()))
+        } else {
+            setHeightLinearLayout(lyChallengeDurationRun, 0)
+        }
+
+        if (swIntervalMode.isChecked) {
+            setHeightLinearLayout(lyIntervalRun, 120)
+            var details: String = "${npDurationInterval.value}mins. ("
+            details += "${tvRunningTime.text} / ${tvWalkingTime.text})"
+
+            tvIntervalRun.setText(details)
+        } else {
+            setHeightLinearLayout(lyIntervalRun, 0)
+        }
+
+        if (activatedGPS) {
+            tvDistanceRun.setText(roundNumber(distance.toString(), 2))
+            if (challengeDistance > 0f) {
+                setHeightLinearLayout(lyChallengeDistancePopUp, 120)
+                tvChallengeDistanceRun.setText(challengeDistance.toString())
+            } else {
+                setHeightLinearLayout(lyChallengeDistancePopUp, 0)
+            }
+
+            if (maxAltitude == null) {
+                setHeightLinearLayout(lyUnevennessRun, 0)
+            } else {
+                setHeightLinearLayout(lyUnevennessRun, 120)
+                tvMaxUnevennessRun.setText(maxAltitude!!.toInt().toString())
+                tvMinUnevennessRun.setText(minAltitude!!.toInt().toString())
+            }
+
+            tvAvgSpeedRun.setText(roundNumber(avgSpeed.toString(), 1))
+            tvMaxSpeedRun.setText(roundNumber(maxSpeed.toString(), 1))
+        } else {
+
+            setHeightLinearLayout(lyCurrentDistance, 0)
+            setHeightLinearLayout(lyCurrentSpeeds, 0)
+        }
     }
 }

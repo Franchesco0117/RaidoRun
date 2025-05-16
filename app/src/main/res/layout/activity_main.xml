@@ -9,6 +9,18 @@
     tools:openDrawer="start"
     tools:context=".MainActivity">
 
+    <include
+        layout="@layout/app_main_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        app:menu="@menu/activity_main_drawer" />
+
     <RelativeLayout
         android:id="@+id/rlMain"
         android:layout_width="match_parent"
@@ -2275,17 +2287,5 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <include
-        layout="@layout/app_main_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        app:menu="@menu/activity_main_drawer" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
