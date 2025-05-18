@@ -83,6 +83,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import org.w3c.dom.Text
+import java.text.SimpleDateFormat
+import java.util.Date
 import kotlin.math.max
 import kotlin.math.round
 
@@ -198,6 +200,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var levelsListRunning: ArrayList<Level>
 
     private var sportsLoaded: Int = 0
+
+    private lateinit var dateRun: String
+    private lateinit var startTimeRun: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1426,12 +1431,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (timeInSeconds.toInt() == 0) {
 
+            dateRun = SimpleDateFormat("yyyy/MM/dd").format(Date())
+            startTimeRun = SimpleDateFormat("HH:mm:ss").format(Date())
+
             fbCamera.isVisible = true
 
             swIntervalMode.isClickable = false
             npDurationInterval.isEnabled = false
             csbRunWalk.isEnabled = false
 
+            swChallenges.isClickable = false
             swChallenges.isClickable = false
             npChallengeDistance.isEnabled = false
             npChallengeDurationHH.isEnabled = false
@@ -1529,6 +1538,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun resetClicked() {
 
         savePreferences()
+        saveDataRun()
 
         updateTotalsUsers()
         setLevelSport(sportSelected)
@@ -1537,6 +1547,59 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         resetTimeView()
         resetInterface()
+    }
+
+    private fun saveDataRun() {
+        var id: String = userEmail + dateRun + startTimeRun
+        id = id.replace("/", "")
+        id = id.replace(":", "")
+
+        var saveDuration = tvChrono.text.toString()
+
+        var saveDistance = roundNumber(distance.toString(), 1)
+        var saveAvgSpeed = roundNumber(avgSpeed.toString(), 1)
+        var saveMaxSpeed = roundNumber(maxSpeed.toString(), 1)
+
+        //var centerLatitude = (minLatitude!! + maxLatitude!!) / 2
+        //var centerLongitude = (minLongitude!! + maxLongitude!!) / 2
+
+        var collection = "runs$sportSelected"
+        var dbRun = FirebaseFirestore.getInstance()
+        dbRun.collection(collection).document(id).set(hashMapOf(
+            "user" to userEmail,
+            "date" to dateRun,
+            "startTime" to startTimeRun,
+            "sport" to sportSelected,
+            "activatedGPS" to activatedGPS,
+            "duration" to saveDuration,
+            "distance" to saveDistance.toDouble(),
+            "avgSpeed" to saveAvgSpeed.toDouble(),
+            "maxSpeed" to saveMaxSpeed.toDouble()
+            //"minAltitude" to minAltitude,
+            //"maxAltitude" to maxAltitude,
+            //"minLatitude" to minLatitude,
+            //"maxLatitude" to maxLatitude,
+            //"minLongitude" to minLongitude,
+            //"maxLongitude" to maxLongitude
+            //"centerLatitude" to centerLatitude,
+            //"centerLongitude" to centerLongitude
+        ))
+
+        if (swIntervalMode.isChecked) {
+            dbRun.collection(collection).document(id).update("intervalMode", true)
+            dbRun.collection(collection).document(id).update("intervalDuration", npDurationInterval.value)
+            dbRun.collection(collection).document(id).update("runningTime", tvRunningTime.text.toString())
+            dbRun.collection(collection).document(id).update("walkingTime", tvWalkingTime.text.toString())
+        }
+
+        if (swChallenges.isChecked) {
+            if (challengeDistance > 0f) {
+                dbRun.collection(collection).document(id).update("challengeDistance", roundNumber(challengeDistance.toString(), 1).toDouble())
+            }
+            if (challengeDuration > 0) {
+                dbRun.collection(collection).document(id).update("challengeDuration", getFormattedStopWatch(challengeDuration.toLong()))
+            }
+        }
     }
 
     private fun resetVariablesRun() {
