@@ -30,5 +30,9 @@ data class Runs(
 
     var sport: String ?= null,
 
-    var activatedGPS: Boolean ?= null
+    var activatedGPS: Boolean ?= null,
+
+    var medalsDistance: String ?= null,
+    var medalsAvgSpeed: String ?= null,
+    var medalsMaxSpeed: String ?= null
 )
