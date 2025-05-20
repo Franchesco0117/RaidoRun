@@ -64,6 +64,7 @@ import com.francisco.raidorun.LoginActivity.Companion.providerSession
 import com.francisco.raidorun.LoginActivity.Companion.userEmail
 import com.francisco.raidorun.Utility.animateViewOfFloat
 import com.francisco.raidorun.Utility.animateViewOfInt
+import com.francisco.raidorun.Utility.deleteRunAndLinkedData
 import com.francisco.raidorun.Utility.getFormattedStopWatch
 import com.francisco.raidorun.Utility.getFormattedTotalTime
 import com.francisco.raidorun.Utility.getSecFromWatch
@@ -81,12 +82,15 @@ import com.google.android.material.navigation.NavigationView
 import com.google.common.hash.HashCode
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.Date
+import kotlin.math.exp
 import kotlin.math.max
 import kotlin.math.round
+import kotlin.text.get
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -203,6 +207,22 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var dateRun: String
     private lateinit var startTimeRun: String
+
+    private lateinit var medalsListBikeDistance: ArrayList<Double>
+    private lateinit var medalsListBikeAvgSpeed: ArrayList<Double>
+    private lateinit var medalsListBikeMaxSpeed: ArrayList<Double>
+
+    private lateinit var medalsListRollerSkateDistance: ArrayList<Double>
+    private lateinit var medalsListRollerSkateAvgSpeed: ArrayList<Double>
+    private lateinit var medalsListRollerSkateMaxSpeed: ArrayList<Double>
+
+    private lateinit var medalsListRunningDistance: ArrayList<Double>
+    private lateinit var medalsListRunningAvgSpeed: ArrayList<Double>
+    private lateinit var medalsListRunningMaxSpeed: ArrayList<Double>
+
+    private lateinit var medalsListSportSelectedDistance: ArrayList<Double>
+    private lateinit var medalsListSportSelectedAvgSpeed: ArrayList<Double>
+    private lateinit var medalsListSportSelectedMaxSpeed: ArrayList<Double>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -457,11 +477,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         hidePopUpRun()
 
-        initPreferences()
-        recoveryPreferences()
-
         initTotals()
         initLevels()
+        initMedals()
+
+        initPreferences()
+        recoveryPreferences()
     }
 
     private fun initTotals() {
@@ -522,8 +543,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         levelRunning.distanceTarget= 1
     }
 
+    private fun initMedals() {
+        medalsListSportSelectedDistance = arrayListOf()
+        medalsListSportSelectedAvgSpeed = arrayListOf()
+        medalsListSportSelectedMaxSpeed = arrayListOf()
+        medalsListSportSelectedDistance.clear()
+        medalsListSportSelectedAvgSpeed.clear()
+        medalsListSportSelectedMaxSpeed.clear()
+
+        medalsListBikeDistance = arrayListOf()
+        medalsListBikeAvgSpeed = arrayListOf()
+        medalsListBikeMaxSpeed = arrayListOf()
+        medalsListBikeDistance.clear()
+        medalsListBikeAvgSpeed.clear()
+        medalsListBikeMaxSpeed.clear()
+
+        medalsListRollerSkateDistance = arrayListOf()
+        medalsListRollerSkateAvgSpeed = arrayListOf()
+        medalsListRollerSkateMaxSpeed = arrayListOf()
+        medalsListRollerSkateDistance.clear()
+        medalsListRollerSkateAvgSpeed.clear()
+        medalsListRollerSkateMaxSpeed.clear()
+
+        medalsListRunningDistance = arrayListOf()
+        medalsListRunningAvgSpeed = arrayListOf()
+        medalsListRunningMaxSpeed = arrayListOf()
+        medalsListRunningDistance.clear()
+        medalsListRunningAvgSpeed.clear()
+        medalsListRunningMaxSpeed.clear()
+    }
+
     private fun loadFromDB() {
         loadTotalUser()
+        loadMedalsUser()
+
     }
 
     private fun loadTotalUser() {
@@ -785,6 +838,224 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    private fun loadMedalsUser() {
+        loadMedalsBike()
+        loadMedalsRollerSkate()
+        loadMedalsRunning()
+    }
+
+    private fun loadMedalsBike() {
+        var dbRecords = FirebaseFirestore.getInstance()
+
+        dbRecords.collection("runsBike")
+            .orderBy("distance", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener {documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListBikeDistance.add(document["distance"].toString().toDouble())
+                    }
+
+                    if (medalsListBikeDistance.size == 3) {
+                        break
+                    }
+
+                    while (medalsListBikeDistance.size < 3) {
+                        medalsListBikeDistance.add(0.0)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents", exception)
+            }
+
+        dbRecords.collection("runsBike")
+            .orderBy("avgSpeed", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListBikeAvgSpeed.add(document["avgSpeed"].toString().toDouble())
+                    }
+
+                    if (medalsListBikeAvgSpeed.size == 3) {
+                        break
+                    }
+
+                    while (medalsListBikeAvgSpeed.size < 3) {
+                        medalsListBikeAvgSpeed.add(0.0)
+                    }
+                }
+
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+
+        dbRecords.collection("runsBike")
+            .orderBy("maxSpeed", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListBikeMaxSpeed.add(document["maxSpeed"].toString().toDouble())
+                    }
+
+                    if (medalsListBikeMaxSpeed.size == 3) {
+                        break
+                    }
+
+                    while (medalsListBikeMaxSpeed.size < 3) {
+                        medalsListBikeMaxSpeed.add(0.0)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+    }
+
+    private fun loadMedalsRollerSkate() {
+        var dbRecords = FirebaseFirestore.getInstance()
+
+        dbRecords.collection("runsRollerSkate")
+            .orderBy("distance", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener {documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListRollerSkateDistance.add(document["distance"].toString().toDouble())
+                    }
+
+                    if (medalsListRollerSkateDistance.size == 3) {
+                        break
+                    }
+
+                    while (medalsListRollerSkateDistance.size < 3) {
+                        medalsListRollerSkateDistance.add(0.0)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents", exception)
+            }
+
+        dbRecords.collection("runsRollerSkate")
+            .orderBy("avgSpeed", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListRollerSkateAvgSpeed.add(document["avgSpeed"].toString().toDouble())
+                    }
+
+                    if (medalsListRollerSkateAvgSpeed.size == 3) {
+                        break
+                    }
+
+                    while (medalsListRollerSkateAvgSpeed.size < 3) {
+                        medalsListRollerSkateAvgSpeed.add(0.0)
+                    }
+                }
+
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+
+        dbRecords.collection("runsRollerSkate")
+            .orderBy("maxSpeed", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListRollerSkateMaxSpeed.add(document["maxSpeed"].toString().toDouble())
+                    }
+
+                    if (medalsListRollerSkateMaxSpeed.size == 3) {
+                        break
+                    }
+
+                    while (medalsListRollerSkateMaxSpeed.size < 3) {
+                        medalsListRollerSkateMaxSpeed.add(0.0)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+    }
+
+    private fun loadMedalsRunning() {
+        var dbRecords = FirebaseFirestore.getInstance()
+
+        dbRecords.collection("runsRunning")
+            .orderBy("distance", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener {documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListRunningDistance.add(document["distance"].toString().toDouble())
+                    }
+
+                    if (medalsListRunningDistance.size == 3) {
+                        break
+                    }
+
+                    while (medalsListRunningDistance.size < 3) {
+                        medalsListRunningDistance.add(0.0)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents", exception)
+            }
+
+        dbRecords.collection("runsRunning")
+            .orderBy("avgSpeed", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListRunningAvgSpeed.add(document["avgSpeed"].toString().toDouble())
+                    }
+
+                    if (medalsListRunningAvgSpeed.size == 3) {
+                        break
+                    }
+
+                    while (medalsListRunningAvgSpeed.size < 3) {
+                        medalsListRunningAvgSpeed.add(0.0)
+                    }
+                }
+
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+
+        dbRecords.collection("runsRunning")
+            .orderBy("maxSpeed", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document["user"] == userEmail) {
+                        medalsListRunningMaxSpeed.add(document["maxSpeed"].toString().toDouble())
+                    }
+
+                    if (medalsListRunningMaxSpeed.size == 3) {
+                        break
+                    }
+
+                    while (medalsListRunningMaxSpeed.size < 3) {
+                        medalsListRunningMaxSpeed.add(0.0)
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(ContentValues.TAG, "Error getting documents: ", exception)
+            }
+    }
 
     private fun initPreferences() {
         sharedPreferences = getSharedPreferences("sharedPrefs_$userEmail", MODE_PRIVATE)
@@ -965,6 +1236,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (avgSpeed > totalsSelectedSport.recordAvgSpeed!!) {
             totalsSelectedSport.recordAvgSpeed = avgSpeed
+            totalsSelectedSport.recordAvgSpeed = avgSpeed
         }
 
         totalsSelectedSport.totalDistance = roundNumber(totalsSelectedSport.totalDistance.toString(), 1).toDouble()
@@ -990,12 +1262,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (sportSelected) {
             "Bike" -> {
                 totalsBike = totalsSelectedSport
+                medalsListBikeDistance = medalsListSportSelectedDistance
+                medalsListBikeAvgSpeed = medalsListSportSelectedAvgSpeed
+                medalsListBikeMaxSpeed = medalsListSportSelectedMaxSpeed
             }
             "RollerSkate" -> {
                 totalsRollerSkate = totalsSelectedSport
+                medalsListRollerSkateDistance = medalsListSportSelectedDistance
+                medalsListRollerSkateAvgSpeed = medalsListSportSelectedAvgSpeed
+                medalsListRollerSkateMaxSpeed = medalsListSportSelectedMaxSpeed
             }
             "Running" -> {
                 totalsRunning = totalsSelectedSport
+                medalsListRunningDistance = medalsListSportSelectedDistance
+                medalsListRunningAvgSpeed = medalsListSportSelectedAvgSpeed
+                medalsListRunningMaxSpeed = medalsListSportSelectedMaxSpeed
             }
         }
     }
@@ -1180,6 +1461,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 levelSelectedSport = levelBike
                 totalsSelectedSport = totalsBike
+
+                medalsListSportSelectedDistance = medalsListBikeDistance
+                medalsListSportSelectedAvgSpeed = medalsListBikeAvgSpeed
+                medalsListSportSelectedMaxSpeed = medalsListBikeMaxSpeed
             }
 
             "RollerSkate" -> {
@@ -1190,6 +1475,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 levelSelectedSport = levelRollerSkate
                 totalsSelectedSport = totalsRollerSkate
+
+                medalsListSportSelectedDistance = medalsListRollerSkateDistance
+                medalsListSportSelectedAvgSpeed = medalsListRollerSkateAvgSpeed
+                medalsListSportSelectedMaxSpeed = medalsListRollerSkateMaxSpeed
             }
 
             "Running" -> {
@@ -1200,6 +1489,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 levelSelectedSport = levelRunning
                 totalsSelectedSport = totalsRunning
+
+                medalsListSportSelectedDistance = medalsListRunningDistance
+                medalsListSportSelectedAvgSpeed = medalsListRunningAvgSpeed
+                medalsListSportSelectedMaxSpeed = medalsListRunningMaxSpeed
             }
         }
 
@@ -1254,59 +1547,53 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvCurrentAvgSpeed.text = roundNumber(avgSpeed.toString(), 1)
         tvCurrentSpeed.text = roundNumber(speed.toString(), 1)
 
-//        if (distance > totalsSelectedSport.recordDistance!!) {
-//            tvDistanceRecord.text = roundNumber(distance.toString(), 1)
-//            csbCurrentDistance.max =distance.toFloat()
-//            csbCurrentDistance.progress = distance.toFloat()
-//
-//            tvDistanceRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
-//        }
-
         csbCurrentDistance.progress = distance.toFloat()
+        if (distance > totalsSelectedSport.recordDistance!!) {
+            tvDistanceRecord.text = roundNumber(distance.toString(), 1)
+            tvDistanceRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
 
-//        if (avgSpeed > totalsSelectedSport.recordAvgSpeed!!) {
-//            tvAvgSpeedRecord.text = roundNumber(avgSpeed.toString(), 1)
-//            csbRecordAvgSpeed.max = avgSpeed.toFloat()
-//            csbRecordAvgSpeed.progress = avgSpeed.toFloat()
-//            csbCurrentAvgSpeed.max = avgSpeed.toFloat()
-//
-//            totalsSelectedSport.recordAvgSpeed = avgSpeed
-//            tvAvgSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
-//        }
+            csbCurrentDistance.max = distance.toFloat()
+            csbCurrentDistance.progress = distance.toFloat()
+
+            totalsSelectedSport.recordDistance = distance
+        }
 
         csbCurrentAvgSpeed.progress = avgSpeed.toFloat()
+        if (avgSpeed > totalsSelectedSport.recordAvgSpeed!!) {
+            tvAvgSpeedRecord.text = roundNumber(avgSpeed.toString(), 1)
+            tvAvgSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
 
-//        if (speed > totalsSelectedSport.recordSpeed!!) {
-//            tvMaxSpeedRecord.text = roundNumber(speed.toString(), 1)
-//            tvMaxSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
-//
-//            totalsSelectedSport.recordSpeed = speed
-//
-//            csbRecordSpeed.max = speed.toFloat()
-//            csbRecordSpeed.progress = speed.toFloat()
-//
-//            csbCurrentMaxSpeed.max = speed.toFloat()
-//            csbCurrentMaxSpeed.progress = speed.toFloat()
-//
-//            csbCurrentSpeed.max = speed.toFloat()
-//        } else {
-//            if (speed == maxSpeed) {
-//                csbCurrentSpeed.max = csbRecordSpeed.max
-//                csbCurrentMaxSpeed.progress = speed.toFloat()
-//
-//                csbCurrentSpeed.max = csbRecordSpeed.max
-//            }
-//        }
+            csbRecordAvgSpeed.max = avgSpeed.toFloat()
+            csbRecordAvgSpeed.progress = avgSpeed.toFloat()
+            csbCurrentAvgSpeed.max = avgSpeed.toFloat()
 
-        csbCurrentSpeed.progress = speed.toFloat()
+            totalsSelectedSport.recordAvgSpeed = avgSpeed
+        }
 
-        if (speed == maxSpeed) {
-            csbCurrentMaxSpeed.max = csbRecordSpeed.max
+        if (speed > totalsSelectedSport.recordSpeed!!) {
+            tvMaxSpeedRecord.text = roundNumber(speed.toString(), 1)
+            tvMaxSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
+
+
+            csbRecordSpeed.max = speed.toFloat()
+            csbRecordSpeed.progress = speed.toFloat()
+
+            csbCurrentMaxSpeed.max = speed.toFloat()
             csbCurrentMaxSpeed.progress = speed.toFloat()
 
-            csbCurrentSpeed.max = csbRecordSpeed.max
-            csbCurrentSpeed.max = csbRecordSpeed.max
+            csbCurrentSpeed.max = speed.toFloat()
+
+            totalsSelectedSport.recordSpeed = speed
+        } else {
+            if (speed == maxSpeed) {
+                csbCurrentSpeed.max = csbRecordSpeed.max
+                csbCurrentMaxSpeed.progress = speed.toFloat()
+
+                csbCurrentSpeed.max = csbRecordSpeed.max
+            }
         }
+
+        csbCurrentSpeed.progress = speed.toFloat()
     }
 
     private fun registerNewLocation(location: Location) {
@@ -1428,6 +1715,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun manageRun() {
+
+
 
         if (timeInSeconds.toInt() == 0) {
 
@@ -1600,6 +1889,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 dbRun.collection(collection).document(id).update("challengeDuration", getFormattedStopWatch(challengeDuration.toLong()))
             }
         }
+    }
+
+    fun deleteRun(v: View) {
+        var id: String = userEmail + dateRun + startTimeRun
+        id = id.replace(":", "")
+        id = id.replace("/", "")
+
+        var lyPopUpRun = findViewById<LinearLayout>(R.id.lyPopupRun)
+
+        var currentRun = Runs()
+        currentRun.distance = roundNumber(distance.toString(), 1).toDouble()
+        currentRun.avgSpeed = roundNumber(avgSpeed.toString(), 1).toDouble()
+        currentRun.maxSpeed = roundNumber(maxSpeed.toString(), 1).toDouble()
+        currentRun.duration = tvChrono.text.toString()
+
+        deleteRunAndLinkedData(id, sportSelected, lyPopUpRun, currentRun)
+        loadMedalsUser()
+        setLevelSport(sportSelected)
+        closePopUpRun()
     }
 
     private fun resetVariablesRun() {
@@ -1777,11 +2085,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onBackPressed() {
         //super.onBackPressed()
 
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START)
-            super.onBackPressed()
+        if (lyPopUpRun.isVisible) {
+            closePopUpRun()
         } else {
-            showExitConfirmationDialog()
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START)
+                super.onBackPressed()
+            } else {
+                if (timeInSeconds > 0L) {
+                    resetClicked()
+                }
+                showExitConfirmationDialog()
+            }
         }
     }
 
