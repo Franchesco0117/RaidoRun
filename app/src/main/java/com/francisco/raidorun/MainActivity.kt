@@ -2426,7 +2426,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var formatedTime = getFormattedTotalTime(totalsSelectedSport.totalTime!!.toLong())
         tvTotalTime.text = getString(R.string.PopUpTotalTime) + formatedTime
 
-
     }
 
     private fun showMedals() {
@@ -2528,5 +2527,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setHeightLinearLayout(lyCurrentDistance, 0)
             setHeightLinearLayout(lyCurrentSpeeds, 0)
         }
+    }
+
+    fun takePicture(v: View) {
+
     }
 }
