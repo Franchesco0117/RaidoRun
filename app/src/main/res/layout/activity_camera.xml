@@ -15,7 +15,7 @@
     </androidx.camera.view.PreviewView>
     
     <ImageButton
-        android:id="@+id/cameraSnitchButton"
+        android:id="@+id/cameraSwitchButton"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_marginBottom="92dp"

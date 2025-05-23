@@ -11,6 +11,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Camera
 import android.location.Location
 import android.location.LocationManager
 import android.media.Image
@@ -113,6 +114,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lateinit var totalsBike: Totals
         lateinit var totalsRollerSkate: Totals
         lateinit var totalsRunning: Totals
+
+        var countPhotos : Int = 0
+        var lastImage: String = ""
     }
 
     private lateinit var drawer: DrawerLayout
@@ -2530,6 +2534,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun takePicture(v: View) {
-
+        val intent = Intent(this, CameraActivity::class.java)
+        val inParameter = intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        inParameter.putExtra("dateRun", dateRun)
+        inParameter.putExtra("startTimeRun", startTimeRun)
+        startActivity(intent)
     }
 }
