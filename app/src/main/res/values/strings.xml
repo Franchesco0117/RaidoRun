@@ -99,4 +99,10 @@
     <string name="alertClearPreferencesTitle">¿Quieres borrar tus preferencias de carrera?</string>
     <string name="alertClearPreferencesDescription">Borraremos los ajustes de volumen y carrera (modo y tiempo de intervalos) de tu útlima carrera, vamos que tampoco pasa na</string>
 
+    <string name="CardAvgSpeedTitle">VEL. PROM.</string>
+    <string name="CardMaxSpeedTitle">VEL. MAX.</string>
+    <string name="CardMedalDistance">Kms. [RP]</string>
+    <string name="CardMedalAvgSpeed">V.Máx. [RP]</string>
+    <string name="CardMedalMaxSpeed">V.Pr. [RP]</string>
+
 </resources>

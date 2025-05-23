@@ -893,10 +893,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListBikeDistance.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListBikeDistance.size < 3) {
-                        medalsListBikeDistance.add(0.0)
-                    }
+                while (medalsListBikeDistance.size < 3) {
+                    medalsListBikeDistance.add(0.0)
                 }
             }
             .addOnFailureListener { exception ->
@@ -915,10 +915,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListBikeAvgSpeed.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListBikeAvgSpeed.size < 3) {
-                        medalsListBikeAvgSpeed.add(0.0)
-                    }
+                while (medalsListBikeAvgSpeed.size < 3) {
+                    medalsListBikeAvgSpeed.add(0.0)
                 }
 
             }
@@ -938,10 +938,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListBikeMaxSpeed.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListBikeMaxSpeed.size < 3) {
-                        medalsListBikeMaxSpeed.add(0.0)
-                    }
+                while (medalsListBikeMaxSpeed.size < 3) {
+                    medalsListBikeMaxSpeed.add(0.0)
                 }
             }
             .addOnFailureListener { exception ->
@@ -964,10 +964,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListRollerSkateDistance.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListRollerSkateDistance.size < 3) {
-                        medalsListRollerSkateDistance.add(0.0)
-                    }
+                while (medalsListRollerSkateDistance.size < 3) {
+                    medalsListRollerSkateDistance.add(0.0)
                 }
             }
             .addOnFailureListener { exception ->
@@ -986,12 +986,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListRollerSkateAvgSpeed.size == 3) {
                         break
                     }
-
-                    while (medalsListRollerSkateAvgSpeed.size < 3) {
-                        medalsListRollerSkateAvgSpeed.add(0.0)
-                    }
                 }
 
+                while (medalsListRollerSkateAvgSpeed.size < 3) {
+                    medalsListRollerSkateAvgSpeed.add(0.0)
+                }
             }
             .addOnFailureListener { exception ->
                 Log.w(ContentValues.TAG, "Error getting documents: ", exception)
@@ -1009,10 +1008,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListRollerSkateMaxSpeed.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListRollerSkateMaxSpeed.size < 3) {
-                        medalsListRollerSkateMaxSpeed.add(0.0)
-                    }
+                while (medalsListRollerSkateMaxSpeed.size < 3) {
+                    medalsListRollerSkateMaxSpeed.add(0.0)
                 }
             }
             .addOnFailureListener { exception ->
@@ -1035,10 +1034,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListRunningDistance.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListRunningDistance.size < 3) {
-                        medalsListRunningDistance.add(0.0)
-                    }
+                while (medalsListRunningDistance.size < 3) {
+                    medalsListRunningDistance.add(0.0)
                 }
             }
             .addOnFailureListener { exception ->
@@ -1057,10 +1056,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListRunningAvgSpeed.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListRunningAvgSpeed.size < 3) {
-                        medalsListRunningAvgSpeed.add(0.0)
-                    }
+                while (medalsListRunningAvgSpeed.size < 3) {
+                    medalsListRunningAvgSpeed.add(0.0)
                 }
 
             }
@@ -1080,10 +1079,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     if (medalsListRunningMaxSpeed.size == 3) {
                         break
                     }
+                }
 
-                    while (medalsListRunningMaxSpeed.size < 3) {
-                        medalsListRunningMaxSpeed.add(0.0)
-                    }
+                while (medalsListRunningMaxSpeed.size < 3) {
+                    medalsListRunningMaxSpeed.add(0.0)
                 }
             }
             .addOnFailureListener { exception ->
@@ -1691,17 +1690,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 recDistanceBronze = false
                 notifyMedal("distance", "gold", "personal")
 
-            } else if (distance >= medalsListSportSelectedDistance.get(1)) {
-                recDistanceGold = false
-                recDistanceSilver = true
-                recDistanceBronze = false
-                notifyMedal("distance", "silver", "personal")
+            } else {
+                if (distance >= medalsListSportSelectedDistance.get(1)) {
+                    recDistanceGold = false
+                    recDistanceSilver = true
+                    recDistanceBronze = false
+                    notifyMedal("distance", "silver", "personal")
 
-            } else if (distance >= medalsListSportSelectedDistance.get(2)) {
-                recDistanceGold = false
-                recDistanceSilver = false
-                recDistanceBronze = true
-                notifyMedal("distance", "bronze", "personal")
+                } else {
+                    if (distance >= medalsListSportSelectedDistance.get(2)) {
+                        recDistanceGold = false
+                        recDistanceSilver = false
+                        recDistanceBronze = true
+                        notifyMedal("distance", "bronze", "personal")
+                    }
+                }
             }
         }
 
