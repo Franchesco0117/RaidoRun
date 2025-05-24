@@ -1,12 +1,16 @@
 package com.francisco.raidorun
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.francisco.raidorun.LoginActivity.Companion.userEmail
 import com.francisco.raidorun.Utility.setHeightLinearLayout
 import com.francisco.raidorun.Utility.animateViewOfFloat
+import com.francisco.raidorun.Utility.deleteRunAndLinkedData
 
 class RunsAdapter(
     private val runsList: ArrayList<Runs>
@@ -154,6 +158,40 @@ class RunsAdapter(
                 holder.ivHeaderMedalMaxSpeed.setImageResource(R.drawable.medalbronze)
                 holder.tvMedalMaxSpeedTitle.setText(R.string.CardMedalMaxSpeed)
             }
+        }
+
+        holder.tvDelete.setOnClickListener {
+            var id: String = userEmail + run.date + run.startTime
+            id = id.replace(":", "")
+            id = id.replace("/", "")
+
+            var currentRun = Runs()
+            currentRun.distance = run.distance
+            currentRun.avgSpeed = run.avgSpeed
+            currentRun.maxSpeed = run.maxSpeed
+            currentRun.duration = run.duration
+            currentRun.activatedGPS = run.activatedGPS
+            currentRun.date = run.date
+            currentRun.startTime = run.startTime
+            currentRun.user = run.user
+            currentRun.sport = run.sport
+
+            AlertDialog.Builder(context)
+                .setTitle(R.string.alertDeleteRecordRaceTitle)
+                .setMessage(R.string.alertDeleteRecordRaceDescription)
+                .setPositiveButton(android.R.string.ok,
+                    DialogInterface.OnClickListener { dialog, which ->
+                        deleteRunAndLinkedData(id, currentRun.sport!!, holder.lyDataRunHeader, currentRun)
+
+                        runsList.removeAt(position)
+                        notifyItemRemoved(position)
+                    })
+                .setNegativeButton(android.R.string.cancel,
+                    DialogInterface.OnClickListener{ dialog, which ->
+
+                    })
+                .setCancelable(true)
+                .show()
         }
     }
 
