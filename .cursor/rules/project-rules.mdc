@@ -1,0 +1,23 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# RaidoRun
+Estamos desarrolando una App para hacer ejercicio, tenemos una pantalla inicial donde tendra un boton circular en grande para empezar la carrera, ademas, el usuario puede crear rondas como intervalos y configurar el tiempo de cada ronda entre hacer ejercicio y descansar- Tenemos 3 modos, Running, RollerSkate y Bike. En ese mismo boton podemos pausar la carrera y abajo saldria un TextView para Finalizar.
+
+Al final una carrera, saldra un PopUp con la informacion recuperada de la carrera. Esta informacion tambien se muestra en la pantalla principal del usuario, datos como distance, avgSpeed y maxSpeed (que son extraidos gracias a la API de geolocalizacion oficial de Google) con sus records son mostrados junto con otras metricas. Existe una pantalla que sirve de Historial donde el usuario puede ver sus carreras con la informacion recuperada, reproducirla y eliminar. 
+
+Durante la ejecucion de la carrera es posible tomar fotografias y en la pantalla principal, saldra una opcion para ver un mapa extraido de la API oficial de Google.
+
+# Tecnologias
+- XML como sistema de interfaces.
+- Material 3 como sistema de diseño.
+- Firebase como base de datos en la nube.
+- Kotlin como lenguaje de programacion.
+- Usamos SharedPreferences para la persistencia de datos local.
+
+#Reglas extra
+- Siempre al terminar un codigo, compilalo para ver que no haya problemas. Para ello utiliza compileDebugKotlin.
+- Aunque pienses que los build.gradle estan incorrectos, los que tiene ahora mismo en el contexto son validos. Si tienes que modificar el libs.versions o los ficheros gradle, simplemente añade lo nuevo que necesites sin modificar lo que ya existe.
+

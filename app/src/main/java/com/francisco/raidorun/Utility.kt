@@ -52,8 +52,8 @@ object Utility {
     }
 
     /* FUNCIONES DE ANIMACION Y CAMBIOS DE ATRIBUTOS */
-    fun setHeightLinearLayout(ly: LinearLayout, value: Int){
-        val params: LinearLayout.LayoutParams = ly.layoutParams as LinearLayout.LayoutParams
+    fun setHeightLinearLayout(ly: View, value: Int) {
+        val params = ly.layoutParams
         params.height = value
         ly.layoutParams = params
     }
