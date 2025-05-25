@@ -1445,7 +1445,11 @@
         android:background="@color/gray_light_trans"
         android:gravity="center|center"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:elevation="16dp"
+        android:translationZ="90dp"
+        android:clickable="true"
+        android:focusable="true">
 
         <!--
     android:translationX="400dp"
