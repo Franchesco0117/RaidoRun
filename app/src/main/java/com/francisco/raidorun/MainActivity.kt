@@ -20,6 +20,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -36,6 +37,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsService
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
@@ -686,7 +688,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (totalsBike.totalTime!! == 0) {
             setHeightLinearLayout(lyNavLevelBike, 0)
         } else {
-            setHeightLinearLayout(lyNavLevelBike, 200)
+            setHeightLinearLayout(lyNavLevelBike, 275)
             for (level in levelsListBike) {
                 if (totalsBike.totalRuns!! < level.runsTarget!!
                     || totalsBike.totalDistance!! < level.distanceTarget!!) {
@@ -749,7 +751,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (totalsRollerSkate.totalTime!! == 0) {
             setHeightLinearLayout(lyNavLevelRollerSkate, 0)
         } else {
-            setHeightLinearLayout(lyNavLevelRollerSkate, 200)
+            setHeightLinearLayout(lyNavLevelRollerSkate, 275)
             for (level in levelsListRollerSkate){
                 if (totalsRollerSkate.totalRuns!! < level.runsTarget!!.toInt()
                     || totalsRollerSkate.totalDistance!! < level.distanceTarget!!.toDouble()) {
@@ -814,7 +816,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setHeightLinearLayout(lyNavLevelRunning, 0)
         } else{
 
-            setHeightLinearLayout(lyNavLevelRunning, 200)
+            setHeightLinearLayout(lyNavLevelRunning, 275)
             for (level in levelsListRunning){
                 if (totalsRunning.totalRuns!! < level.runsTarget!!.toInt()
                     || totalsRunning.totalDistance!! < level.distanceTarget!!.toDouble()){
@@ -1197,6 +1199,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvChrono.text = getString(R.string.init_stop_watch_value)
     }
 
+    fun Context.getThemeColor(attr: Int): Int {
+        val typedValue = TypedValue()
+        val theme = this.theme
+        theme.resolveAttribute(attr, typedValue, true)
+        return typedValue.data
+    }
+
+
     fun inflateIntervalMode(v: View) {
         val lyIntervalMode = findViewById<LinearLayout>(R.id.lyIntervalMode)
         val lyIntervalModeSpace = findViewById<LinearLayout>(R.id.lyIntervalModeSpace)
@@ -1206,7 +1216,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             animateViewOfInt(
                 swIntervalMode,
                 "textColor",
-                ContextCompat.getColor(this, R.color.orange),
+                ContextCompat.getColor(this, R.color.wii_blue),
                 500
             )
             setHeightLinearLayout(lyIntervalModeSpace, 300)
@@ -1224,7 +1234,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             TIME_RUNING = getSecFromWatch(tvRunningTime.text.toString())
 
         } else {
-            swIntervalMode.setTextColor(ContextCompat.getColor(this, R.color.white))
+            swIntervalMode.setTextColor(getThemeColor(com.google.android.material.R.attr.colorPrimary))
             setHeightLinearLayout(lyIntervalModeSpace, 0)
             lyIntervalMode.translationY = -200f
             animateViewOfFloat(tvChrono, "translationX", 0f, 500)
@@ -1239,13 +1249,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             animateViewOfInt(
                 swChallenges,
                 "textColor",
-                ContextCompat.getColor(this, R.color.orange),
+                ContextCompat.getColor(this, R.color.wii_blue),
                 500
             )
             setHeightLinearLayout(lyChallengesSpace, 500)
             animateViewOfFloat(lyChallenges, "translationY", 0f, 500)
         } else {
-            swChallenges.setTextColor(ContextCompat.getColor(this, R.color.white))
+            swChallenges.setTextColor(getThemeColor(com.google.android.material.R.attr.colorPrimary))
             setHeightLinearLayout(lyChallengesSpace, 0)
             lyChallenges.translationY = -100f
 
@@ -1336,21 +1346,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 lyChallengeDuration.translationZ = 5f
                 lyChallengeDistance.translationZ = 0f
 
-                tvChallengeDuration.setTextColor(ContextCompat.getColor(this, R.color.orange))
-                tvChallengeDuration.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_dark
-                    )
-                )
+                tvChallengeDuration.setTextColor(ContextCompat.getColor(this, R.color.white))
+                tvChallengeDuration.setBackgroundResource(R.drawable.bg_challenge_duration_selected)
 
-                tvChallengeDistance.setTextColor(ContextCompat.getColor(this, R.color.white))
-                tvChallengeDistance.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_medium
-                    )
-                )
+                tvChallengeDistance.setTextColor(ContextCompat.getColor(this, R.color.gray_strong))
+                tvChallengeDistance.setBackgroundResource(R.drawable.bg_challenge_distance_unselected)
 
                 challengeDistance = 0f
                 getChallengeDuration(
@@ -1364,21 +1364,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 lyChallengeDuration.translationZ = 0f
                 lyChallengeDistance.translationZ = 5f
 
-                tvChallengeDuration.setTextColor(ContextCompat.getColor(this, R.color.white))
-                tvChallengeDuration.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_medium
-                    )
-                )
+                tvChallengeDuration.setTextColor(ContextCompat.getColor(this, R.color.gray_strong))
+                tvChallengeDuration.setBackgroundResource(R.drawable.bg_challenge_duration_unselected)
 
-                tvChallengeDistance.setTextColor(ContextCompat.getColor(this, R.color.orange))
-                tvChallengeDistance.setBackgroundColor(
-                    ContextCompat.getColor(
-                        this,
-                        R.color.gray_dark
-                    )
-                )
+                tvChallengeDistance.setTextColor(ContextCompat.getColor(this, R.color.white))
+                tvChallengeDistance.setBackgroundResource(R.drawable.bg_challenge_distance_selected)
 
                 challengeDuration = 0
                 challengeDistance = npChallengeDistance.value.toFloat()
@@ -1481,16 +1471,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun selectSport(sport: String) {
         sportSelected = sport
 
-        var lySportBike = findViewById<LinearLayout>(R.id.lySportBike)
-        var lySportRollerSkate = findViewById<LinearLayout>(R.id.lySportRollerSkate)
-        var lySportRunning = findViewById<LinearLayout>(R.id.lySportRunning)
+        var lySportBike = findViewById<CardView>(R.id.cvSportBike)
+        var lySportRollerSkate = findViewById<CardView>(R.id.cvSportRollerSkate)
+        var lySportRunning = findViewById<CardView>(R.id.cvSportRunning)
 
         when(sport) {
             "Bike" -> {
                 LIMIT_DISTANCE_ACCEPTED = LIMIT_DISTANCE_ACCEPTED_BIKE
-                lySportBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
-                lySportRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
-                lySportRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportBike.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.wii_blue))
+                lySportRollerSkate.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRunning.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
 
                 levelSelectedSport = levelBike
                 totalsSelectedSport = totalsBike
@@ -1502,9 +1492,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             "RollerSkate" -> {
                 LIMIT_DISTANCE_ACCEPTED = LIMIT_DISTANCE_ACCEPTED_ROLLERSKATE
-                lySportBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
-                lySportRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
-                lySportRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportBike.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRollerSkate.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.wii_blue))
+                lySportRunning.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
 
                 levelSelectedSport = levelRollerSkate
                 totalsSelectedSport = totalsRollerSkate
@@ -1516,9 +1506,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             "Running" -> {
                 LIMIT_DISTANCE_ACCEPTED = LIMIT_DISTANCE_ACCEPTED_RUNNING
-                lySportBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
-                lySportRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
-                lySportRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
+                lySportBike.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRollerSkate.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
+                lySportRunning.setCardBackgroundColor(ContextCompat.getColor(mainContext, R.color.wii_blue))
 
                 levelSelectedSport = levelRunning
                 totalsSelectedSport = totalsRunning
@@ -1583,7 +1573,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         csbCurrentDistance.progress = distance.toFloat()
         if (distance > totalsSelectedSport.recordDistance!!) {
             tvDistanceRecord.text = roundNumber(distance.toString(), 1)
-            tvDistanceRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
+            tvDistanceRecord.setTextColor(ContextCompat.getColor(this, R.color.wii_blue_dark))
 
             csbCurrentDistance.max = distance.toFloat()
             csbCurrentDistance.progress = distance.toFloat()
@@ -1594,7 +1584,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         csbCurrentAvgSpeed.progress = avgSpeed.toFloat()
         if (avgSpeed > totalsSelectedSport.recordAvgSpeed!!) {
             tvAvgSpeedRecord.text = roundNumber(avgSpeed.toString(), 1)
-            tvAvgSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
+            tvAvgSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.wii_blue_dark))
 
             csbRecordAvgSpeed.max = avgSpeed.toFloat()
             csbRecordAvgSpeed.progress = avgSpeed.toFloat()
@@ -1605,7 +1595,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         if (speed > totalsSelectedSport.recordSpeed!!) {
             tvMaxSpeedRecord.text = roundNumber(speed.toString(), 1)
-            tvMaxSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.salmon_dark))
+            tvMaxSpeedRecord.setTextColor(ContextCompat.getColor(this, R.color.wii_blue_dark))
 
 
             csbRecordSpeed.max = speed.toFloat()
@@ -1909,9 +1899,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun manageRun() {
-
-
-
         if (timeInSeconds.toInt() == 0) {
 
             dateRun = SimpleDateFormat("yyyy/MM/dd").format(Date())
@@ -2196,10 +2183,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         if (secAux.toInt() == TIME_RUNING) {
-            tvChrono.setTextColor(ContextCompat.getColor(this, R.color.chrono_walking))
+            tvChrono.setTextColor(ContextCompat.getColor(this, R.color.wii_yellow))
 
             val lyRoundProgressBg = findViewById<LinearLayout>(R.id.lyRoundProgressBg)
-            lyRoundProgressBg.setBackgroundColor(ContextCompat.getColor(this, R.color.chrono_walking))
+            lyRoundProgressBg.setBackgroundColor(ContextCompat.getColor(this, R.color.wii_yellow))
             lyRoundProgressBg.translationX = -widthAnimations.toFloat()
         } else {
             updateProgressBarRound(secs)
@@ -2494,14 +2481,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         tvDurationRun.setText(tvChrono.text)
         if (challengeDuration > 0) {
-            setHeightLinearLayout(lyChallengeDurationRun, 120)
+            setHeightLinearLayout(lyChallengeDurationRun, 140)
             tvChallengeDurationRun.setText(getFormattedStopWatch((challengeDuration * 1000).toLong()))
         } else {
             setHeightLinearLayout(lyChallengeDurationRun, 0)
         }
 
         if (swIntervalMode.isChecked) {
-            setHeightLinearLayout(lyIntervalRun, 120)
+            setHeightLinearLayout(lyIntervalRun, 150)
             var details: String = "${npDurationInterval.value}mins. ("
             details += "${tvRunningTime.text} / ${tvWalkingTime.text})"
 
@@ -2513,7 +2500,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (activatedGPS) {
             tvDistanceRun.setText(roundNumber(distance.toString(), 2))
             if (challengeDistance > 0f) {
-                setHeightLinearLayout(lyChallengeDistancePopUp, 120)
+                setHeightLinearLayout(lyChallengeDistancePopUp, 70)
                 tvChallengeDistanceRun.setText(challengeDistance.toString())
             } else {
                 setHeightLinearLayout(lyChallengeDistancePopUp, 0)

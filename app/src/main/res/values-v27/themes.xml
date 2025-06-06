@@ -1,66 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
+
     <style name="Base.Theme.RaidoRun" parent="Theme.Material3.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/wii_blue</item>
         <item name="colorPrimaryVariant">@color/wii_blue_dark</item>
         <item name="colorOnPrimary">@color/white</item>
-        
+
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/wii_blue_light</item>
         <item name="colorSecondaryVariant">@color/wii_blue</item>
         <item name="colorOnSecondary">@color/black</item>
-        
+
         <!-- Accent color. -->
         <item name="colorAccent">@color/wii_accent</item>
-        
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/wii_gray_light</item>
         <item name="android:windowLightStatusBar">true</item>
-        
+
         <!-- Background colors -->
         <item name="android:colorBackground">@color/wii_gray_light</item>
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/black</item>
-        
+
         <!-- Card colors -->
         <item name="cardBackgroundColor">@color/white</item>
-        
+
         <!-- Text colors -->
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColorSecondary">@color/wii_gray_medium</item>
-        <item name="android:textColorTertiary">@color/gray_strong</item>
-        
+
         <!-- Navigation bar -->
         <item name="android:navigationBarColor">@color/wii_gray_light</item>
-<!--        <item name="android:windowLightNavigationBar">true</item>-->
-        
+        <item name="android:windowLightNavigationBar">true</item>
+
         <!-- Ripple effect -->
         <item name="colorControlHighlight">@color/wii_blue_light</item>
-        
+
         <!-- Window background -->
-        <item name="android:windowBackground">@color/gray_strong</item>
-        
+        <item name="android:windowBackground">@color/wii_gray_light</item>
+
         <!-- Dialog theme -->
         <item name="dialogCornerRadius">28dp</item>
-<!--        <item name="dialogBackgroundColor">@color/white</item>-->
+        <!--        <item name="dialogBackgroundColor">@color/white</item>-->
         <item name="colorPrimaryContainer">@color/white</item>
-
-        <item name="floatingActionButtonSurfaceStyle">@color/white</item>
-        <item name="floatingActionButtonStyle">@color/wii_blue</item>
     </style>
-
-    <style name="Theme.RaidoRun" parent="Base.Theme.RaidoRun" />
-
-    <color name="fab_background_light">@color/white</color>
-    <color name="fab_icon_light">@color/wii_blue</color>
-
-    <color name="map_background">@color/wii_gray_medium</color>
-
-    <color name="wii_sport_background">@color/wii_blue_ultra_light</color>
-    <color name="wii_level_circle">@color/wii_accent</color>
-    <color name="wii_text_secondary">@color/wii_gray_medium</color>
-
-    <color name="record_background">@color/wii_blue_ultra_light</color>
 </resources>

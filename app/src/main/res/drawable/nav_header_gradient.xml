@@ -6,7 +6,4 @@
         android:endColor="?attr/android:colorBackground"
         android:startColor="?attr/colorPrimary"
         android:type="linear" />
-    <corners
-        android:topLeftRadius="16dp"
-        android:topRightRadius="16dp" />
 </shape> 

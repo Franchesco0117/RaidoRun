@@ -1,21 +1,21 @@
 <resources>
-    <string name="app_name">RaidoRun</string>
+    <string name="app_name">RaidhoRun</string>
 
-    <string name="tv_login_title">¿Hasta qué nivel eres capaz de llegar?</string>
-    <string name="et_email">Ingresar correo electronico</string>
-    <string name="et_password">Ingresar contraseña</string>
-    <string name="btn_login">Iniciar sesión</string>
-    <string name="tv_forgot_password">¿Olvidaste tu contraseña?</string>
-    <string name="btn_reset_password">Enviar contraseña</string>
-    <string name="tv_terms">He leído y acepto los </string>
-    <string name="tv_conditions">términos y condiciones</string>
+    <string name="tv_login_title">How far are you able to go?</string>
+    <string name="et_email">Enter email address</string>
+    <string name="et_password">Enter password</string>
+    <string name="btn_login">Log In</string>
+    <string name="tv_forgot_password">Forgot your password?</string>
+    <string name="btn_reset_password">Send password</string>
+    <string name="tv_terms">I have read and accept the </string>
+    <string name="tv_conditions">terms and conditions</string>
     <string name="btn_sign_google">Google</string>
     <string name="btn_sign_facebook">Facebook</string>
-    <string name="error_empty_email">El campo correo electronico no puede estar vacío</string>
-    <string name="error_empty_password">El campo contraseña no puede estar vacío</string>
-    <string name="error_invalid_email">El correo electronico no es válido</string>
+    <string name="error_empty_email">Email field cannot be empty</string>
+    <string name="error_empty_password">Password field cannot be empty</string>
+    <string name="error_invalid_email">Invalid email address</string>
 
-    <string name="bar_title_terms">Términos y Condiciones de Uso</string>
+    <string name="bar_title_terms">Terms and Conditions of Use</string>
     <string name="terms1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus convallis metus at pretium. Vivamus at lacinia leo. Praesent velit elit, suscipit sit amet pulvinar id, imperdiet ac massa. Quisque molestie lectus rhoncus urna tempor, ut lacinia mi tempor. Praesent volutpat, ligula eget lobortis cursus, mauris libero consequat ligula, nec scelerisque erat ipsum tempor justo. Aliquam ornare faucibus augue vel faucibus. Ut sollicitudin commodo tortor eu faucibus. Vestibulum lacinia ligula sed tortor auctor, vitae sollicitudin lorem dapibus. Phasellus sed tincidunt odio.</string>
     <string name="terms2">Praesent arcu nisi, auctor quis tempor id, vehicula non nulla. Sed a fermentum tellus, quis pharetra lorem. Fusce vehicula libero in ultricies varius. Suspendisse vel velit tortor. Aliquam non nisi eget lectus tempor consectetur sed in magna. Nullam tincidunt, nibh ut sodales suscipit, ante est luctus purus, sed pellentesque ipsum massa et quam. Proin sed sapien ultrices ex aliquet elementum sed et erat. Sed tincidunt felis sapien, a suscipit massa cursus et. Phasellus auctor tellus ac neque maximus accumsan. Morbi sit amet odio nec sapien pharetra elementum maximus id odio. Integer laoreet, neque id efficitur auctor, magna massa consequat justo, quis vehicula ipsum massa at sem. Morbi in ornare sapien, in luctus mauris. </string>
     <string name="terms3">Sed id libero auctor, lacinia lectus a, consequat nisl. Nam quis suscipit purus. Fusce at congue quam. Etiam congue imperdiet bibendum. Etiam at porttitor ipsum. Donec consectetur sapien in neque tempus tempus. Sed vulputate rutrum ultrices. Praesent in est leo. Suspendisse euismod purus id urna tempus pellentesque. Praesent condimentum nisl sit amet purus pulvinar sagittis. Cras purus felis, hendrerit et ornare ut, molestie id orci. Integer dictum consequat leo, id pretium urna tempus et. Donec nibh ante, laoreet id lorem vitae, vestibulum sollicitudin lorem. </string>
@@ -24,15 +24,15 @@
     <string name="menu_running">Running</string>
     <string name="menu_record">Record</string>
     <string name="menu_premium">Become Premium</string>
-    <string name="menu_clearPreferences">Restablecer Ajustes</string>
-    <string name="menu_signOut">Cerrar Sesion</string>
-    <string name="menu_course">¿Quieres aprender a desarrollar apps?</string>
+    <string name="menu_clearPreferences">Reset Preferences</string>
+    <string name="menu_signOut">Sign Out</string>
+    <string name="menu_course">Want to learn how to build apps?</string>
 
     <string name="user">blabla@raidorun.com</string>
-    <string name="nav_hi">Quien mueve las piernas mueve el corazon. ¡Muevete, corazon!</string>
-    <string name="level">Nivel</string>
+    <string name="nav_hi">He who moves his legs, moves his heart. Move it, heart!</string>
+    <string name="level">Level</string>
     <string name="time">4d 03:56:23</string>
-    <string name="distance">DISTANCIA</string>
+    <string name="distance">DISTANCE</string>
     <string name="progreso_distancia">30%</string>
     <string name="runs">RUNS</string>
     <string name="progreso_runs">5/10</string>
@@ -40,72 +40,72 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
 
-    <string name="bar_title_record">Registro</string>
+    <string name="bar_title_record">History</string>
 
-    <string name="orderby_dateZA">Fecha (Recientes primero)</string>
-    <string name="orderby_durationZA">Duración (Mayores primero)</string>
-    <string name="orderby_distanceZA">Distancia (Mayores primero)</string>
-    <string name="orderby_avgspeedZA">Vel. Prom. (Mayores primero)</string>
-    <string name="orderby_maxspeedZA">Vel. Máx. (Mayores primero)</string>
+    <string name="orderby_dateZA">Date (Newest first)</string>
+    <string name="orderby_durationZA">Duration (Longest first)</string>
+    <string name="orderby_distanceZA">Distance (Longest first)</string>
+    <string name="orderby_avgspeedZA">Avg. Speed (Highest first)</string>
+    <string name="orderby_maxspeedZA">Max. Speed (Highest first)</string>
 
-    <string name="orderby_dateAZ">Fecha (Antiguos primero)</string>
-    <string name="orderby_durationAZ">Duración (Menores primero)</string>
-    <string name="orderby_distanceAZ">Distancia (Menores primero)</string>
-    <string name="orderby_avgspeedAZ">Vel. Prom. (Menores primero)</string>
-    <string name="orderby_maxspeedAZ">Vel. Máx. (Menores primero)</string>
+    <string name="orderby_dateAZ">Date (Oldest first)</string>
+    <string name="orderby_durationAZ">Duration (Shortest first)</string>
+    <string name="orderby_distanceAZ">Distance (Shortest first)</string>
+    <string name="orderby_avgspeedAZ">Avg. Speed (Lowest first)</string>
+    <string name="orderby_maxspeedAZ">Max. Speed (Lowest first)</string>
 
-    <string name="start">VAVAVA</string>
-    <string name="stop">TATE QUIETO</string>
-    <string name="finish">Finalizar</string>
+    <string name="start">START</string>
+    <string name="stop">STOP</string>
+    <string name="finish">Finish</string>
     <string name="rounds">Round 1</string>
     <string name="time_running">Running Time</string>
     <string name="time_walking">Walking Time</string>
     <string name="walking_clock">00:00</string>
     <string name="init_stop_watch_value">00:00:00</string>
 
-    <string name="hard_volumen">Volumen de Música Cañera</string>
-    <string name="soft_volumen">Volumen de Música Tranqui</string>
-    <string name="notification_volumen">Volumen de Notificaciones</string>
+    <string name="hard_volumen">High-Energy Music Volume</string>
+    <string name="soft_volumen">Relaxing Music Volume</string>
+    <string name="notification_volumen">Notification Volume</string>
     <string name="hard_position">00:00:00</string>
     <string name="hard_duration">01:00:00</string>
     <string name="soft_position">00:00:00</string>
     <string name="soft_duration">01:00:00</string>
 
-    <string name="PopUpTotalRuns">Carrera: </string>
-    <string name="PopUpTotalDistance">Kms acumulados: </string>
-    <string name="PopUpTotalTime">Total time: </string>
-    <string name="NoDataWarning">No hay datos registrados. Recuerda activar el GPS si deseas información de tu carrera</string>
+    <string name="PopUpTotalRuns">Runs: </string>
+    <string name="PopUpTotalDistance">Total Distance (km): </string>
+    <string name="PopUpTotalTime">Total Time: </string>
+    <string name="NoDataWarning">No data found. Make sure GPS is active to track your run</string>
 
-    <string name="PopUpDurationTitle">DURACION</string>
-    <string name="PopUpChallengeTitle">OBJETIVO</string>
-    <string name="PopUpIntervalTitle">INTERVALOS</string>
-    <string name="PopUpDistanceTitle">DISTANCIA</string>
-    <string name="PopUpAvgSpeedTitle">VELOCIDAD PROMEDIO</string>
-    <string name="PopUpMaxSpeedTitle">VELOCIDAD MÁXIMA</string>
-    <string name="PopUpUnevennessTitle">DESNIVEL</string>
+    <string name="PopUpDurationTitle">DURATION</string>
+    <string name="PopUpChallengeTitle">CHALLENGE</string>
+    <string name="PopUpIntervalTitle">INTERVALS</string>
+    <string name="PopUpDistanceTitle">DISTANCE</string>
+    <string name="PopUpAvgSpeedTitle">AVG. SPEED</string>
+    <string name="PopUpMaxSpeedTitle">MAX. SPEED</string>
+    <string name="PopUpUnevennessTitle">ELEVATION</string>
 
     <string name="textNull"></string>
     <string name="textNoData">-</string>
 
-    <string name="medalDistanceDescription">Distancia [Record Personal]</string>
-    <string name="medalAvgSpeedDescription">Vel. Máx. [Record Personal]</string>
-    <string name="medalMaxSpeedDescription">Vel. Prom. [Record Personal]</string>
+    <string name="medalDistanceDescription">Distance [Personal Best]</string>
+    <string name="medalAvgSpeedDescription">Max Speed [Personal Best]</string>
+    <string name="medalMaxSpeedDescription">Avg. Speed [Personal Best]</string>
 
-    <string name="alertActivationGPSTitle">Permitir acceso a ubicación</string>
-    <string name="alertActivationGPSDescription">Si desea obtener datos de su carrera como la distancia recorrida y la velocidad debe activar el GPS</string>
-    <string name="ignoreActivationGPS">Ignorar</string>
-    <string name="acceptActivationGPS">Activar</string>
+    <string name="alertActivationGPSTitle">Allow location access</string>
+    <string name="alertActivationGPSDescription">To track your distance and speed, GPS access is required</string>
+    <string name="ignoreActivationGPS">Ignore</string>
+    <string name="acceptActivationGPS">Activate</string>
 
-    <string name="alertClearPreferencesTitle">¿Quieres borrar tus preferencias de carrera?</string>
-    <string name="alertClearPreferencesDescription">Borraremos los ajustes de volumen y carrera (modo y tiempo de intervalos) de tu útlima carrera, vamos que tampoco pasa na</string>
+    <string name="alertClearPreferencesTitle">Do you want to clear your running preferences?</string>
+    <string name="alertClearPreferencesDescription">We will reset your music and workout settings (mode and intervals) from your last session. Do not worry, nothing major.</string>
 
-    <string name="CardAvgSpeedTitle">VEL. PROM.</string>
-    <string name="CardMaxSpeedTitle">VEL. MAX.</string>
-    <string name="CardMedalDistance">Kms. [RP]</string>
-    <string name="CardMedalAvgSpeed">V.Máx. [RP]</string>
-    <string name="CardMedalMaxSpeed">V.Pr. [RP]</string>
+    <string name="CardAvgSpeedTitle">AVG. SPEED</string>
+    <string name="CardMaxSpeedTitle">MAX. SPEED</string>
+    <string name="CardMedalDistance">Km [PB]</string>
+    <string name="CardMedalAvgSpeed">Max [PB]</string>
+    <string name="CardMedalMaxSpeed">Avg [PB]</string>
 
-    <string name="alertDeleteRecordRaceTitle">Are you sure do you want to delete this record?</string>
-    <string name="alertDeleteRecordRaceDescription">This will delete de record for ever</string>
+    <string name="alertDeleteRecordRaceTitle">Are you sure you want to delete this record?</string>
+    <string name="alertDeleteRecordRaceDescription">This will permanently delete the record</string>
 
 </resources>

@@ -173,7 +173,7 @@ class RecordActivity : AppCompatActivity() {
 
     fun loadRunsBike(v: View) {
         sportSelected = "Bike"
-        ivBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
+        ivBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.wii_blue))
         ivRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
         ivRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
 
@@ -183,7 +183,7 @@ class RecordActivity : AppCompatActivity() {
     fun loadRunsRollerSkate(v: View) {
         sportSelected = "RollerSkate"
         ivBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
-        ivRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
+        ivRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.wii_blue))
         ivRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
 
         loadRecyclerView("date", Query.Direction.DESCENDING)
@@ -193,7 +193,7 @@ class RecordActivity : AppCompatActivity() {
         sportSelected = "Running"
         ivBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
         ivRollerSkate.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
-        ivRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.orange))
+        ivRunning.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.wii_blue))
 
         loadRecyclerView("date", Query.Direction.DESCENDING)
     }

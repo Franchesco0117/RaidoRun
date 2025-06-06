@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:background="@color/gray_dark"
+    android:background="?attr/android:colorBackground"
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
@@ -14,7 +14,7 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="30dp"
         android:src="@mipmap/banner" />
 
     <TextView
@@ -24,26 +24,38 @@
         android:gravity="center_horizontal"
         android:paddingTop="20dp"
         android:text="@string/tv_login_title"
-        android:textColor="@color/orange_dark"
+        android:textColor="@color/wii_blue"
         android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/etEmail"
-        style="@style/ViewCustom"
-        android:layout_margin="10dp"
+    
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
         android:hint="@string/et_email"
-        android:inputType="textEmailAddress"
-        android:textColor="@color/white"
-        android:textColorHint="@color/gray_light_trans" />
+        app:startIconDrawable="@drawable/ic_email"
+        app:endIconMode="clear_text">
 
-    <EditText
-        android:id="@+id/etPassword"
-        style="@style/ViewCustom"
-        android:layout_margin="10dp"
-        android:hint="@string/et_password"
-        android:inputType="textPassword"
-        android:textColor="@color/white"
-        android:textColorHint="@color/gray_light_trans" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+        android:hint="@string/et_email"
+        app:startIconDrawable="@drawable/ic_password"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:inputType="textPassword"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btnLogin"
@@ -60,7 +72,7 @@
         android:layout_margin="10dp"
         android:gravity="center"
         android:text="@string/tv_forgot_password"
-        android:textColor="@color/gray"
+        android:textColor="?attr/android:textColorTertiary"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -73,16 +85,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tv_terms"
-            android:textColor="@color/gray"
+            android:drawableTint="@color/wii_blue"
+            android:checked="false"
+            android:textColor="?attr/android:textColorPrimary"
             app:centerIfNoTextEnabled="false" />
 
         <TextView
             android:id="@+id/tvTermsConditions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
+            android:layout_marginStart="5dp"
             android:text="@string/tv_conditions"
-            android:textColor="@color/orange" />
+            android:textColor="@color/wii_blue" />
 
     </LinearLayout>
 
@@ -90,26 +104,14 @@
         android:id="@+id/btnSignGoogle"
         style="@style/ViewCustom"
         android:layout_marginHorizontal="10dp"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="?attr/android:textColorTertiary"
         android:drawableLeft="@drawable/google"
         android:text="@string/btn_sign_google"
         android:textAlignment="textStart"
         android:textAllCaps="true"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorSurface"
         android:textSize="18sp"
+        android:elevation="8dp"
         app:iconGravity="start" />
 
-    <Button
-        android:id="@+id/btnSignFacebook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        android:backgroundTint="@color/white"
-        android:drawableLeft="@drawable/facebook"
-        android:text="@string/btn_sign_facebook"
-        android:textAlignment="textStart"
-        android:textAllCaps="true"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        app:iconGravity="start" />
 </LinearLayout>

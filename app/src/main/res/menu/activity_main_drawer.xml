@@ -8,10 +8,6 @@
         <item android:id="@+id/nav_item_record"
             android:icon="@drawable/history"
             android:title="@string/menu_record" />
-
-        <item android:id="@+id/nav_item_premium"
-            android:icon="@android:drawable/star_on"
-            android:title="@string/menu_premium" />
     </group>
 
     <item android:title="Cuenta">
@@ -25,13 +21,4 @@
                 android:title="@string/menu_signOut" />
         </menu>
     </item>
-
-    <item android:title="Anuncio">
-        <menu>
-            <item android:id="@+id/nav_item_offer"
-                android:icon="@drawable/common_full_open_on_phone"
-                android:title="@string/menu_course" />
-        </menu>
-    </item>
-
 </menu>

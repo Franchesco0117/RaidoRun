@@ -5,94 +5,88 @@
     android:id="@+id/item_record"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="0dp"
-    android:layout_marginTop="2dp"
-    android:layout_marginRight="0dp"
-    android:layout_marginBottom="0dp"
+    android:layout_margin="8dp"
     android:orientation="vertical"
-    card_view:cardBackgroundColor="@color/gray_dark"
-    card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="4dp">
+    card_view:cardBackgroundColor="?attr/android:colorBackground"
+    card_view:cardCornerRadius="12dp"
+    card_view:cardElevation="6dp">
 
     <LinearLayout
         android:id="@+id/lyDataRun"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Header -->
         <LinearLayout
             android:id="@+id/lyDataRunHeader"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvHeaderDate"
-                android:layout_width="75dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif-light"
                 android:text="05-OCT-2021"
-                android:textAlignment="textEnd"
-                android:textColor="@color/gray_light"
+                android:textAlignment="center"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvHeaderDuration"
-                android:layout_width="60dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/gray_strong"
+                android:background="@drawable/sport_data_background"
                 android:fontFamily="sans-serif-light"
-                android:paddingTop="2dp"
-                android:paddingRight="5dp"
-                android:paddingBottom="2dp"
+                android:padding="5dp"
+                android:elevation="5dp"
                 android:text="01:00HH"
-                android:textAlignment="textEnd"
-                android:textColor="@color/gray_light"
+                android:textAlignment="center"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvHeaderDistance"
-                android:layout_width="55dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/gray_strong"
+                android:background="@drawable/sport_data_background"
                 android:fontFamily="sans-serif-light"
-                android:paddingLeft="5dp"
-                android:paddingTop="2dp"
-                android:paddingRight="5dp"
-                android:paddingBottom="2dp"
+                android:padding="5dp"
+                android:elevation="5dp"
                 android:text="12.5KM"
-                android:textAlignment="textEnd"
-                android:textColor="@color/gray_light"
+                android:textAlignment="center"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvHeaderAvgSpeed"
-                android:layout_width="65dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@color/gray_strong"
+                android:background="@drawable/sport_data_background"
                 android:fontFamily="sans-serif-light"
-                android:paddingLeft="5dp"
-                android:paddingTop="2dp"
-                android:paddingRight="5dp"
-                android:paddingBottom="2dp"
+                android:padding="5dp"
+                android:elevation="5dp"
                 android:text="12.5KM/H"
-                android:textAlignment="textEnd"
-                android:textColor="@color/gray_light"
+                android:textAlignment="center"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="12sp" />
 
             <ImageView
                 android:id="@+id/ivHeaderMedalDistance"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="5dp"
                 android:src="@drawable/medal_null_dark" />
 
@@ -114,49 +108,51 @@
                 android:id="@+id/ivHeaderOpenClose"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="5dp"
                 android:rotation="0"
                 android:src="@drawable/opener_icon" />
 
         </LinearLayout>
 
+        <!-- Body -->
         <LinearLayout
             android:id="@+id/lyDataRunBody"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="200dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/lyDataRunBodyContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:translationY="0dp">
 
+                <!-- Body 1 -->
                 <LinearLayout
                     android:id="@+id/lyDataDateSport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
                     android:gravity="top|right"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/lySport"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:background="@color/gray_strong"
-                        android:gravity="top|right"
+                        android:layout_width="80dp"
+                        android:layout_height="52dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:elevation="5dp"
                         android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/ivSportSelected"
-                            android:layout_width="80dp"
-                            android:layout_height="52dp"
-                            android:background="@color/orange"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/sport_title_background"
                             android:src="@mipmap/running" />
                     </LinearLayout>
 
@@ -164,9 +160,11 @@
                         android:id="@+id/lyDate"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:background="@color/gray_strong"
+                        android:background="@drawable/sport_data_background"
                         android:gravity="top|right"
                         android:orientation="vertical"
+                        android:layout_marginBottom="8dp"
+                        android:elevation="5dp"
                         android:paddingBottom="5dp">
 
                         <TextView
@@ -174,24 +172,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
                             android:fontFamily="sans-serif-light"
                             android:text="05-OCT-2021"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/gray_light"
+                            android:textColor="?attr/android:textColorPrimary"
                             android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/tvStartTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="0dp"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginEnd="5dp"
                             android:fontFamily="sans-serif-light"
                             android:text="00:00:00"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/gray_light"
-                            android:textSize="10sp" />
+                            android:textColor="?attr/android:textColorSecondary"
+                            android:textSize="11sp" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -211,15 +208,14 @@
                         android:id="@+id/tvPlay"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/gray_light"
+                        android:background="@drawable/delete_button_background"
                         android:fontFamily="sans-serif-light"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
+                        android:elevation="3dp"
+                        android:padding="5dp"
+                        android:textColor="@color/white"
                         android:text="REPRODUCIR"
                         android:textAlignment="center"
-                        android:textColor="@color/gray_dark"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -227,35 +223,36 @@
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:background="@color/gray_light"
+                        android:background="@drawable/replay_button_background"
                         android:fontFamily="sans-serif-light"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"
+                        android:padding="5dp"
                         android:text="ELIMINAR"
                         android:textAlignment="center"
+                        android:elevation="3dp"
                         android:textColor="@color/gray_dark"
-                        android:textSize="12sp"
+                        android:textSize="10sp"
                         android:textStyle="bold" />
-
-
                 </LinearLayout>
 
+                <!-- Body 2 -->
                 <LinearLayout
                     android:id="@+id/lyDataDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="top|right"
+                    android:elevation="5dp"
+                    android:gravity="top|end"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/lyDuration"
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
-                        android:background="@color/gray_strong"
-                        android:gravity="top|right"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/sport_data_background"
+                        android:gravity="top|end"
                         android:orientation="vertical"
+                        android:elevation="5dp"
                         android:paddingBottom="5dp">
 
                         <TextView
@@ -263,31 +260,31 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="5dp"
                             android:fontFamily="sans-serif-light"
                             android:text="@string/PopUpDurationTitle"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/gray_light"
-                            android:textSize="14sp" />
+                            android:textColor="?attr/android:textColorPrimary"
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/tvDurationRun"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="5dp"
                             android:fontFamily="sans-serif-light"
                             android:text="00:00:00"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/gray_light"
-                            android:textSize="16sp" />
+                            android:textColor="?attr/android:textColorSecondary"
+                            android:textSize="11sp" />
 
                         <LinearLayout
                             android:id="@+id/lyChallengeDurationRun"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/gray_strong"
-                            android:gravity="top|right"
+                            android:gravity="top|end"
+                            android:layout_marginTop="5dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -295,32 +292,32 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="5dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/PopUpChallengeTitle"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="14sp" />
+                                android:textColor="?attr/android:textColorPrimary"
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/tvChallengeDurationRun"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="5dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="01:00:00"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="14sp" />
+                                android:textColor="?attr/android:textColorSecondary"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/lyIntervalRun"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/gray_strong"
-                            android:gravity="top|right"
+                            android:gravity="top|end"
+                            android:layout_marginTop="5dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -328,11 +325,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="5dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/PopUpIntervalTitle"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
+                                android:textColor="?attr/android:textColorPrimary"
                                 android:textSize="12sp" />
 
                             <TextView
@@ -340,33 +337,36 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="10dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="5min (1:45 / 3:15)"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
+                                android:textColor="?attr/android:textColorSecondary"
                                 android:textSize="10sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Body 3 -->
                 <LinearLayout
                     android:id="@+id/lyDataDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:elevation="5dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/lyDistance"
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="5dp"
-                        android:background="@color/gray_strong"
-                        android:gravity="top|right"
+                        android:elevation="5dp"
+                        android:background="@drawable/sport_data_background"
+                        android:gravity="top|end"
                         android:orientation="vertical"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:paddingBottom="5dp">
 
                         <TextView
@@ -374,20 +374,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="5dp"
                             android:fontFamily="sans-serif-light"
                             android:text="@string/PopUpDistanceTitle"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/gray_light"
-                            android:textSize="14sp" />
+                            android:textColor="?attr/android:textColorPrimary"
+                            android:textSize="12sp" />
 
                         <LinearLayout
                             android:id="@+id/lyDistanceData"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:background="@color/gray_strong"
-                            android:gravity="top|right"
+                            android:gravity="top|end"
                             android:orientation="horizontal">
 
                             <TextView
@@ -395,32 +394,32 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginEnd="3dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="0.00"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="16sp" />
+                                android:textColor="?attr/android:textColorSecondary"
+                                android:textSize="11sp" />
 
                             <TextView
                                 android:id="@+id/tvDistanceRunUX"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="5dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="KM"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="14sp" />
+                                android:textColor="?attr/android:textColorSecondary"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/lyChallengeDistance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@color/gray_strong"
-                            android:gravity="top|right"
+                            android:gravity="top|end"
+                            android:layout_marginTop="5dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -428,19 +427,18 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="5dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/PopUpChallengeTitle"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
+                                android:textColor="?attr/android:textColorPrimary"
                                 android:textSize="12sp" />
 
                             <LinearLayout
                                 android:id="@+id/lyChallengeDistanceRun"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@color/gray_strong"
-                                android:gravity="top|right"
+                                android:gravity="top|end"
                                 android:orientation="horizontal">
 
                                 <TextView
@@ -448,24 +446,24 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="0dp"
-                                    android:layout_marginRight="4dp"
+                                    android:layout_marginEnd="3dp"
                                     android:fontFamily="sans-serif-light"
                                     android:text="15.00"
                                     android:textAlignment="textEnd"
-                                    android:textColor="@color/gray_light"
-                                    android:textSize="12sp" />
+                                    android:textColor="?attr/android:textColorSecondary"
+                                    android:textSize="11sp" />
 
                                 <TextView
                                     android:id="@+id/tvChallengeDistanceRunUX"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="0dp"
-                                    android:layout_marginRight="10dp"
+                                    android:layout_marginEnd="5dp"
                                     android:fontFamily="sans-serif-light"
                                     android:text="KM"
                                     android:textAlignment="textEnd"
-                                    android:textColor="@color/gray_light"
-                                    android:textSize="10sp" />
+                                    android:textColor="?attr/android:textColorSecondary"
+                                    android:textSize="11sp" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -474,8 +472,8 @@
                             android:id="@+id/lyUnevennessRun"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/gray_strong"
-                            android:gravity="top|right"
+                            android:gravity="top|end"
+                            android:layout_marginTop="5dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -483,11 +481,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="5dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/PopUpUnevennessTitle"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
+                                android:textColor="?attr/android:textColorPrimary"
                                 android:textSize="12sp" />
 
                             <LinearLayout
@@ -495,7 +493,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="0dp"
-                                android:gravity="top|right"
+                                android:gravity="top|end"
                                 android:orientation="vertical">
 
                                 <LinearLayout
@@ -503,33 +501,30 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="0dp"
-                                    android:gravity="top|right"
+                                    android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
                                     <TextView
                                         android:id="@+id/tvMaxUnevennessRun"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_marginRight="2dp"
+                                        android:layout_marginEnd="2dp"
                                         android:drawableStart="@drawable/max"
                                         android:drawablePadding="3dp"
                                         android:fontFamily="sans-serif-light"
                                         android:text="1782"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/gray_light"
-                                        android:textSize="12sp" />
+                                        android:textColor="@android:color/holo_green_light"
+                                        android:textSize="14sp" />
 
                                     <TextView
                                         android:id="@+id/tvMaxUnevennessUX"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="0dp"
-                                        android:layout_marginRight="4dp"
+                                        android:layout_marginEnd="4dp"
                                         android:fontFamily="sans-serif-light"
                                         android:text="MSNM"
                                         android:textAlignment="textEnd"
-                                        android:textColor="@color/gray_light"
+                                        android:textColor="?attr/android:textColorPrimary"
                                         android:textSize="9sp" />
 
                                 </LinearLayout>
@@ -539,7 +534,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="0dp"
-                                    android:gravity="top|right"
+                                    android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
                                     <TextView
@@ -547,40 +542,38 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="0dp"
-                                        android:layout_marginRight="2dp"
+                                        android:layout_marginEnd="2dp"
                                         android:drawableStart="@drawable/min"
                                         android:drawablePadding="3dp"
                                         android:fontFamily="sans-serif-light"
                                         android:text="1782"
-                                        android:textAlignment="textEnd"
-                                        android:textColor="@color/gray_light"
-                                        android:textSize="12sp" />
+                                        android:textColor="@android:color/holo_red_light"
+                                        android:textSize="14sp" />
 
                                     <TextView
                                         android:id="@+id/tvMinUnevennessUX"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="0dp"
-                                        android:layout_marginRight="4dp"
+                                        android:layout_marginEnd="4dp"
                                         android:fontFamily="sans-serif-light"
                                         android:text="MSNM"
                                         android:textAlignment="textEnd"
-                                        android:textColor="@color/gray_light"
+                                        android:textColor="?attr/android:textColorPrimary"
                                         android:textSize="9sp" />
 
                                 </LinearLayout>
                             </LinearLayout>
-
-
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Body 4 -->
                 <LinearLayout
                     android:id="@+id/lyDataSpeedMedals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:elevation="5dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -589,10 +582,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_marginBottom="5dp"
-                        android:background="@color/gray_strong"
-                        android:gravity="top|right"
+                        android:background="@drawable/sport_data_background"
+                        android:gravity="top|end"
+                        android:elevation="5dp"
+                        android:layout_marginStart="5dp"
                         android:orientation="vertical"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:paddingBottom="5dp">
 
                         <TextView
@@ -600,20 +595,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginEnd="10dp"
                             android:fontFamily="sans-serif-light"
                             android:text="@string/CardAvgSpeedTitle"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/gray_light"
-                            android:textSize="14sp" />
+                            android:textColor="?attr/android:textColorPrimary"
+                            android:textSize="12sp" />
 
                         <LinearLayout
                             android:id="@+id/lyAvgSpeedDataRun"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:background="@color/gray_strong"
-                            android:gravity="top|right"
+                            android:gravity="top|end"
                             android:orientation="horizontal">
 
                             <TextView
@@ -621,44 +615,43 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginEnd="4dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="0.0"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="16sp" />
+                                android:textColor="?attr/android:textColorSecondary"
+                                android:textSize="11sp" />
 
                             <TextView
                                 android:id="@+id/tvAvgSpeedRunUX"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="10dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="KM/H"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="14sp" />
+                                android:textColor="?attr/android:textColorSecondary"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <TextView
                             android:id="@+id/tvMaxSpeedTitle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginEnd="10dp"
                             android:fontFamily="sans-serif-light"
                             android:text="@string/CardMaxSpeedTitle"
                             android:textAlignment="textEnd"
-                            android:textColor="@color/gray_light"
-                            android:textSize="14sp" />
+                            android:textColor="?attr/android:textColorPrimary"
+                            android:textSize="12sp" />
 
                         <LinearLayout
                             android:id="@+id/lyMaxSpeedRun"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/gray_strong"
-                            android:gravity="top|right"
+                            android:gravity="top|end"
                             android:orientation="horizontal">
 
                             <TextView
@@ -666,24 +659,24 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="4dp"
+                                android:layout_marginEnd="4dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="0.0"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="16sp" />
+                                android:textColor="?attr/android:textColorSecondary"
+                                android:textSize="11sp" />
 
                             <TextView
                                 android:id="@+id/tvMaxSpeedRunUX"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="0dp"
-                                android:layout_marginRight="10dp"
+                                android:layout_marginEnd="10dp"
                                 android:fontFamily="sans-serif-light"
                                 android:text="KM/H"
                                 android:textAlignment="textEnd"
-                                android:textColor="@color/gray_light"
-                                android:textSize="14sp" />
+                                android:textColor="?attr/android:textColorSecondary"
+                                android:textSize="11sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -691,10 +684,11 @@
                         android:id="@+id/lyMedalsRun"
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginStart="5dp"
                         android:layout_marginBottom="5dp"
                         android:gravity="top|center"
                         android:orientation="horizontal"
-                        android:paddingBottom="0dp"
                         android:translationY="-30dp">
 
                         <LinearLayout
@@ -720,7 +714,7 @@
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/textNull"
                                 android:textAlignment="center"
-                                android:textColor="@color/gray_light"
+                                android:textColor="?attr/android:textColorPrimary"
                                 android:textSize="10sp"
                                 android:textStyle="italic"
                                 android:translationY="05dp" />
@@ -749,7 +743,7 @@
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/textNull"
                                 android:textAlignment="center"
-                                android:textColor="@color/gray_light"
+                                android:textColor="?attr/android:textColorPrimary"
                                 android:textSize="10sp"
                                 android:textStyle="italic"
                                 android:translationY="05dp" />
@@ -778,7 +772,7 @@
                                 android:fontFamily="sans-serif-light"
                                 android:text="@string/textNull"
                                 android:textAlignment="center"
-                                android:textColor="@color/gray_light"
+                                android:textColor="?attr/android:textColorPrimary"
                                 android:textSize="10sp"
                                 android:textStyle="italic"
                                 android:translationY="05dp" />
@@ -786,9 +780,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
-
-
 </androidx.cardview.widget.CardView>

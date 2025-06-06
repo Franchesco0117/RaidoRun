@@ -6,14 +6,21 @@
         <item name="android:layout_margin"> 10dp</item>
     </style>
 
-    <style name="NumberPickerTheme" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/white</item>
-        <!-- To remove divider of the number picker -->
+    <style name="NumberPickerTheme" parent="Theme.AppCompat.DayNight">
+        <!-- Color del texto principal -->
+        <item name="android:textColorPrimary">@color/wii_blue</item>
+        <!-- Eliminar líneas divisorias -->
         <item name="colorControlNormal">@android:color/transparent</item>
-        <!--<item name="colorControlNormal">@color/gray_dark</item>-->
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:background">@color/gray_dark</item>
+        <!-- Tamaño del texto -->
         <item name="android:textSize">30sp</item>
+        <!-- Estilo del texto -->
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="CustomFABStyle" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
+        <item name="backgroundTint">@color/fab_background_light</item>
+        <item name="tint">@color/fab_icon_light</item>
     </style>
 
 </resources>

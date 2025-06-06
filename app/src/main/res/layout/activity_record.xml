@@ -4,94 +4,156 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="?attr/android:colorBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:translationY="0dp">
+        android:elevation="4dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_record"
             app:title="@string/bar_title_record"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/gray_dark"
+            android:layout_height="56dp"
+            android:background="@color/wii_blue"
             app:titleTextColor="@color/white"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            android:elevation="0dp" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray_dark">
+        android:background="@color/wii_blue_ultra_light"
+        android:paddingTop="16dp">
 
+        <!-- Selector de deportes - Cards redondeadas -->
         <LinearLayout
             android:id="@+id/lySports"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="@color/gray_light">
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="12dp"
+            android:background="@color/wii_blue_ultra_light">
 
-            <ImageView
-                android:id="@+id/ivBike"
+            <!-- Card Bicicleta -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/bike"
-                android:background="@color/gray_medium"
-                android:onClick="loadRunsBike"/>
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="loadRunsBike">
 
-            <ImageView
-                android:id="@+id/ivRollerSkate"
-                android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/rollerskate"
-                android:background="@color/gray_medium"
-                android:onClick="loadRunsRollerSkate"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@color/wii_gray_medium">
 
-            <ImageView
-                android:id="@+id/ivRunning"
+                    <ImageView
+                        android:id="@+id/ivBike"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/bike" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card Patines -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
-                android:layout_weight=".3"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/running"
-                android:background="@color/orange"
-                android:onClick="loadRunsRunning"/>
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="loadRunsRollerSkate">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@color/wii_gray_medium">
+
+                    <ImageView
+                        android:id="@+id/ivRollerSkate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/rollerskate" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Card Running - Seleccionada -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="loadRunsRunning">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@color/wii_blue">
+
+                    <ImageView
+                        android:id="@+id/ivRunning"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/running" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
+        <!-- Listado de carreras por deporte -->
         <LinearLayout
-            android:id="@+id/rlRecyclers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/gray_light">
+            android:layout_marginTop="8dp"
+            android:background="@drawable/card_radius_top"
+            android:elevation="2dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRecords"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="0dp">
-            </androidx.recyclerview.widget.RecyclerView>
+                android:padding="6dp"
+                android:clipToPadding="false"
+                android:scrollbars="vertical" />
+
         </LinearLayout>
     </LinearLayout>
 
+    <!-- FAB con estilo Wii -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fbHome"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="end|bottom"
         android:layout_marginRight="10dp"
-        android:backgroundTint="@color/salmon_dark"
         android:onClick="callHome"
         android:src="@drawable/camino"
+        app:maxImageSize="28dp"
+        style="@style/CustomFABStyle"
+        app:elevation="6dp"
         android:translationX="-20dp"
         android:translationY="-90dp"
-        app:maxImageSize="50dp" />
-
+        app:borderWidth="0dp" />
 </LinearLayout>

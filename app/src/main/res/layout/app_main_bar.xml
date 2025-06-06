@@ -13,12 +13,10 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolBar_main"
-            app:title="@string/bar_title"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/salmon_dark"
+            android:background="?attr/android:statusBarColor"
+            android:elevation="8dp"
             app:layout_scrollFlags="scroll|enterAlways"/>
-
     </com.google.android.material.appbar.AppBarLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
