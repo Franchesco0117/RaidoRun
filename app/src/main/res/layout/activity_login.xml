@@ -15,14 +15,14 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="30dp"
-        android:src="@mipmap/banner" />
+        android:src="@drawable/banner_login" />
 
     <TextView
         android:id="@+id/tvInvitation"
         style="@style/ViewCustom"
         android:layout_marginBottom="30dp"
         android:gravity="center_horizontal"
-        android:paddingTop="20dp"
+        android:paddingTop="10dp"
         android:text="@string/tv_login_title"
         android:textColor="@color/wii_blue"
         android:textStyle="bold" />

@@ -140,16 +140,6 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    public override fun onStart() {
-        super.onStart()
-        
-        val currentUser = FirebaseAuth.getInstance().currentUser
-
-        if (currentUser != null) {
-            goHome(currentUser.email.toString(), currentUser.providerId)
-        }
-    }
-
     private fun loginUser() {
         email = etEmail.text.toString()
         password = etPassword.text.toString()
