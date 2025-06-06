@@ -108,4 +108,16 @@
     <string name="alertDeleteRecordRaceTitle">Are you sure you want to delete this record?</string>
     <string name="alertDeleteRecordRaceDescription">This will permanently delete the record</string>
 
+    <!-- Onboarding Screen 1 -->
+    <string name="onboarding_title_1">Move your way</string>
+    <string name="onboarding_desc_1">Choose between running, biking, or skating and start your journey toward a more active life. You decide when, how, and where to train.</string>
+
+    <!-- Onboarding Screen 2 -->
+    <string name="onboarding_title_2">Every step counts</string>
+    <string name="onboarding_desc_2">Track your progress with maps, speed, stopwatch, and personalized goals. Beat your records and reach new levels in each sport.</string>
+
+    <!-- Onboarding Screen 3 -->
+    <string name="onboarding_title_3">Turn your workout into an achievement</string>
+    <string name="onboarding_desc_3">Earn medals, level up, and save your best moments with photos during your route. RaidoRun turns every run into an experience!</string>
+
 </resources>

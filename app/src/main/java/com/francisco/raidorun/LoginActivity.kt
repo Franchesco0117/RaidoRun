@@ -185,7 +185,11 @@ class LoginActivity : AppCompatActivity() {
                         "dateRegister" to dateRegister
                     ))
 
-                goHome(email, provider)
+                // For new users, go to OnBoarding first
+                userEmail = email
+                providerSession = provider
+                startActivity(Intent(this, com.francisco.raidorun.onboarding.OnBoardingActivity::class.java))
+                finish()
             } else {
                 Toast.makeText(this, "No se pudo crear el usuario", Toast.LENGTH_SHORT).show()
             }

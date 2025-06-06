@@ -15,7 +15,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
-    private val SPLASH_DELAY = 3000L // 3 seconds
+    private val SPLASH_DELAY = 4000L // 4 seconds
     private lateinit var auth: FirebaseAuth
     private var keepSplashOnScreen = true
 

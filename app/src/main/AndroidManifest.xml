@@ -58,6 +58,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".onboarding.OnBoardingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RaidoRun" />
     </application>
 
 </manifest>
