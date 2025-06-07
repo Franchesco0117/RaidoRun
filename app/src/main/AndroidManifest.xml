@@ -30,6 +30,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RaidoRun"
         tools:targetApi="31">
+        
+        <meta-data
+            android:name="com.google.android.gms.games.APP_ID"
+            android:value="@string/games_app_id" />
+            
         <activity
             android:name=".LoginActivity"
             android:exported="false"
@@ -57,11 +62,17 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:clearTaskOnLaunch="true" />
         <activity
             android:name=".onboarding.OnBoardingActivity"
             android:exported="false"
             android:theme="@style/Theme.RaidoRun" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key"/>
     </application>
 
 </manifest>

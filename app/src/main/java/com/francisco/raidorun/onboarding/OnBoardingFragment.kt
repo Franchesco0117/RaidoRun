@@ -1,4 +1,4 @@
-package com.example.raidorun.onboarding
+package com.francisco.raidorun.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">RaidhoRun</string>
 
+    <!-- Google Play Games Services -->
+    <string name="games_app_id">363596102596</string>
+
     <string name="tv_login_title">How far are you able to go?</string>
     <string name="et_email">Enter email address</string>
     <string name="et_password">Enter password</string>

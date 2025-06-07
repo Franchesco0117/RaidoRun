@@ -1,4 +1,4 @@
-package com.example.raidorun.onboarding
+package com.francisco.raidorun.onboarding
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

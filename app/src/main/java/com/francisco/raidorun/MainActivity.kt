@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Camera
+import android.graphics.Color
 import android.location.Location
 import android.location.LocationManager
 import android.media.Image
@@ -86,6 +87,14 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.RoundCap
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.common.hash.HashCode
@@ -101,7 +110,8 @@ import kotlin.math.max
 import kotlin.math.round
 import kotlin.text.get
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 
     companion object {
         lateinit var mainContext: Context
@@ -245,6 +255,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private var recMaxSpeedGold: Boolean = false
     private var recMaxSpeedSilver: Boolean = false
     private var recMaxSpeedBronze: Boolean = false
+
+    private lateinit var map: GoogleMap
+    private var mapCentered = true
+
+    private val LOCATION_PERMISSION_REQ_CODE = 1000
+
+    private lateinit var listPoints: Iterable<LatLng>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -499,12 +516,140 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         hidePopUpRun()
 
+        initMap()
+
         initTotals()
         initLevels()
         initMedals()
 
         initPreferences()
         recoveryPreferences()
+    }
+
+    private fun initMap() {
+        listPoints = arrayListOf()
+        (listPoints as ArrayList<LatLng>).clear()
+
+        createMapFragment()
+
+        var lyOpenerButton = findViewById<LinearLayout>(R.id.lyOpenerButton)
+        if (allPermissionGrantedGPS()) {
+            lyOpenerButton.isEnabled = true
+        } else {
+            lyOpenerButton.isEnabled = false
+        }
+    }
+
+    override fun onMyLocationButtonClick(): Boolean {
+        return false
+    }
+
+    override fun onMyLocationClick(p0: Location) {
+
+    }
+
+    private fun createMapFragment() {
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.fragmentMap) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+
+        googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
+        enableMyLocation()
+        map.setOnMyLocationButtonClickListener(this)
+        map.setOnMyLocationClickListener(this)
+        map.setOnMapLongClickListener { mapCentered = false }
+        map.setOnMapClickListener { mapCentered = false }
+
+        manageLocation()
+        centerMap (init_lt, init_ln)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            LOCATION_PERMISSION_REQ_CODE -> {
+                var lyOpenerButton = findViewById<LinearLayout>(R.id.lyOpenerButton)
+
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    lyOpenerButton.isEnabled = true
+                } else {
+                    var lyMap = findViewById<LinearLayout>(R.id.lyMap)
+                    if (lyMap.height > 0) {
+                        setHeightLinearLayout(lyMap, 0)
+
+                        var lyFragmentMap = findViewById<LinearLayout>(R.id.lyFragmentMap)
+                        lyFragmentMap.translationY = -300f
+
+                        var ivOpenClose = findViewById<ImageView>(R.id.ivOpenClose)
+                        ivOpenClose.setRotation(0f)
+                    }
+
+                    lyOpenerButton.isEnabled = false
+                }
+            }
+        }
+    }
+
+    private fun enableMyLocation() {
+        if (!::map.isInitialized) return
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissionLocation()
+            return
+        } else {
+            map.isMyLocationEnabled = true
+        }
+    }
+
+    fun changeTypeMap(v: View) {
+        var ivTypeMap = findViewById<ImageView>(R.id.ivTypeMap)
+        if (map.mapType == GoogleMap.MAP_TYPE_HYBRID){
+            map.mapType = GoogleMap.MAP_TYPE_NORMAL
+            ivTypeMap.setImageResource(R.drawable.ic_hybrid_map_type)
+        } else {
+            map.mapType = GoogleMap.MAP_TYPE_HYBRID
+            ivTypeMap.setImageResource(R.drawable.ic_normal_map_type)
+        }
+    }
+
+    fun callCenterMap(v: View) {
+        mapCentered = true
+        if (latitude == 0.0) {
+            centerMap(init_lt, init_ln)
+        } else {
+            centerMap(latitude, longitude)
+        }
+    }
+
+    fun callShowHideMap(v: View) {
+        if (allPermissionGrantedGPS()) {
+            var lyMap = findViewById<LinearLayout>(R.id.lyMap)
+            var lyFragmentMap = findViewById<LinearLayout>(R.id.lyFragmentMap)
+            var ivOpenClose = findViewById<ImageView>(R.id.ivOpenClose)
+
+            if (lyMap.height == 0) {
+                setHeightLinearLayout(lyMap, 850)
+                animateViewOfFloat(lyFragmentMap, "translationY",0f, 100)
+                ivOpenClose.setRotation(180f)
+            } else {
+                setHeightLinearLayout(lyMap, 0)
+                lyFragmentMap.translationY = -300f
+                ivOpenClose.setRotation(0f)
+            }
+        } else {
+            requestPermissionLocation()
+        }
+    }
+
+    private fun centerMap(lt: Double, ln: Double) {
+        val posMap = LatLng(lt, ln)
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(posMap, 16f), 1000, null)
     }
 
     private fun initTotals() {
@@ -1199,14 +1344,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvChrono.text = getString(R.string.init_stop_watch_value)
     }
 
-    fun Context.getThemeColor(attr: Int): Int {
-        val typedValue = TypedValue()
-        val theme = this.theme
-        theme.resolveAttribute(attr, typedValue, true)
-        return typedValue.data
-    }
-
-
     fun inflateIntervalMode(v: View) {
         val lyIntervalMode = findViewById<LinearLayout>(R.id.lyIntervalMode)
         val lyIntervalModeSpace = findViewById<LinearLayout>(R.id.lyIntervalModeSpace)
@@ -1234,7 +1371,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             TIME_RUNING = getSecFromWatch(tvRunningTime.text.toString())
 
         } else {
-            swIntervalMode.setTextColor(getThemeColor(com.google.android.material.R.attr.colorPrimary))
+            swIntervalMode.setTextColor(ContextCompat.getColor(this, R.color.wii_blue))
             setHeightLinearLayout(lyIntervalModeSpace, 0)
             lyIntervalMode.translationY = -200f
             animateViewOfFloat(tvChrono, "translationX", 0f, 500)
@@ -1255,7 +1392,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             setHeightLinearLayout(lyChallengesSpace, 500)
             animateViewOfFloat(lyChallenges, "translationY", 0f, 500)
         } else {
-            swChallenges.setTextColor(getThemeColor(com.google.android.material.R.attr.colorPrimary))
+            swChallenges.setTextColor(ContextCompat.getColor(this, R.color.wii_blue))
             setHeightLinearLayout(lyChallengesSpace, 0)
             lyChallenges.translationY = -100f
 
@@ -1631,11 +1768,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     updateSpeeds(distanceInterval)
                     refreshInterfaceData()
 
-                    //saveLocation(Location)
+                    saveLocation(location)
 
-                    //var newPos = LatLng (new_latitude, new_longitude)
-                    //(listPoints as ArrayList<LatLng>).add(newPos)
-                    //createPolyLines(listPoints)
+                    var newPos = LatLng (new_latitude, new_longitude)
+                    (listPoints as ArrayList<LatLng>).add(newPos)
+                    createPolyLines(listPoints)
 
                     checkMedals(distance, avgSpeed, maxSpeed)
                 }
@@ -1645,9 +1782,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         latitude = new_latitude
         longitude = new_longitude
 
-        /*
-        // condicional para centrar mapa
+        if (mapCentered == true) {
+            centerMap(latitude, longitude)
+        }
 
+        // Center Map
         if (minLatitude == null) {
             minLatitude = latitude
             maxLatitude = latitude
@@ -1669,7 +1808,42 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (location.latitude > maxAltitude!!) maxAltitude = location.altitude
             if (location.latitude > minAltitude!!) minAltitude = location.altitude
         }
-        */
+    }
+
+    private fun createPolyLines(listPosition: Iterable<LatLng>) {
+        val polyLineOptions = PolylineOptions()
+            .width(25f)
+            .color(ContextCompat.getColor(this, R.color.wii_blue))
+            .addAll(listPoints)
+
+        var polyLine = map.addPolyline(polyLineOptions)
+        polyLine.startCap = RoundCap()
+    }
+
+    private fun saveLocation(location: Location) {
+        var dirName = dateRun + startTimeRun
+        dirName = dirName.replace("/", "")
+        dirName = dirName.replace(":", "")
+
+        var docName = timeInSeconds.toString()
+        while (docName.length < 4) docName = "0" + docName
+
+        var ms: Boolean
+        ms = speed == maxSpeed && speed > 0
+
+        var dbLocation = FirebaseFirestore.getInstance()
+        dbLocation.collection("locations/$userEmail/$dirName").document(docName).set(hashMapOf(
+            "time" to SimpleDateFormat("HH:MM:SS").format(Date()),
+            "latitude" to location.latitude,
+            "longitude" to location.longitude,
+            "altitude" to location.altitude,
+            "hasAltitude" to location.hasAltitude(),
+            "speedFromGoogle" to location.speed,
+            "speedFromMe" to speed,
+            "maxSpeed" to ms,
+            "color" to tvChrono.currentTextColor
+
+        ))
     }
 
     private fun checkMedals(distance: Double, avgSpeed: Double, maxSpeed: Double) {
@@ -2031,8 +2205,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var saveAvgSpeed = roundNumber(avgSpeed.toString(), 1)
         var saveMaxSpeed = roundNumber(maxSpeed.toString(), 1)
 
-        //var centerLatitude = (minLatitude!! + maxLatitude!!) / 2
-        //var centerLongitude = (minLongitude!! + maxLongitude!!) / 2
+        var centerLatitude = (minLatitude!! + maxLatitude!!) / 2
+        var centerLongitude = (minLongitude!! + maxLongitude!!) / 2
 
         var medalsDistance = "none"
         var medalsAvgSpeed = "none"
@@ -2062,14 +2236,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             "distance" to saveDistance.toDouble(),
             "avgSpeed" to saveAvgSpeed.toDouble(),
             "maxSpeed" to saveMaxSpeed.toDouble(),
-            //"minAltitude" to minAltitude,
-            //"maxAltitude" to maxAltitude,
-            //"minLatitude" to minLatitude,
-            //"maxLatitude" to maxLatitude,
-            //"minLongitude" to minLongitude,
-            //"maxLongitude" to maxLongitude
-            //"centerLatitude" to centerLatitude,
-            //"centerLongitude" to centerLongitude,
+            "minAltitude" to minAltitude,
+            "maxAltitude" to maxAltitude,
+            "minLatitude" to minLatitude,
+            "maxLatitude" to maxLatitude,
+            "minLongitude" to minLongitude,
+            "maxLongitude" to maxLongitude,
+            "centerLatitude" to centerLatitude,
+            "centerLongitude" to centerLongitude,
             "medalDistance" to medalsDistance,
             "medalAvgSpeed" to medalsAvgSpeed,
             "medalMaxSpeed" to medalsMaxSpeed
@@ -2126,11 +2300,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         minLongitude = null
         maxLongitude = null
 
+        (listPoints as ArrayList<LatLng>).clear()
+
         challengeDistance = 0f
         challengeDuration = 0
 
         activatedGPS = true
         flagSavedLocation = false
+
     }
 
     private fun resetTimeView() {

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import com.example.raidorun.onboarding.OnBoardingAdapter
 import com.francisco.raidorun.MainActivity
 import com.francisco.raidorun.R
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator

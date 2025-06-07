@@ -479,19 +479,19 @@
                             android:orientation="vertical"
                             android:translationY="-300dp">
 
-                            <!--                            <fragment-->
-                            <!--                                android:id="@+id/fragmentMap"-->
-                            <!--                                android:name="com.google.android.gms.maps.SupportMapFragment"-->
-                            <!--                                android:layout_width="match_parent"-->
-                            <!--                                android:layout_height="420dp"-->
-                            <!--                                tools:context=".MainActivity"-->
-                            <!--                                map:mapType="normal"-->
-                            <!--                                map:uiCompass="false"-->
-                            <!--                                map:uiRotateGestures="true"-->
-                            <!--                                map:uiScrollGestures="true"-->
-                            <!--                                map:uiTiltGestures="true"-->
-                            <!--                                map:uiZoomControls="true"-->
-                            <!--                                map:uiZoomGestures="true"/>-->
+                            <fragment
+                                android:id="@+id/fragmentMap"
+                                android:name="com.google.android.gms.maps.SupportMapFragment"
+                                android:layout_width="match_parent"
+                                android:layout_height="420dp"
+                                tools:context=".MainActivity"
+                                map:mapType="normal"
+                                map:uiCompass="false"
+                                map:uiRotateGestures="true"
+                                map:uiScrollGestures="true"
+                                map:uiTiltGestures="true"
+                                map:uiZoomControls="true"
+                                map:uiZoomGestures="true"/>
 
                             <TextView
                                 android:id="@+id/tvMapCenter"
@@ -520,7 +520,7 @@
                                 android:layout_marginTop="-470dp"
                                 android:layout_marginRight="5dp"
                                 android:onClick="changeTypeMap"
-                                android:src="@drawable/map_type_normal"
+                                android:src="@drawable/ic_hybrid_map_type"
                                 android:translationZ="10dp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -2140,7 +2140,8 @@
                             android:onClick="shareRun"
                             android:src="@android:drawable/ic_menu_share"
                             app:borderWidth="0dp"
-                            app:maxImageSize="32dp" />
+                            app:maxImageSize="32dp"
+                            android:visibility="gone"/>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

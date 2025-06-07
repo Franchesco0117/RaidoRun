@@ -1,34 +1,26 @@
 package com.francisco.raidorun
 
+import android.app.Activity
 import android.content.Intent
-import android.credentials.CredentialManager
-import android.graphics.Color
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
-import android.window.OnBackInvokedDispatcher
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
+import android.widget.*
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.doOnTextChanged
-import androidx.credentials.GetCredentialRequest
-import androidx.transition.Visibility
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.coroutineScope
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.*
 import kotlin.properties.Delegates
 
 class LoginActivity : AppCompatActivity() {
@@ -47,153 +39,281 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var tvForgotPassword: TextView
     private lateinit var tvTermsConditions: TextView
     private lateinit var btnSignGoogle: Button
+    private lateinit var cbAccept: CheckBox
 
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var signInLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        initializeViews()
+        setupGoogleSignIn()
+        setupClickListeners()
+        setupTextChangedListeners()
+        setupActivityResultLauncher()
+    }
+
+    private fun initializeViews() {
         lyTermsConditions = findViewById(R.id.lyTemsConditions)
         lyTermsConditions.visibility = View.INVISIBLE
-
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         btnLogin = findViewById(R.id.btnLogin)
-        mAuth = FirebaseAuth.getInstance()
         tvForgotPassword = findViewById(R.id.tvForgotPassword)
         tvTermsConditions = findViewById(R.id.tvTermsConditions)
         btnSignGoogle = findViewById(R.id.btnSignGoogle)
+        cbAccept = findViewById(R.id.cbAcceptTermsConditions)
+        mAuth = FirebaseAuth.getInstance()
+    }
 
-        btnLogin.setOnClickListener {
-            loginUser()
-        }
+    private fun setupGoogleSignIn() {
+        try {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .requestProfile()
+                .build()
 
-        tvForgotPassword.setOnClickListener {
-            resetPassword()
-        }
+            googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        tvTermsConditions.setOnClickListener {
-            val intent = Intent(this, TermsConditionsActivity::class.java)
-            startActivity(intent)
-        }
-
-        btnSignGoogle.setOnClickListener {
-            signInGoogle()
-        }
-
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val startIntent = Intent(Intent.ACTION_MAIN)
-                startIntent.addCategory(Intent.CATEGORY_HOME)
-                startIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                startActivity(startIntent)
+            // Verificar la configuración actual
+            googleSignInClient.silentSignIn().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("GoogleSignIn", "Silent sign-in successful")
+                    val account = task.result
+                    account?.idToken?.let { token ->
+                        firebaseAuthWithGoogle(token)
+                    }
+                } else {
+                    Log.d("GoogleSignIn", "No silent sign-in available")
+                }
             }
-        })
-
-        manageLogin()
-        etEmail.doOnTextChanged { text, start, before, count -> manageLogin()}
-        etPassword.doOnTextChanged { text, start, before, count -> manageLogin()}
-    }
-
-    private fun signInGoogle() {
-        TODO("Not yet implemented")
-    }
-
-    private fun manageLogin() {
-        var email = etEmail.text.toString()
-        var password = etPassword.text.toString()
-
-        if (TextUtils.isEmpty(password) || !ValidateEmail.isEmail(email)) {
-            btnLogin.setBackgroundColor(ContextCompat.getColor(this, R.color.gray_medium))
-            btnLogin.isEnabled = false
-        } else {
-            btnLogin.setBackgroundColor(ContextCompat.getColor(this, R.color.green))
-            btnLogin.isEnabled = true
+        } catch (e: Exception) {
+            Log.e("GoogleSignIn", "Error setting up Google Sign-In", e)
+            Toast.makeText(this, "Error configurando Google Sign-In", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun resetPassword() {
-        var e = etEmail.text.toString() //trim()
+    private fun setupActivityResultLauncher() {
+        signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            Log.d("GoogleSignIn", "Activity result received: ${result.resultCode}")
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    try {
+                        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                        Log.d("GoogleSignIn", "Processing sign in result")
+                        try {
+                            val account = task.getResult(ApiException::class.java)
+                            Log.d("GoogleSignIn", "Google Sign In successful")
+                            account?.let {
+                                Log.d("GoogleSignIn", "Email: ${it.email}, ID Token present: ${it.idToken != null}")
+                                it.idToken?.let { token ->
+                                    firebaseAuthWithGoogle(token)
+                                } ?: run {
+                                    Log.e("GoogleSignIn", "ID Token is null")
+                                    Toast.makeText(this, "Error: No se pudo obtener el token", Toast.LENGTH_SHORT).show()
+                                }
+                            } ?: run {
+                                Log.e("GoogleSignIn", "Account object is null")
+                                Toast.makeText(this, "Error: No se pudo obtener la cuenta", Toast.LENGTH_SHORT).show()
+                            }
+                        } catch (e: ApiException) {
+                            Log.e("GoogleSignIn", "Google sign in failed. Code: ${e.statusCode}", e)
+                            Toast.makeText(this, "Error ${e.statusCode}: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
+                    } catch (e: Exception) {
+                        Log.e("GoogleSignIn", "Unexpected error", e)
+                        Toast.makeText(this, "Error inesperado: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                Activity.RESULT_CANCELED -> {
+                    Log.e("GoogleSignIn", "Sign in cancelled by user")
+                    Toast.makeText(this, "Inicio de sesión cancelado por el usuario", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Log.e("GoogleSignIn", "Unknown result code: ${result.resultCode}")
+                    Toast.makeText(this, "Error desconocido en el inicio de sesión", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
-        if (e.isEmpty()) {
-            Toast.makeText(this, "Enter a valid email", Toast.LENGTH_SHORT).show()
+    private fun setupClickListeners() {
+        btnLogin.setOnClickListener { loginUser() }
+        tvForgotPassword.setOnClickListener { resetPassword() }
+        tvTermsConditions.setOnClickListener {
+            startActivity(Intent(this, TermsConditionsActivity::class.java))
+        }
+        btnSignGoogle.setOnClickListener {
+            when {
+                lyTermsConditions.visibility == View.INVISIBLE -> {
+                    lyTermsConditions.visibility = View.VISIBLE
+                    Toast.makeText(this, "Aceptar los términos y reintentar", Toast.LENGTH_LONG).show()
+                }
+                cbAccept.isChecked -> signInWithGoogle()
+                else -> Toast.makeText(this, "Debes aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun setupTextChangedListeners() {
+        etEmail.doOnTextChanged { _, _, _, _ -> manageLoginButton() }
+        etPassword.doOnTextChanged { _, _, _, _ -> manageLoginButton() }
+    }
+
+    private fun signInWithGoogle() {
+        if (!::googleSignInClient.isInitialized) {
+            Log.e("GoogleSignIn", "Google Sign-In client not initialized")
+            setupGoogleSignIn()
             return
         }
 
-        val db = FirebaseFirestore.getInstance()
-        db.collection("users").whereEqualTo("user", e).get()
-            .addOnSuccessListener {documents ->
-                if (!documents.isEmpty) {
-                    mAuth.sendPasswordResetEmail(e).addOnCompleteListener {task ->
-                        if(task.isSuccessful) {
-                            Toast.makeText(this, "$e has receive an email to reset your password", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(this, "Error to send email", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                } else {
-                    Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show()
-                }
-            } .addOnFailureListener {
-                Toast.makeText(this, "Error when searching user", Toast.LENGTH_SHORT).show()
+        try {
+            Log.d("GoogleSignIn", "Starting Google Sign In process")
+            googleSignInClient.signOut().addOnCompleteListener {
+                val signInIntent = googleSignInClient.signInIntent
+                signInLauncher.launch(signInIntent)
             }
+        } catch (e: Exception) {
+            Log.e("GoogleSignIn", "Error launching sign in", e)
+            Toast.makeText(this, "Error al iniciar sesión con Google", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        Log.d("GoogleSignIn", "Starting Firebase auth with Google")
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        mAuth.signInWithCredential(credential)
+            .addOnSuccessListener { authResult ->
+                Log.d("GoogleSignIn", "Firebase auth successful")
+                val user = authResult.user
+                user?.let { firebaseUser ->
+                    val email = firebaseUser.email ?: return@let
+                    Log.d("GoogleSignIn", "User email: $email")
+                    saveUserToFirestore(email, "Google")
+                    goHome(email, "Google")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("GoogleSignIn", "Firebase auth failed", e)
+                Toast.makeText(this, "Error en la autenticación: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun saveUserToFirestore(email: String, provider: String) {
+        Log.d("GoogleSignIn", "Saving user to Firestore")
+        val dateRegister = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        FirebaseFirestore.getInstance().collection("users").document(email)
+            .set(hashMapOf(
+                "user" to email,
+                "dateRegister" to dateRegister,
+                "provider" to provider
+            ))
+            .addOnSuccessListener {
+                Log.d("GoogleSignIn", "User saved to Firestore successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e("GoogleSignIn", "Error saving user to Firestore", e)
+            }
+    }
+
+    private fun manageLoginButton() {
+        val emailText = etEmail.text.toString()
+        val passwordText = etPassword.text.toString()
+
+        btnLogin.isEnabled = !TextUtils.isEmpty(passwordText) && ValidateEmail.isEmail(emailText)
+        btnLogin.setBackgroundColor(
+            ContextCompat.getColor(this,
+                if (btnLogin.isEnabled) R.color.green else R.color.gray_medium
+            )
+        )
     }
 
     private fun loginUser() {
         email = etEmail.text.toString()
         password = etPassword.text.toString()
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
-            if (task.isSuccessful) {
-                goHome(email, "email")
-            } else {
-                if (lyTermsConditions.visibility == View.INVISIBLE) {
-                    lyTermsConditions.visibility = View.VISIBLE
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    goHome(email, "email")
                 } else {
-                    var cbAccept = findViewById<CheckBox>(R.id.cbAcceptTermsConditions)
-                    if (cbAccept.isChecked) {
-                        register("email")
-                    } else {
-                        Toast.makeText(this, "Tienes que aceptar los Terminos y Condiciones", Toast.LENGTH_SHORT).show()
+                    when {
+                        lyTermsConditions.visibility == View.INVISIBLE -> {
+                            lyTermsConditions.visibility = View.VISIBLE
+                        }
+                        cbAccept.isChecked -> register("email")
+                        else -> {
+                            Toast.makeText(this, "Tienes que aceptar los Términos y Condiciones", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
-        }
     }
 
-    private fun goHome(email: String, provider: String) {
-        userEmail = email
-        providerSession = provider
+    private fun resetPassword() {
+        val emailText = etEmail.text.toString()
 
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        if (emailText.isEmpty()) {
+            Toast.makeText(this, "Ingresa un email válido", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        FirebaseFirestore.getInstance().collection("users")
+            .whereEqualTo("user", emailText)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }
+
+                mAuth.sendPasswordResetEmail(emailText)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Toast.makeText(this, "Se ha enviado un email a $emailText para restablecer tu contraseña", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Error al enviar el email", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al buscar el usuario", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun register(provider: String) {
-        email = etEmail.text.toString()
-        password = etPassword.text.toString()
-
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {
-            if (it.isSuccessful) {
-                var dateRegister = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
-                var dbRegister = FirebaseFirestore.getInstance()
-                dbRegister.collection("users").document(email)
-                    .set(hashMapOf(
-                        "user" to email,
-                        "dateRegister" to dateRegister
-                    ))
-
-                // For new users, go to OnBoarding first
-                userEmail = email
-                providerSession = provider
-                startActivity(Intent(this, com.francisco.raidorun.onboarding.OnBoardingActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, "No se pudo crear el usuario", Toast.LENGTH_SHORT).show()
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    saveUserToFirestore(email, provider)
+                    startActivity(Intent(this, com.francisco.raidorun.onboarding.OnBoardingActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "No se pudo crear el usuario", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
     }
 
+    private fun goHome(email: String, provider: String) {
+        Log.d("GoogleSignIn", "Navigating to MainActivity")
+        userEmail = email
+        providerSession = provider
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val startIntent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
+        startActivity(startIntent)
+    }
 }

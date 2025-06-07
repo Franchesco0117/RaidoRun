@@ -65,9 +65,16 @@ dependencies {
     implementation(libs.firebase.database) //Firebase Database
 
     // Google - Credential Manager libraries
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
-    implementation(libs.googleid)
+    implementation platform('com.google.firebase:firebase-bom:32.7.2')
+    implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.android.gms:play-services-auth:21.0.0'
+    implementation 'androidx.credentials:credentials:1.2.0-alpha02' // Credential Manager (opcional)
+    implementation 'androidx.credentials:credentials-play-services-auth:1.2.0-alpha02' // Para Google ID
+
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:32.7.4')
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 
     // Seekbar circle
     implementation libs.circularseekbar
@@ -77,6 +84,8 @@ dependencies {
 
     // Google Maps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+
+
 
     // Notifications
     implementation "androidx.core:core-ktx:1.16.0"

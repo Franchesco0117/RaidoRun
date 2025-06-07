@@ -18,15 +18,15 @@ data class Runs(
     var maxSpeed: Double ?= null,
     var avgSpeed: Double ?= null,
 
-//    var minAltitude: Double ?= null,
-//    var maxAltitude: Double ?= null,
-//    var minLatitude: Double ?= null,
-//    var maxLatitude: Double ?= null,
-//    var minLongitude: Double ?= null,
-//    var maxLongitude: Double ?= null,
-//
-//    var centerLatitude: Double ?= null,
-//    var centerLongitude: Double ?= null,
+    var minAltitude: Double ?= null,
+    var maxAltitude: Double ?= null,
+    var minLatitude: Double ?= null,
+    var maxLatitude: Double ?= null,
+    var minLongitude: Double ?= null,
+    var maxLongitude: Double ?= null,
+
+    var centerLatitude: Double ?= null,
+    var centerLongitude: Double ?= null,
 
     var sport: String ?= null,
 

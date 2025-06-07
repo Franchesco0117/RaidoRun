@@ -48,7 +48,7 @@
         style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
         android:hint="@string/et_password"
         app:startIconDrawable="@drawable/ic_password"
-        app:endIconMode="clear_text">
+        app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPassword"
@@ -112,6 +112,7 @@
         android:textColor="?attr/colorSurface"
         android:textSize="18sp"
         android:elevation="8dp"
-        app:iconGravity="start" />
+        app:iconGravity="start"
+        android:visibility="gone"/>
 
 </LinearLayout>
