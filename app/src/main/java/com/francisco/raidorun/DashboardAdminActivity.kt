@@ -44,6 +44,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private lateinit var pieChartIntervalMode: PieChart
     private lateinit var barChartAverageDuration: BarChart
     private lateinit var barChartUserFrequency: HorizontalBarChart
+    private lateinit var pieChartTargetUsage: PieChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +63,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         pieChartIntervalMode = findViewById(R.id.pieChartIntervalMode)
         barChartAverageDuration = findViewById(R.id.barChartAverageDuration)
         barChartUserFrequency = findViewById(R.id.barChartUserFrequency)
+        pieChartTargetUsage = findViewById(R.id.pieChartTargetUsage)
         
         loadKpiRunsPieChart()
         loadActiveUsersBarChart()
@@ -70,6 +72,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         loadIntervalModePieChart()
         loadAverageDurationBarChart()
         loadUserFrequencyBarChart()
+        loadTargetUsagePieChart()
     }
 
     private fun initToolBar() {
@@ -668,6 +671,92 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             
             animateY(1000)
             invalidate()
+        }
+    }
+
+    private fun loadTargetUsagePieChart() {
+        val db = FirebaseFirestore.getInstance()
+        val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
+        var runsWithTarget = 0
+        var runsWithoutTarget = 0
+        var loadedCollections = 0
+
+        for (collection in collections) {
+            db.collection(collection)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val hasDistanceTarget = document.contains("distanceTarget") && 
+                                              document.get("distanceTarget") != null
+                        val hasDurationTarget = document.contains("challengeDuration") && 
+                                              document.getString("challengeDuration")?.isNotEmpty() == true
+                        
+                        if (hasDistanceTarget || hasDurationTarget) {
+                            runsWithTarget++
+                        } else {
+                            runsWithoutTarget++
+                        }
+                    }
+                    
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showTargetUsagePieChart(runsWithTarget, runsWithoutTarget)
+                    }
+                }
+                .addOnFailureListener {
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showTargetUsagePieChart(runsWithTarget, runsWithoutTarget)
+                    }
+                }
+        }
+    }
+
+    private fun showTargetUsagePieChart(runsWithTarget: Int, runsWithoutTarget: Int) {
+        val entries = ArrayList<PieEntry>()
+        val total = runsWithTarget + runsWithoutTarget
+        
+        if (total > 0) {
+            val withTargetPercentage = (runsWithTarget.toFloat() / total) * 100
+            val withoutTargetPercentage = (runsWithoutTarget.toFloat() / total) * 100
+            
+            entries.add(PieEntry(withTargetPercentage, "Con objetivo"))
+            entries.add(PieEntry(withoutTargetPercentage, "Sin objetivo"))
+            
+            val dataSet = PieDataSet(entries, "")
+            dataSet.colors = listOf(
+                Color.rgb(255, 193, 7),  // Amarillo para carreras con objetivo
+                Color.rgb(158, 158, 158)  // Gris para carreras sin objetivo
+            )
+            
+            val data = PieData(dataSet)
+            data.setValueFormatter(PercentFormatter(pieChartTargetUsage))
+            data.setValueTextSize(14f)
+            data.setValueTextColor(Color.WHITE)
+            
+            pieChartTargetUsage.apply {
+                this.data = data
+                description.isEnabled = false
+                setUsePercentValues(true)
+                setEntryLabelColor(Color.WHITE)
+                setEntryLabelTextSize(12f)
+                legend.textSize = 12f
+                legend.textColor = Color.BLACK
+                centerText = "Total: $total\ncarreras"
+                setCenterTextSize(14f)
+                setHoleColor(Color.TRANSPARENT)
+                
+                // Agregar detalle en el texto central
+                val withTargetText = "${runsWithTarget} con objetivo"
+                val withoutTargetText = "${runsWithoutTarget} sin objetivo"
+                centerText = "Total: $total carreras\n$withTargetText\n$withoutTargetText"
+                
+                animateY(1000)
+                invalidate()
+            }
+        } else {
+            pieChartTargetUsage.setNoDataText("No hay datos disponibles")
+            pieChartTargetUsage.invalidate()
         }
     }
 
