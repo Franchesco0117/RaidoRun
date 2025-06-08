@@ -12,7 +12,9 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -41,6 +43,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private lateinit var barChartExerciseTime: BarChart
     private lateinit var pieChartIntervalMode: PieChart
     private lateinit var barChartAverageDuration: BarChart
+    private lateinit var barChartUserFrequency: HorizontalBarChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +61,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         barChartExerciseTime = findViewById(R.id.barChartExerciseTime)
         pieChartIntervalMode = findViewById(R.id.pieChartIntervalMode)
         barChartAverageDuration = findViewById(R.id.barChartAverageDuration)
+        barChartUserFrequency = findViewById(R.id.barChartUserFrequency)
         
         loadKpiRunsPieChart()
         loadActiveUsersBarChart()
@@ -65,6 +69,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         loadExerciseTimeBarChart()
         loadIntervalModePieChart()
         loadAverageDurationBarChart()
+        loadUserFrequencyBarChart()
     }
 
     private fun initToolBar() {
@@ -562,6 +567,104 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                     }
                 }
             }
+            
+            animateY(1000)
+            invalidate()
+        }
+    }
+
+    private fun loadUserFrequencyBarChart() {
+        val db = FirebaseFirestore.getInstance()
+        val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
+        val userRunCounts = HashMap<String, Int>()
+        var loadedCollections = 0
+
+        for (collection in collections) {
+            db.collection(collection)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val user = document.getString("user") ?: continue
+                        userRunCounts[user] = (userRunCounts[user] ?: 0) + 1
+                    }
+                    
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        // Ordenar usuarios por cantidad de carreras (descendente)
+                        val sortedUsers = userRunCounts.entries
+                            .sortedByDescending { it.value }
+                            .take(10) // Mostrar solo los 10 usuarios más activos
+                        
+                        showUserFrequencyBarChart(sortedUsers)
+                    }
+                }
+                .addOnFailureListener {
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        val sortedUsers = userRunCounts.entries
+                            .sortedByDescending { it.value }
+                            .take(10)
+                        
+                        showUserFrequencyBarChart(sortedUsers)
+                    }
+                }
+        }
+    }
+
+    private fun showUserFrequencyBarChart(sortedUsers: List<Map.Entry<String, Int>>) {
+        val entries = ArrayList<BarEntry>()
+        val labels = ArrayList<String>()
+        
+        // Crear entradas para el gráfico
+        sortedUsers.forEachIndexed { index, entry ->
+            entries.add(BarEntry(index.toFloat(), entry.value.toFloat()))
+            // Simplificar el correo para la visualización (quitar el dominio)
+            labels.add(entry.key.substringBefore("@"))
+        }
+
+        val dataSet = BarDataSet(entries, "Carreras por usuario")
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        
+        val data = BarData(dataSet)
+        data.setValueTextSize(12f)
+        data.setValueFormatter(object : com.github.mikephil.charting.formatter.ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return value.toInt().toString()
+            }
+        })
+        
+        barChartUserFrequency.apply {
+            this.data = data
+            description.isEnabled = false
+            legend.isEnabled = false
+            setFitBars(true)
+            
+            // Configurar eje X (vertical en gráfico horizontal)
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                valueFormatter = IndexAxisValueFormatter(labels)
+                granularity = 1f
+                setDrawGridLines(false)
+                labelRotationAngle = 45f // Rotar etiquetas para mejor lectura
+                textSize = 10f
+            }
+            
+            // Configurar eje Y (horizontal en gráfico horizontal)
+            axisRight.isEnabled = false
+            axisLeft.apply {
+                axisMinimum = 0f
+                setDrawGridLines(true)
+                granularity = 1f
+                // Asegurar que solo se muestren valores enteros
+                valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return value.toInt().toString()
+                    }
+                }
+            }
+            
+            // Ajustar márgenes para las etiquetas
+            setExtraOffsets(10f, 10f, 30f, 30f)
             
             animateY(1000)
             invalidate()
