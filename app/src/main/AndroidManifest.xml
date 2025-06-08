@@ -69,6 +69,12 @@
             android:name=".onboarding.OnBoardingActivity"
             android:exported="false"
             android:theme="@style/Theme.RaidoRun" />
+        <activity
+            android:name=".DashboardAdminActivity"
+            android:exported="false"
+            android:theme="@style/Theme.RaidoRun"
+            android:launchMode="singleTop"
+            android:clearTaskOnLaunch="true" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

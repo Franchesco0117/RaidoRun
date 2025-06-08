@@ -299,12 +299,19 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goHome(email: String, provider: String) {
-        Log.d("GoogleSignIn", "Navigating to MainActivity")
         userEmail = email
         providerSession = provider
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
+        
+        // Check if user is admin
+        if (email == "admin@raidhorun.com") {
+            val intent = Intent(this, DashboardAdminActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        } else {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
         finish()
     }
 

@@ -35,4 +35,5 @@ data class Runs(
     var medalsDistance: String ?= null,
     var medalsAvgSpeed: String ?= null,
     var medalsMaxSpeed: String ?= null
+
 )

@@ -85,8 +85,6 @@ dependencies {
     // Google Maps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
 
-
-
     // Notifications
     implementation "androidx.core:core-ktx:1.16.0"
 
@@ -120,5 +118,8 @@ dependencies {
 
     // DotsIndicator
     implementation 'com.tbuonomo:dotsindicator:4.3'
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
 }

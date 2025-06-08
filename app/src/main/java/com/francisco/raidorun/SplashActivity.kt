@@ -40,10 +40,15 @@ class SplashActivity : AppCompatActivity() {
     private fun checkUserLoginStatus() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            // Usuario está logueado, inicializar variables y ir a MainActivity
+            // Usuario está logueado, inicializar variables y ir a MainActivity o DashboardAdminActivity
             userEmail = currentUser.email ?: ""
             providerSession = currentUser.providerId
-            startActivity(Intent(this, MainActivity::class.java))
+            
+            if (userEmail == "admin@raidhorun.com") {
+                startActivity(Intent(this, DashboardAdminActivity::class.java))
+            } else {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
         } else {
             // Usuario no está logueado, ir a LoginActivity
             startActivity(Intent(this, LoginActivity::class.java))

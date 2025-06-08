@@ -123,4 +123,10 @@
     <string name="onboarding_title_3">Turn your workout into an achievement</string>
     <string name="onboarding_desc_3">Earn medals, level up, and save your best moments with photos during your route. RaidoRun turns every run into an experience!</string>
 
+    <!-- Admin Dashboard -->
+    <string name="users">Users</string>
+    <string name="statistics">Statistics</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="admin_dashboard">Admin Dashboard</string>
+
 </resources>
