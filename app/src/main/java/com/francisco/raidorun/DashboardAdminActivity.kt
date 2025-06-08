@@ -1,6 +1,7 @@
 package com.francisco.raidorun
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -19,6 +20,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -37,6 +39,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private lateinit var barChartActiveUsers: BarChart
     private lateinit var barChartKilometers: BarChart
     private lateinit var barChartExerciseTime: BarChart
+    private lateinit var pieChartIntervalMode: PieChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,11 +55,13 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         barChartActiveUsers = findViewById(R.id.barChartActiveUsers)
         barChartKilometers = findViewById(R.id.barChartKilometers)
         barChartExerciseTime = findViewById(R.id.barChartExerciseTime)
+        pieChartIntervalMode = findViewById(R.id.pieChartIntervalMode)
         
         loadKpiRunsPieChart()
         loadActiveUsersBarChart()
         loadKilometersBarChart()
         loadExerciseTimeBarChart()
+        loadIntervalModePieChart()
     }
 
     private fun initToolBar() {
@@ -387,6 +392,83 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             
             animateY(1000)
             invalidate()
+        }
+    }
+
+    private fun loadIntervalModePieChart() {
+        val db = FirebaseFirestore.getInstance()
+        val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
+        var intervalModeCount = 0
+        var normalModeCount = 0
+        var loadedCollections = 0
+
+        for (collection in collections) {
+            db.collection(collection)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val isIntervalMode = document.getBoolean("intervalMode") ?: false
+                        if (isIntervalMode) {
+                            intervalModeCount++
+                        } else {
+                            normalModeCount++
+                        }
+                    }
+                    
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showIntervalModePieChart(intervalModeCount, normalModeCount)
+                    }
+                }
+                .addOnFailureListener {
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showIntervalModePieChart(intervalModeCount, normalModeCount)
+                    }
+                }
+        }
+    }
+
+    private fun showIntervalModePieChart(intervalModeCount: Int, normalModeCount: Int) {
+        val entries = ArrayList<PieEntry>()
+        val total = intervalModeCount + normalModeCount
+        
+        if (total > 0) {
+            val intervalPercentage = (intervalModeCount.toFloat() / total) * 100
+            val normalPercentage = (normalModeCount.toFloat() / total) * 100
+            
+            entries.add(PieEntry(intervalPercentage, "Modo Intervalos"))
+            entries.add(PieEntry(normalPercentage, "Modo Normal"))
+            
+            val dataSet = PieDataSet(entries, "")
+            dataSet.colors = listOf(
+                Color.rgb(104, 159, 56),  // Verde para intervalos
+                Color.rgb(3, 169, 244)     // Azul para normal
+            )
+            
+            val data = PieData(dataSet)
+            data.setValueFormatter(PercentFormatter(pieChartIntervalMode))
+            data.setValueTextSize(14f)
+            data.setValueTextColor(Color.WHITE)
+            
+            pieChartIntervalMode.apply {
+                this.data = data
+                description.isEnabled = false
+                setUsePercentValues(true)
+                setEntryLabelColor(Color.WHITE)
+                setEntryLabelTextSize(12f)
+                legend.textSize = 12f
+                legend.textColor = Color.BLACK
+                centerText = "Total: $total\ncarreras"
+                setCenterTextSize(14f)
+                setHoleColor(Color.TRANSPARENT)
+                animateY(1000)
+                invalidate()
+            }
+        } else {
+            // Si no hay datos, mostrar un mensaje o gráfico vacío
+            pieChartIntervalMode.setNoDataText("No hay datos disponibles")
+            pieChartIntervalMode.invalidate()
         }
     }
 
