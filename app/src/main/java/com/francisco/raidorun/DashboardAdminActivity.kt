@@ -11,12 +11,14 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -24,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashMap
+import kotlin.math.roundToInt
 
 class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,6 +35,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
     private lateinit var pieChartKpiRuns: PieChart
     private lateinit var barChartActiveUsers: BarChart
+    private lateinit var barChartKilometers: BarChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +49,11 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         pieChartKpiRuns = findViewById(R.id.pieChartKpiRuns)
         barChartActiveUsers = findViewById(R.id.barChartActiveUsers)
+        barChartKilometers = findViewById(R.id.barChartKilometers)
         
         loadKpiRunsPieChart()
         loadActiveUsersBarChart()
+        loadKilometersBarChart()
     }
 
     private fun initToolBar() {
@@ -168,6 +174,84 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             axisRight.isEnabled = false
             legend.isEnabled = false
             setFitBars(true)
+            animateY(1000)
+            invalidate()
+        }
+    }
+
+    private fun loadKilometersBarChart() {
+        val db = FirebaseFirestore.getInstance()
+        val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
+        val labels = listOf("Bicicleta", "Running", "RollerSkate")
+        val distances = mutableListOf(0.0, 0.0, 0.0)
+        
+        var loadedCollections = 0
+
+        for ((i, collection) in collections.withIndex()) {
+            db.collection(collection)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val distance = document.getDouble("distance") ?: 0.0
+                        distances[i] += distance
+                    }
+                    
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showKilometersBarChart(labels, distances)
+                    }
+                }
+                .addOnFailureListener {
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showKilometersBarChart(labels, distances)
+                    }
+                }
+        }
+    }
+
+    private fun showKilometersBarChart(labels: List<String>, distances: List<Double>) {
+        val entries = ArrayList<BarEntry>()
+        for (i in distances.indices) {
+            // Redondear a 1 decimal
+            val roundedDistance = (distances[i] * 10.0).roundToInt() / 10.0
+            entries.add(BarEntry(i.toFloat(), roundedDistance.toFloat()))
+        }
+
+        val dataSet = BarDataSet(entries, "Kilómetros")
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        
+        val data = BarData(dataSet)
+        data.setValueTextSize(12f)
+        data.setValueFormatter(object : com.github.mikephil.charting.formatter.ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return "${value}km"
+            }
+        })
+        
+        barChartKilometers.apply {
+            this.data = data
+            description.isEnabled = false
+            legend.isEnabled = false
+            setFitBars(true)
+            
+            // Configurar eje X
+            xAxis.apply {
+                valueFormatter = IndexAxisValueFormatter(labels)
+                position = XAxis.XAxisPosition.BOTTOM
+                granularity = 1f
+                setDrawGridLines(false)
+            }
+            
+            // Configurar eje Y derecho
+            axisRight.isEnabled = false
+            
+            // Configurar eje Y izquierdo
+            axisLeft.apply {
+                axisMinimum = 0f
+                setDrawGridLines(true)
+            }
+            
             animateY(1000)
             invalidate()
         }
