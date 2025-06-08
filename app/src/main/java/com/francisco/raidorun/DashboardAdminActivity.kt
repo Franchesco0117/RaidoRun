@@ -36,6 +36,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private lateinit var pieChartKpiRuns: PieChart
     private lateinit var barChartActiveUsers: BarChart
     private lateinit var barChartKilometers: BarChart
+    private lateinit var barChartExerciseTime: BarChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +51,12 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         pieChartKpiRuns = findViewById(R.id.pieChartKpiRuns)
         barChartActiveUsers = findViewById(R.id.barChartActiveUsers)
         barChartKilometers = findViewById(R.id.barChartKilometers)
+        barChartExerciseTime = findViewById(R.id.barChartExerciseTime)
         
         loadKpiRunsPieChart()
         loadActiveUsersBarChart()
         loadKilometersBarChart()
+        loadExerciseTimeBarChart()
     }
 
     private fun initToolBar() {
@@ -250,6 +253,136 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             axisLeft.apply {
                 axisMinimum = 0f
                 setDrawGridLines(true)
+            }
+            
+            animateY(1000)
+            invalidate()
+        }
+    }
+
+    private fun loadExerciseTimeBarChart() {
+        val db = FirebaseFirestore.getInstance()
+        val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, -7)
+        val sevenDaysAgo = SimpleDateFormat("yyyy/MM/dd").format(calendar.time)
+        
+        // Mapa para almacenar los minutos totales por día
+        val dailyMinutes = TreeMap<String, Int>()
+        var loadedCollections = 0
+
+        for (collection in collections) {
+            db.collection(collection)
+                .whereGreaterThanOrEqualTo("date", sevenDaysAgo)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val date = document.getString("date") ?: continue
+                        val duration = document.getString("duration") ?: continue
+                        
+                        // Convertir duración HH:mm:ss a minutos
+                        val minutes = durationToMinutes(duration)
+                        
+                        // Agregar al total del día
+                        dailyMinutes[date] = (dailyMinutes[date] ?: 0) + minutes
+                    }
+                    
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showExerciseTimeBarChart(dailyMinutes)
+                    }
+                }
+                .addOnFailureListener {
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        showExerciseTimeBarChart(dailyMinutes)
+                    }
+                }
+        }
+    }
+
+    private fun durationToMinutes(duration: String): Int {
+        val parts = duration.split(":")
+        if (parts.size != 3) return 0
+        
+        return try {
+            val hours = parts[0].toInt()
+            val minutes = parts[1].toInt()
+            val seconds = parts[2].toInt()
+            
+            hours * 60 + minutes + (seconds / 60)
+        } catch (e: NumberFormatException) {
+            0
+        }
+    }
+
+    private fun formatMinutesToHoursAndMinutes(minutes: Int): String {
+        val hours = minutes / 60
+        val mins = minutes % 60
+        return if (hours > 0) {
+            "${hours}h ${mins}m"
+        } else {
+            "${mins}m"
+        }
+    }
+
+    private fun showExerciseTimeBarChart(dailyMinutes: TreeMap<String, Int>) {
+        val entries = ArrayList<BarEntry>()
+        val dateLabels = ArrayList<String>()
+        
+        // Obtener los últimos 7 días
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
+        val dayFormat = SimpleDateFormat("EEE", Locale("es", "ES"))
+        
+        for (i in 6 downTo 0) {
+            calendar.add(Calendar.DAY_OF_YEAR, -i)
+            val date = dateFormat.format(calendar.time)
+            val dayName = dayFormat.format(calendar.time).capitalize()
+            
+            entries.add(BarEntry((6 - i).toFloat(), (dailyMinutes[date] ?: 0).toFloat()))
+            dateLabels.add(dayName)
+            
+            calendar.add(Calendar.DAY_OF_YEAR, i) // Restaurar la fecha
+        }
+
+        val dataSet = BarDataSet(entries, "Tiempo de ejercicio")
+        dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
+        
+        val data = BarData(dataSet)
+        data.setValueTextSize(12f)
+        data.setValueFormatter(object : com.github.mikephil.charting.formatter.ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return formatMinutesToHoursAndMinutes(value.toInt())
+            }
+        })
+        
+        barChartExerciseTime.apply {
+            this.data = data
+            description.isEnabled = false
+            legend.isEnabled = false
+            setFitBars(true)
+            
+            // Configurar eje X
+            xAxis.apply {
+                valueFormatter = IndexAxisValueFormatter(dateLabels)
+                position = XAxis.XAxisPosition.BOTTOM
+                granularity = 1f
+                setDrawGridLines(false)
+            }
+            
+            // Configurar eje Y derecho
+            axisRight.isEnabled = false
+            
+            // Configurar eje Y izquierdo
+            axisLeft.apply {
+                axisMinimum = 0f
+                setDrawGridLines(true)
+                valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return formatMinutesToHoursAndMinutes(value.toInt())
+                    }
+                }
             }
             
             animateY(1000)
