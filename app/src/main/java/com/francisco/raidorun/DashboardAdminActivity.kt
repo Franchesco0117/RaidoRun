@@ -40,6 +40,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private lateinit var barChartKilometers: BarChart
     private lateinit var barChartExerciseTime: BarChart
     private lateinit var pieChartIntervalMode: PieChart
+    private lateinit var barChartAverageDuration: BarChart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +57,14 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         barChartKilometers = findViewById(R.id.barChartKilometers)
         barChartExerciseTime = findViewById(R.id.barChartExerciseTime)
         pieChartIntervalMode = findViewById(R.id.pieChartIntervalMode)
+        barChartAverageDuration = findViewById(R.id.barChartAverageDuration)
         
         loadKpiRunsPieChart()
         loadActiveUsersBarChart()
         loadKilometersBarChart()
         loadExerciseTimeBarChart()
         loadIntervalModePieChart()
+        loadAverageDurationBarChart()
     }
 
     private fun initToolBar() {
@@ -469,6 +472,99 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             // Si no hay datos, mostrar un mensaje o gráfico vacío
             pieChartIntervalMode.setNoDataText("No hay datos disponibles")
             pieChartIntervalMode.invalidate()
+        }
+    }
+
+    private fun loadAverageDurationBarChart() {
+        val db = FirebaseFirestore.getInstance()
+        val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
+        val labels = listOf("Bicicleta", "Running", "RollerSkate")
+        val totalMinutes = mutableListOf(0L, 0L, 0L)
+        val counts = mutableListOf(0, 0, 0)
+        var loadedCollections = 0
+
+        for ((i, collection) in collections.withIndex()) {
+            db.collection(collection)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        val duration = document.getString("duration") ?: continue
+                        val minutes = durationToMinutes(duration)
+                        totalMinutes[i] += minutes
+                        counts[i]++
+                    }
+                    
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        val averages = totalMinutes.zip(counts) { total, count ->
+                            if (count > 0) total.toFloat() / count else 0f
+                        }
+                        showAverageDurationBarChart(labels, averages)
+                    }
+                }
+                .addOnFailureListener {
+                    loadedCollections++
+                    if (loadedCollections == collections.size) {
+                        val averages = totalMinutes.zip(counts) { total, count ->
+                            if (count > 0) total.toFloat() / count else 0f
+                        }
+                        showAverageDurationBarChart(labels, averages)
+                    }
+                }
+        }
+    }
+
+    private fun showAverageDurationBarChart(labels: List<String>, averageMinutes: List<Float>) {
+        val entries = ArrayList<BarEntry>()
+        for (i in averageMinutes.indices) {
+            entries.add(BarEntry(i.toFloat(), averageMinutes[i]))
+        }
+
+        val dataSet = BarDataSet(entries, "Duración promedio")
+        dataSet.colors = listOf(
+            Color.rgb(233, 30, 99),  // Rosa para Bicicleta
+            Color.rgb(156, 39, 176),  // Morado para Running
+            Color.rgb(255, 193, 7)    // Amarillo para RollerSkate
+        )
+        
+        val data = BarData(dataSet)
+        data.setValueTextSize(12f)
+        data.setValueFormatter(object : com.github.mikephil.charting.formatter.ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return formatMinutesToHoursAndMinutes(value.toInt())
+            }
+        })
+        
+        barChartAverageDuration.apply {
+            this.data = data
+            description.isEnabled = false
+            legend.isEnabled = false
+            setFitBars(true)
+            
+            // Configurar eje X
+            xAxis.apply {
+                valueFormatter = IndexAxisValueFormatter(labels)
+                position = XAxis.XAxisPosition.BOTTOM
+                granularity = 1f
+                setDrawGridLines(false)
+            }
+            
+            // Configurar eje Y derecho
+            axisRight.isEnabled = false
+            
+            // Configurar eje Y izquierdo
+            axisLeft.apply {
+                axisMinimum = 0f
+                setDrawGridLines(true)
+                valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return formatMinutesToHoursAndMinutes(value.toInt())
+                    }
+                }
+            }
+            
+            animateY(1000)
+            invalidate()
         }
     }
 
