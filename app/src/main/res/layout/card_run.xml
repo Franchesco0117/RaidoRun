@@ -32,7 +32,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif-light"
-                android:text="05-OCT-2021"
+                android:text="16-JUL-2004"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="12sp" />
@@ -174,7 +174,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_marginEnd="5dp"
                             android:fontFamily="sans-serif-light"
-                            android:text="05-OCT-2021"
+                            android:text="16-JUL-2004"
                             android:textAlignment="textEnd"
                             android:textColor="?attr/android:textColorPrimary"
                             android:textSize="12sp" />

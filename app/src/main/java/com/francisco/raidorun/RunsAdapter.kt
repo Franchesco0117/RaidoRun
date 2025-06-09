@@ -100,8 +100,8 @@ class RunsAdapter(
         holder.tvDistanceRun.setText(run.distance.toString())
         holder.tvHeaderDistance.setText(run.distance.toString() + "KM")
 
-        // holder.tvMaxUnevennessRun.setText(run.maxAltitude.toString())
-        // holder.tvMinUnevennessRun.setText(run.minAltitude.toString())
+        holder.tvMaxUnevennessRun.setText(run.maxAltitude.toString())
+        holder.tvMinUnevennessRun.setText(run.minAltitude.toString())
 
         holder.tvAvgSpeedRun.setText(run.avgSpeed.toString())
         holder.tvHeaderAvgSpeed.setText(run.avgSpeed.toString() + "KM/H")

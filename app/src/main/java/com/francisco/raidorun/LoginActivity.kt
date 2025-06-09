@@ -93,7 +93,7 @@ class LoginActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             Log.e("GoogleSignIn", "Error setting up Google Sign-In", e)
-            Toast.makeText(this, "Error configurando Google Sign-In", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error setting Google Sign-In", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -114,11 +114,11 @@ class LoginActivity : AppCompatActivity() {
                                     firebaseAuthWithGoogle(token)
                                 } ?: run {
                                     Log.e("GoogleSignIn", "ID Token is null")
-                                    Toast.makeText(this, "Error: No se pudo obtener el token", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(this, "Error: could not get ID Token", Toast.LENGTH_SHORT).show()
                                 }
                             } ?: run {
                                 Log.e("GoogleSignIn", "Account object is null")
-                                Toast.makeText(this, "Error: No se pudo obtener la cuenta", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Error: could not get account", Toast.LENGTH_SHORT).show()
                             }
                         } catch (e: ApiException) {
                             Log.e("GoogleSignIn", "Google sign in failed. Code: ${e.statusCode}", e)
@@ -126,16 +126,16 @@ class LoginActivity : AppCompatActivity() {
                         }
                     } catch (e: Exception) {
                         Log.e("GoogleSignIn", "Unexpected error", e)
-                        Toast.makeText(this, "Error inesperado: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Unexpected error: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
                 Activity.RESULT_CANCELED -> {
                     Log.e("GoogleSignIn", "Sign in cancelled by user")
-                    Toast.makeText(this, "Inicio de sesión cancelado por el usuario", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Login cancel by user", Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     Log.e("GoogleSignIn", "Unknown result code: ${result.resultCode}")
-                    Toast.makeText(this, "Error desconocido en el inicio de sesión", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Unexpected result code: ${result.resultCode}", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -151,10 +151,10 @@ class LoginActivity : AppCompatActivity() {
             when {
                 lyTermsConditions.visibility == View.INVISIBLE -> {
                     lyTermsConditions.visibility = View.VISIBLE
-                    Toast.makeText(this, "Aceptar los términos y reintentar", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, R.string.accept_terms_and_retry, Toast.LENGTH_LONG).show()
                 }
                 cbAccept.isChecked -> signInWithGoogle()
-                else -> Toast.makeText(this, "Debes aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
+                else -> Toast.makeText(this, R.string.must_accept_terms, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -179,7 +179,7 @@ class LoginActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             Log.e("GoogleSignIn", "Error launching sign in", e)
-            Toast.makeText(this, "Error al iniciar sesión con Google", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.google_sign_in_error, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -199,7 +199,7 @@ class LoginActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 Log.e("GoogleSignIn", "Firebase auth failed", e)
-                Toast.makeText(this, "Error en la autenticación: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "${R.string.auth_error} ${e.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -247,7 +247,7 @@ class LoginActivity : AppCompatActivity() {
                         }
                         cbAccept.isChecked -> register("email")
                         else -> {
-                            Toast.makeText(this, "Tienes que aceptar los Términos y Condiciones", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, R.string.must_accept_terms_and_conditions, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -258,7 +258,7 @@ class LoginActivity : AppCompatActivity() {
         val emailText = etEmail.text.toString()
 
         if (emailText.isEmpty()) {
-            Toast.makeText(this, "Ingresa un email válido", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.enter_valid_email, Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -267,21 +267,21 @@ class LoginActivity : AppCompatActivity() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.user_not_found, Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }
 
                 mAuth.sendPasswordResetEmail(emailText)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            Toast.makeText(this, "Se ha enviado un email a $emailText para restablecer tu contraseña", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "${R.string.password_reset_email_sent} $emailText ${R.string.password_reset_email_reset}", Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(this, "Error al enviar el email", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, R.string.error_sending_email, Toast.LENGTH_SHORT).show()
                         }
                     }
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Error al buscar el usuario", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.error_finding_user, Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -293,7 +293,7 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(Intent(this, com.francisco.raidorun.onboarding.OnBoardingActivity::class.java))
                     finish()
                 } else {
-                    Toast.makeText(this, "No se pudo crear el usuario", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.user_creation_failed, Toast.LENGTH_SHORT).show()
                 }
             }
     }

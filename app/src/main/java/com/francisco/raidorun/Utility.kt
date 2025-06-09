@@ -246,12 +246,12 @@ object Utility {
         dbRun.collection("runs$sport").document(idRun)
             .delete()
             .addOnSuccessListener {
-                Snackbar.make(layout, "Registro borrado", Snackbar.LENGTH_LONG).setAction("OK") {
+                Snackbar.make(layout, R.string.record_deleted, Snackbar.LENGTH_LONG).setAction(R.string.ok) {
                     layout.setBackgroundColor(Color.CYAN)
                 }.show()
             }
             .addOnFailureListener {
-                Snackbar.make(layout, "Error al borrar registro", Snackbar.LENGTH_LONG).setAction("OK") {
+                Snackbar.make(layout, R.string.error_deleting_record, Snackbar.LENGTH_LONG).setAction(R.string.ok) {
                     layout.setBackgroundColor(Color.CYAN)
                 }.show()
             }

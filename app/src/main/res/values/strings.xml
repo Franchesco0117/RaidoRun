@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">RaidhoRun</string>
 
-    <!-- Google Play Games Services -->
     <string name="games_app_id">363596102596</string>
 
     <string name="tv_login_title">How far are you able to go?</string>
@@ -23,22 +22,23 @@
     <string name="terms2">Praesent arcu nisi, auctor quis tempor id, vehicula non nulla. Sed a fermentum tellus, quis pharetra lorem. Fusce vehicula libero in ultricies varius. Suspendisse vel velit tortor. Aliquam non nisi eget lectus tempor consectetur sed in magna. Nullam tincidunt, nibh ut sodales suscipit, ante est luctus purus, sed pellentesque ipsum massa et quam. Proin sed sapien ultrices ex aliquet elementum sed et erat. Sed tincidunt felis sapien, a suscipit massa cursus et. Phasellus auctor tellus ac neque maximus accumsan. Morbi sit amet odio nec sapien pharetra elementum maximus id odio. Integer laoreet, neque id efficitur auctor, magna massa consequat justo, quis vehicula ipsum massa at sem. Morbi in ornare sapien, in luctus mauris. </string>
     <string name="terms3">Sed id libero auctor, lacinia lectus a, consequat nisl. Nam quis suscipit purus. Fusce at congue quam. Etiam congue imperdiet bibendum. Etiam at porttitor ipsum. Donec consectetur sapien in neque tempus tempus. Sed vulputate rutrum ultrices. Praesent in est leo. Suspendisse euismod purus id urna tempus pellentesque. Praesent condimentum nisl sit amet purus pulvinar sagittis. Cras purus felis, hendrerit et ornare ut, molestie id orci. Integer dictum consequat leo, id pretium urna tempus et. Donec nibh ante, laoreet id lorem vitae, vestibulum sollicitudin lorem. </string>
 
-    <string name="bar_title">Raido Run</string>
+    <string name="skip_onboarding">SKIP</string>
+
+    <string name="bar_title">Home</string>
     <string name="menu_running">Running</string>
-    <string name="menu_record">Record</string>
-    <string name="menu_premium">Become Premium</string>
+    <string name="menu_record">History</string>
     <string name="menu_clearPreferences">Reset Preferences</string>
     <string name="menu_signOut">Sign Out</string>
-    <string name="menu_course">Want to learn how to build apps?</string>
 
     <string name="user">blabla@raidorun.com</string>
     <string name="nav_hi">He who moves his legs, moves his heart. Move it, heart!</string>
     <string name="level">Level</string>
     <string name="time">4d 03:56:23</string>
     <string name="distance">DISTANCE</string>
-    <string name="progreso_distancia">30%</string>
+    <string name="distance_progress">30%</string>
     <string name="runs">RUNS</string>
-    <string name="progreso_runs">5/10</string>
+    <string name="progress_runs">5/10</string>
+    <string name="total_distance">35.6/500 KM</string>
 
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
@@ -57,6 +57,19 @@
     <string name="orderby_avgspeedAZ">Avg. Speed (Lowest first)</string>
     <string name="orderby_maxspeedAZ">Max. Speed (Lowest first)</string>
 
+    <string name="title_distance">DISTANCE</string>
+    <string name="current_distance">0.0</string>
+    <string name="current_distance_ux">KMs.</string>
+    <string name="record_distance">20.16</string>
+    <string name="title_avg_speed">AVG. SPEED</string>
+    <string name="current_avg_speed">0.0</string>
+    <string name="current_avg_speed_ux">KM/H</string>
+    <string name="record_avg_speed">13.5</string>
+    <string name="title_speed">SPEED</string>
+    <string name="current_speed">0.0</string>
+    <string name="current_speed_ux">KM/H</string>
+    <string name="record_speed">16.3</string>
+
     <string name="start">START</string>
     <string name="stop">STOP</string>
     <string name="finish">Finish</string>
@@ -66,13 +79,33 @@
     <string name="walking_clock">00:00</string>
     <string name="init_stop_watch_value">00:00:00</string>
 
-    <string name="hard_volumen">High-Energy Music Volume</string>
-    <string name="soft_volumen">Relaxing Music Volume</string>
-    <string name="notification_volumen">Notification Volume</string>
-    <string name="hard_position">00:00:00</string>
-    <string name="hard_duration">01:00:00</string>
-    <string name="soft_position">00:00:00</string>
-    <string name="soft_duration">01:00:00</string>
+    <string name="map_center_location">CENTER</string>
+    <string name="title_map">MAP</string>
+
+    <string name="interval_mode">Interval Run</string>
+    <string name="interval_duration">INTERVAL DURATION</string>
+    <string name="interval_duration_UX">MIN.</string>
+    <string name="running_time">02:30</string>
+    <string name="running_time_UX">RUN</string>
+    <string name="walking_time_div"> / </string>
+    <string name="walking_time">02:30</string>
+    <string name="walking_time_UX">WALK</string>
+
+    <string name="challenge_mode">Set Goal</string>
+    <string name="challenge_duration">DURATION</string>
+    <string name="challenge_duration_HHMM">:</string>
+    <string name="challenge_duration_MMSS">:</string>
+    <string name="challenge_duration_UX">HH:MM:SS</string>
+    <string name="challenge_distance">DISTANCE</string>
+    <string name="challenge_distance_UX">KM</string>
+
+    <string name="notify_goal_reached">Notify When Goal Is Reached</string>
+    <string name="auto_finish">Auto-End Run</string>
+    <string name="title_total_time">Total Time</string>
+    <string name="total_time">13:24:58</string>
+
+    <string name="title_popup">Run Summary</string>
+    <string name="title_mode_popup">Mode</string>
 
     <string name="PopUpTotalRuns">Runs: </string>
     <string name="PopUpTotalDistance">Total Distance (km): </string>
@@ -87,6 +120,10 @@
     <string name="PopUpMaxSpeedTitle">MAX. SPEED</string>
     <string name="PopUpUnevennessTitle">ELEVATION</string>
 
+    <string name="duration_run">00:00:00</string>
+    <string name="challenge_duration_run">01:00:00</string>
+    <string name="interval_duration_run">5min (1:45 / 3:15)</string>
+
     <string name="textNull"></string>
     <string name="textNoData">-</string>
 
@@ -100,7 +137,7 @@
     <string name="acceptActivationGPS">Activate</string>
 
     <string name="alertClearPreferencesTitle">Do you want to clear your running preferences?</string>
-    <string name="alertClearPreferencesDescription">We will reset your music and workout settings (mode and intervals) from your last session. Do not worry, nothing major.</string>
+    <string name="alertClearPreferencesDescription">We will reset your music and workout settings (mode and intervals) from your last session.</string>
 
     <string name="CardAvgSpeedTitle">AVG. SPEED</string>
     <string name="CardMaxSpeedTitle">MAX. SPEED</string>
@@ -123,10 +160,52 @@
     <string name="onboarding_title_3">Turn your workout into an achievement</string>
     <string name="onboarding_desc_3">Earn medals, level up, and save your best moments with photos during your route. RaidoRun turns every run into an experience!</string>
 
+    <string name="permissions_required">You must provide permissions</string>
+    <string name="image_saved">Image saved</string>
+    <string name="image_save_error">Error saving image</string>
+    <string name="ok">OK</string>
+
+    <string name="exit_title">Exit App</string>
+    <string name="exit_message">Are you sure you want to exit?</string>
+    <string name="positive_yes">Yes</string>
+    <string name="negative_no">No</string>
+
+    <string name="settings_reset">Your settings have been reset</string>
+    <string name="new_personal_records">Personal Records</string>
+    <string name="new_personal_record_notifications">New personal record notifications</string>
+    <string name="personal_best_in">Personal best in</string>
+    <string name="distance_covered">distance covered</string>
+    <string name="average_speed">average speed</string>
+    <string name="maximum_speed_reached">maximum speed reached</string>
+
+    <string name="accept_terms_and_retry">Accept the terms and retry</string>
+    <string name="must_accept_terms">You must accept the terms and conditions</string>
+    <string name="google_sign_in_error">Error signing in with Google</string>
+    <string name="auth_error">Authentication error:</string>
+    <string name="must_accept_terms_and_conditions">You have to accept the Terms and Conditions</string>
+    <string name="enter_valid_email">Enter a valid email</string>
+    <string name="user_not_found">User not found</string>
+    <string name="password_reset_email_sent">An email has been sent to</string>
+    <string name="password_reset_email_reset">to reset your password</string>
+    <string name="error_sending_email">Error sending email</string>
+    <string name="error_finding_user">Error finding user</string>
+    <string name="user_creation_failed">Could not create user</string>
+
+    <string name="record_deleted">Record deleted</string>
+    <string name="error_deleting_record">Error deleting record</string>
+
     <!-- Admin Dashboard -->
     <string name="users">Users</string>
     <string name="statistics">Statistics</string>
     <string name="sign_out">Sign Out</string>
     <string name="admin_dashboard">Admin Dashboard</string>
+    <string name="first_kpi">Total Completed Runs by Type</string>
+    <string name="second_kpi">Active Users This Week</string>
+    <string name="third_kpi">Kilometers Covered by Sport</string>
+    <string name="fourth_kpi">Total Exercise Time Per Day</string>
+    <string name="fifth_kpi">Run Distribution by Mode</string>
+    <string name="sixth_kpi">Average Duration by Sport</string>
+    <string name="seventh_kpi">Most Active Users</string>
+    <string name="eighth_kpi">Goal Usage in Runs</string>
 
 </resources>

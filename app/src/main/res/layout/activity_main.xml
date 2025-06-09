@@ -37,7 +37,7 @@
                     android:id="@+id/rlCurrentDistance"
                     android:layout_width="120dp"
                     android:layout_height="120dp"
-                    android:layout_gravity="center|right"
+                    android:layout_gravity="center|end"
                     android:layout_margin="5dp"
                     android:orientation="vertical">
 
@@ -119,7 +119,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:gravity="center"
-                            android:text="DISTANCE"
+                            android:text="@string/title_distance"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textSize="12sp" />
@@ -129,7 +129,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30dp"
-                            android:text="0.0"
+                            android:text="@string/current_distance"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textSize="30sp" />
@@ -139,7 +139,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="70dp"
-                            android:text="KMs."
+                            android:text="@string/current_distance_ux"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textSize="12sp" />
@@ -150,7 +150,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="93dp"
                             android:layout_marginRight="26dp"
-                            android:text="20.16"
+                            android:text="@string/record_distance"
                             android:textAlignment="textEnd"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textSize="14sp" />
@@ -223,7 +223,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:gravity="center"
-                            android:text="AVG SPEED"
+                            android:text="@string/title_avg_speed"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textSize="10sp" />
@@ -233,7 +233,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30dp"
-                            android:text="0.0"
+                            android:text="@string/current_avg_speed"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textSize="30sp" />
@@ -243,7 +243,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="70dp"
-                            android:text="KM/H"
+                            android:text="@string/current_avg_speed_ux"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textSize="12sp" />
@@ -254,7 +254,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="93dp"
                             android:layout_marginRight="26dp"
-                            android:text="13.5"
+                            android:text="@string/record_avg_speed"
                             android:textAlignment="textEnd"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textSize="14sp" />
@@ -347,7 +347,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
                             android:gravity="center"
-                            android:text="SPEED"
+                            android:text="@string/title_speed"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textSize="10sp" />
@@ -357,7 +357,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="30dp"
-                            android:text="0.0"
+                            android:text="@string/current_speed"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textSize="30sp" />
@@ -367,7 +367,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="70dp"
-                            android:text="KM/H"
+                            android:text="@string/current_speed_ux"
                             android:textAlignment="center"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textSize="12sp" />
@@ -378,7 +378,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="93dp"
                             android:layout_marginRight="26dp"
-                            android:text="16.3"
+                            android:text="@string/record_speed"
                             android:textAlignment="textEnd"
                             android:textColor="?android:attr/textColorSecondary"
                             android:textSize="14sp" />
@@ -506,7 +506,7 @@
                                 android:paddingTop="15dp"
                                 android:paddingRight="20dp"
                                 android:paddingBottom="10dp"
-                                android:text="CENTRAR"
+                                android:text="@string/map_center_location"
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
                                 android:translationY="-57dp"
@@ -573,7 +573,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
                                     android:gravity="center"
-                                    android:text="MAPA"
+                                    android:text="@string/title_map"
                                     android:textAlignment="center"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:textSize="14sp" />
@@ -781,7 +781,7 @@
                             android:layout_marginRight="30dp"
                             android:checked="false"
                             android:onClick="inflateIntervalMode"
-                            android:text="Carrera con Intervalos"
+                            android:text="@string/interval_mode"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textColorHighlight="@color/wii_blue_dark"
                             android:textSize="18dp"
@@ -817,7 +817,7 @@
                                         android:id="@+id/tvIntervalDuration"
                                         android:layout_width="150dp"
                                         android:layout_height="wrap_content"
-                                        android:text="DURACIÓN DE LOS INTERVALOS"
+                                        android:text="@string/interval_duration"
                                         android:textColor="?android:attr/textColorPrimary" />
 
                                     <LinearLayout
@@ -840,7 +840,7 @@
                                             android:id="@+id/tvIntervalDurationUX"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="MIN."
+                                            android:text="@string/interval_duration_UX"
                                             android:textColor="?android:attr/textColorPrimary" />
 
                                     </LinearLayout>
@@ -865,7 +865,7 @@
                                             android:id="@+id/tvRunningTime"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="02:30"
+                                            android:text="@string/running_time"
                                             android:textColor="?android:attr/textColorPrimary"
                                             android:textSize="20dp" />
 
@@ -873,7 +873,7 @@
                                             android:id="@+id/tvRunningTimeUX"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="RUN"
+                                            android:text="@string/running_time_UX"
                                             android:textColor="?android:attr/textColorPrimary"
                                             android:textSize="12dp" />
 
@@ -881,7 +881,7 @@
                                             android:id="@+id/tvWalkingTimeDiv"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text=" / "
+                                            android:text="@string/walking_time_div"
                                             android:textColor="?android:attr/textColorPrimary"
                                             android:textSize="20dp" />
 
@@ -889,7 +889,7 @@
                                             android:id="@+id/tvWalkingTime"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="02:30"
+                                            android:text="@string/walking_time"
                                             android:textColor="?android:attr/textColorPrimary"
                                             android:textSize="20dp" />
 
@@ -897,7 +897,7 @@
                                             android:id="@+id/tvWalkingTimeux"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="WALK"
+                                            android:text="@string/walking_time_UX"
                                             android:textColor="?android:attr/textColorPrimary"
                                             android:textSize="12dp" />
                                     </LinearLayout>
@@ -941,7 +941,7 @@
                             android:checked="false"
                             android:onClick="inflateChallenges"
                             android:paddingTop="20dp"
-                            android:text="Marcar Objetivo"
+                            android:text="@string/challenge_mode"
                             android:textColor="?android:attr/textColorPrimary"
                             android:textColorHighlight="@color/wii_blue_dark"
                             android:textSize="18dp"
@@ -981,7 +981,7 @@
                                         android:background="@drawable/bg_challenge_duration_selected"
                                         android:onClick="showDuration"
                                         android:paddingTop="5dp"
-                                        android:text="DURACIÓN"
+                                        android:text="@string/challenge_duration"
                                         android:textAlignment="center"
                                         android:textColor="@color/white"
                                         android:textSize="18dp" />
@@ -993,7 +993,7 @@
                                         android:background="@drawable/bg_challenge_distance_unselected"
                                         android:onClick="showDistance"
                                         android:paddingTop="5dp"
-                                        android:text="DISTANCIA"
+                                        android:text="@string/challenge_distance"
                                         android:textAlignment="center"
                                         android:textColor="@color/gray_strong"
                                         android:textSize="18dp" />
@@ -1038,7 +1038,7 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:layout_gravity="center"
-                                                android:text=":"
+                                                android:text="@string/challenge_duration_HHMM"
                                                 android:textAlignment="center"
                                                 android:textColor="?android:attr/textColorPrimary"
                                                 android:textSize="20dp"
@@ -1057,7 +1057,7 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:layout_gravity="center"
-                                                android:text=":"
+                                                android:text="@string/challenge_duration_MMSS"
                                                 android:textAlignment="center"
                                                 android:textColor="?android:attr/textColorPrimary"
                                                 android:textSize="20dp"
@@ -1076,7 +1076,7 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:layout_gravity="center"
-                                                android:text="HH:MM:SS"
+                                                android:text="@string/challenge_duration_UX"
                                                 android:textAlignment="center"
                                                 android:textColor="?android:attr/textColorPrimary"
                                                 android:textSize="20dp"
@@ -1121,7 +1121,7 @@
                                                 android:layout_height="wrap_content"
                                                 android:layout_gravity="center"
                                                 android:layout_marginLeft="10dp"
-                                                android:text="KM"
+                                                android:text="@string/challenge_distance_UX"
                                                 android:textAlignment="center"
                                                 android:textColor="?android:attr/textColorPrimary"
                                                 android:textSize="20dp"
@@ -1146,7 +1146,7 @@
                                         android:layout_marginLeft="30dp"
                                         android:checked="true"
                                         android:drawableTint="@color/wii_blue"
-                                        android:text="Notificar Objetivo Alcanzado"
+                                        android:text="@string/notify_goal_reached"
                                         android:textColor="?android:attr/textColorPrimary"
                                         android:textSize="16dp" />
 
@@ -1157,7 +1157,7 @@
                                         android:layout_marginLeft="30dp"
                                         android:checked="false"
                                         android:drawableTint="@color/wii_blue"
-                                        android:text="Fin de carrera automático"
+                                        android:text="@string/auto_finish"
                                         android:textColor="?android:attr/textColorPrimary"
                                         android:textSize="16dp" />
                                 </LinearLayout>
@@ -1232,7 +1232,7 @@
                         android:layout_weight="1"
                         android:fontFamily=""
                         android:paddingStart="20dp"
-                        android:text="Resumen de Carrera"
+                        android:text="@string/title_popup"
                         android:textColor="@color/wii_gray"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -1269,7 +1269,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.7"
-                            android:text="Modo"
+                            android:text="@string/title_mode_popup"
                             android:textColor="@color/white"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -1300,7 +1300,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alpha="0.7"
-                            android:text="Tiempo Total"
+                            android:text="@string/title_total_time"
                             android:textColor="@color/white"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -1313,7 +1313,7 @@
                             android:background="@drawable/time_background"
                             android:paddingHorizontal="16dp"
                             android:paddingVertical="12dp"
-                            android:text="13:24:58"
+                            android:text="@string/total_time"
                             android:textAlignment="center"
                             android:textColor="?attr/android:textColorTertiary"
                             android:textSize="24sp" />
@@ -1399,7 +1399,7 @@
                                     android:id="@+id/tvLevelDistanceLabel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="DISTANCE"
+                                    android:text="@string/distance"
                                     android:textColor="?android:attr/textColorSecondary"
                                     android:textSize="12sp" />
 
@@ -1407,7 +1407,7 @@
                                     android:id="@+id/tvTotalDistanceLevel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="30%"
+                                    android:text="@string/distance_progress"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:textSize="28sp"
                                     android:textStyle="bold" />
@@ -1416,7 +1416,7 @@
                                     android:id="@+id/tvTotalDistance"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="35.6/500 km"
+                                    android:text="@string/total_distance"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:textSize="14sp" />
 
@@ -1424,7 +1424,7 @@
                                     android:id="@+id/tvTotalRunsLevel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="5/10"
+                                    android:text="@string/progress_runs"
                                     android:textColor="?android:attr/textColorPrimary"
                                     android:textSize="22sp" />
 
@@ -1432,7 +1432,7 @@
                                     android:id="@+id/tvLevelRunsLabel"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="RUNS"
+                                    android:text="@string/runs"
                                     android:textColor="?android:attr/textColorSecondary"
                                     android:textSize="12sp" />
                             </LinearLayout>
@@ -1671,7 +1671,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="8dp"
                                             android:fontFamily="sans-serif-light"
-                                            android:text="00:00:00"
+                                            android:text="@string/duration_run"
                                             android:textAlignment="center"
                                             android:textColor="?android:attr/textColorPrimary"
                                             android:textSize="32sp" />
@@ -1710,7 +1710,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="4dp"
                                             android:fontFamily="sans-serif"
-                                            android:text="01:00:00"
+                                            android:text="@string/challenge_duration_run"
                                             android:textAlignment="center"
                                             android:textColor="@android:color/holo_orange_light"
                                             android:textSize="18sp" />
@@ -1749,7 +1749,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="4dp"
                                             android:fontFamily="sans-serif"
-                                            android:text="5min (1:45 / 3:15)"
+                                            android:text="@string/interval_duration_run"
                                             android:textAlignment="center"
                                             android:textColor="@android:color/holo_blue_light"
                                             android:textSize="14sp" />

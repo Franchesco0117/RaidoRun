@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RaidhoRun</string>
+
+    <string name="games_app_id">363596102596</string>
+
+    <string name="tv_login_title">¿Qué tan lejos eres capaz de llegar?</string>
+    <string name="et_email">Ingresa tu correo electrónico</string>
+    <string name="et_password">Ingresa tu contraseña</string>
+    <string name="btn_login">Iniciar sesión</string>
+    <string name="tv_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="btn_reset_password">Enviar contraseña</string>
+    <string name="tv_terms">He leído y acepto los </string>
+    <string name="tv_conditions">términos y condiciones</string>
+    <string name="btn_sign_google">Google</string>
+    <string name="btn_sign_facebook">Facebook</string>
+    <string name="error_empty_email">El campo de correo no puede estar vacío</string>
+    <string name="error_empty_password">El campo de contraseña no puede estar vacío</string>
+    <string name="error_invalid_email">Correo electrónico no válido</string>
+
+    <string name="bar_title_terms">Términos y Condiciones de Uso</string>
+    <string name="terms1">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent rhoncus convallis metus at pretium. Vivamus at lacinia leo. Praesent velit elit, suscipit sit amet pulvinar id, imperdiet ac massa. Quisque molestie lectus rhoncus urna tempor, ut lacinia mi tempor. Praesent volutpat, ligula eget lobortis cursus, mauris libero consequat ligula, nec scelerisque erat ipsum tempor justo. Aliquam ornare faucibus augue vel faucibus. Ut sollicitudin commodo tortor eu faucibus. Vestibulum lacinia ligula sed tortor auctor, vitae sollicitudin lorem dapibus. Phasellus sed tincidunt odio.</string>
+    <string name="terms2">Praesent arcu nisi, auctor quis tempor id, vehicula non nulla. Sed a fermentum tellus, quis pharetra lorem. Fusce vehicula libero in ultricies varius. Suspendisse vel velit tortor. Aliquam non nisi eget lectus tempor consectetur sed in magna. Nullam tincidunt, nibh ut sodales suscipit, ante est luctus purus, sed pellentesque ipsum massa et quam. Proin sed sapien ultrices ex aliquet elementum sed et erat. Sed tincidunt felis sapien, a suscipit massa cursus et. Phasellus auctor tellus ac neque maximus accumsan. Morbi sit amet odio nec sapien pharetra elementum maximus id odio. Integer laoreet, neque id efficitur auctor, magna massa consequat justo, quis vehicula ipsum massa at sem. Morbi in ornare sapien, in luctus mauris. </string>
+    <string name="terms3">Sed id libero auctor, lacinia lectus a, consequat nisl. Nam quis suscipit purus. Fusce at congue quam. Etiam congue imperdiet bibendum. Etiam at porttitor ipsum. Donec consectetur sapien in neque tempus tempus. Sed vulputate rutrum ultrices. Praesent in est leo. Suspendisse euismod purus id urna tempus pellentesque. Praesent condimentum nisl sit amet purus pulvinar sagittis. Cras purus felis, hendrerit et ornare ut, molestie id orci. Integer dictum consequat leo, id pretium urna tempus et. Donec nibh ante, laoreet id lorem vitae, vestibulum sollicitudin lorem. </string>
+
+    <string name="skip_onboarding">OMITIR</string>
+
+    <string name="bar_title">Inicio</string>
+    <string name="menu_running">Carreras</string>
+    <string name="menu_record">Historial</string>
+    <string name="menu_clearPreferences">Restablecer preferencias</string>
+    <string name="menu_signOut">Cerrar sesión</string>
+
+    <string name="user">blabla@raidorun.com</string>
+    <string name="nav_hi">Quien mueve las piernas, mueve el corazón. ¡Muévelo, corazón!</string>
+    <string name="level">Nivel</string>
+    <string name="time">4d 03:56:23</string>
+    <string name="distance">DISTANCIA</string>
+    <string name="distance_progress">30%</string>
+    <string name="runs">CARRERAS</string>
+    <string name="progress_runs">5/10</string>
+    <string name="total_distance">35.6/500 KM</string>
+
+    <string name="navigation_drawer_open">Abrir</string>
+    <string name="navigation_drawer_close">Cerrar</string>
+
+    <string name="bar_title_record">Historial</string>
+
+    <string name="orderby_dateZA">Fecha (Más reciente primero)</string>
+    <string name="orderby_durationZA">Duración (Mayor primero)</string>
+    <string name="orderby_distanceZA">Distancia (Mayor primero)</string>
+    <string name="orderby_avgspeedZA">Vel. promedio (Mayor primero)</string>
+    <string name="orderby_maxspeedZA">Vel. máxima (Mayor primero)</string>
+
+    <string name="orderby_dateAZ">Fecha (Más antigua primero)</string>
+    <string name="orderby_durationAZ">Duración (Menor primero)</string>
+    <string name="orderby_distanceAZ">Distancia (Menor primero)</string>
+    <string name="orderby_avgspeedAZ">Vel. promedio (Menor primero)</string>
+    <string name="orderby_maxspeedAZ">Vel. máxima (Menor primero)</string>
+
+    <string name="title_distance">DISTANCIA</string>
+    <string name="current_distance">0.0</string>
+    <string name="current_distance_ux">KM</string>
+    <string name="record_distance">20.16</string>
+    <string name="title_avg_speed">VEL. PROMEDIO</string>
+    <string name="current_avg_speed">0.0</string>
+    <string name="current_avg_speed_ux">KM/H</string>
+    <string name="record_avg_speed">13.5</string>
+    <string name="title_speed">VELOCIDAD</string>
+    <string name="current_speed">0.0</string>
+    <string name="current_speed_ux">KM/H</string>
+    <string name="record_speed">16.3</string>
+
+    <string name="start">INICIAR</string>
+    <string name="stop">DETENER</string>
+    <string name="finish">Finalizar</string>
+    <string name="rounds">Ronda 1</string>
+    <string name="time_running">Tiempo corriendo</string>
+    <string name="time_walking">Tiempo caminando</string>
+    <string name="walking_clock">00:00</string>
+    <string name="init_stop_watch_value">00:00:00</string>
+
+    <string name="map_center_location">CENTRAR</string>
+    <string name="title_map">MAPA</string>
+
+    <string name="interval_mode">Carrera con intervalos</string>
+    <string name="interval_duration">DURACIÓN DE LOS INTERVALOS</string>
+    <string name="interval_duration_UX">MIN.</string>
+    <string name="running_time">02:30</string>
+    <string name="running_time_UX">CORRER</string>
+    <string name="walking_time_div"> / </string>
+    <string name="walking_time">02:30</string>
+    <string name="walking_time_UX">CAMINAR</string>
+
+    <string name="challenge_mode">Marcar Objetivo</string>
+    <string name="challenge_duration">DURACIÓN</string>
+    <string name="challenge_duration_HHMM">:</string>
+    <string name="challenge_duration_MMSS">:</string>
+    <string name="challenge_duration_UX">HH:MM:SS</string>
+    <string name="challenge_distance">DISTANCIA</string>
+    <string name="challenge_distance_UX">KM</string>
+
+    <string name="notify_goal_reached">Notificar cuando se alcance la meta</string>
+    <string name="auto_finish">Finalizar carrera automáticamente</string>
+    <string name="title_total_time">Tiempo total</string>
+    <string name="total_time">13:24:58</string>
+
+    <string name="title_popup">Resumen de carrera</string>
+    <string name="title_mode_popup">Modo</string>
+
+    <string name="PopUpTotalRuns">Carreras: </string>
+    <string name="PopUpTotalDistance">Distancia total (km): </string>
+    <string name="PopUpTotalTime">Tiempo total: </string>
+    <string name="NoDataWarning">No se encontraron datos. Asegúrate de que el GPS esté activo para rastrear tu carrera</string>
+
+    <string name="PopUpDurationTitle">DURACIÓN</string>
+    <string name="PopUpChallengeTitle">RETO</string>
+    <string name="PopUpIntervalTitle">INTERVALOS</string>
+    <string name="PopUpDistanceTitle">DISTANCIA</string>
+    <string name="PopUpAvgSpeedTitle">VEL. PROM.</string>
+    <string name="PopUpMaxSpeedTitle">VEL. MÁX.</string>
+    <string name="PopUpUnevennessTitle">ELEVACIÓN</string>
+
+    <string name="duration_run">00:00:00</string>
+    <string name="challenge_duration_run">01:00:00</string>
+    <string name="interval_duration_run">5min (1:45 / 3:15)</string>
+
+    <string name="textNull"></string>
+    <string name="textNoData">-</string>
+
+    <string name="medalDistanceDescription">Distancia [Mejor marca]</string>
+    <string name="medalAvgSpeedDescription">Vel. máx. [Mejor marca]</string>
+    <string name="medalMaxSpeedDescription">Vel. prom. [Mejor marca]</string>
+
+    <string name="alertActivationGPSTitle">Permitir acceso a la ubicación</string>
+    <string name="alertActivationGPSDescription">Para rastrear tu distancia y velocidad, se requiere acceso al GPS</string>
+    <string name="ignoreActivationGPS">Ignorar</string>
+    <string name="acceptActivationGPS">Activar</string>
+
+    <string name="alertClearPreferencesTitle">¿Deseas borrar tus preferencias de carrera?</string>
+    <string name="alertClearPreferencesDescription">Se restablecerán tu música y configuraciones de entrenamiento (modo e intervalos) de la última sesión.</string>
+
+    <string name="CardAvgSpeedTitle">VEL. PROM.</string>
+    <string name="CardMaxSpeedTitle">VEL. MÁX.</string>
+    <string name="CardMedalDistance">Km [MM]</string>
+    <string name="CardMedalAvgSpeed">Máx [MM]</string>
+    <string name="CardMedalMaxSpeed">Prom [MM]</string>
+
+    <string name="alertDeleteRecordRaceTitle">¿Estás seguro de que deseas eliminar este registro?</string>
+    <string name="alertDeleteRecordRaceDescription">Esto eliminará el registro permanentemente</string>
+
+    <!-- Onboarding Pantalla 1 -->
+    <string name="onboarding_title_1">Muévete a tu manera</string>
+    <string name="onboarding_desc_1">Elige entre correr, andar en bicicleta o patinar y comienza tu camino hacia una vida más activa. Tú decides cuándo, cómo y dónde entrenar.</string>
+
+    <!-- Onboarding Pantalla 2 -->
+    <string name="onboarding_title_2">Cada paso cuenta</string>
+    <string name="onboarding_desc_2">Sigue tu progreso con mapas, velocidad, cronómetro y metas personalizadas. Supera tus récords y alcanza nuevos niveles en cada deporte.</string>
+
+    <!-- Onboarding Pantalla 3 -->
+    <string name="onboarding_title_3">Convierte tu entrenamiento en un logro</string>
+    <string name="onboarding_desc_3">Gana medallas, sube de nivel y guarda tus mejores momentos con fotos durante tu ruta. ¡RaidoRun convierte cada carrera en una experiencia!</string>
+
+    <string name="permissions_required">Debes otorgar permisos</string>
+    <string name="image_saved">Imagen guardada</string>
+    <string name="image_save_error">Error al guardar la imagen</string>
+    <string name="ok">Aceptar</string>
+
+    <string name="exit_title">Salir de la app</string>
+    <string name="exit_message">¿Estás seguro de que deseas salir?</string>
+    <string name="positive_yes">Sí</string>
+    <string name="negative_no">No</string>
+
+    <string name="settings_reset">Tu configuración ha sido restablecida</string>
+    <string name="new_personal_records">Récords personales</string>
+    <string name="new_personal_record_notifications">Notificaciones de nuevos récords personales</string>
+    <string name="personal_best_in">Mejor marca en</string>
+    <string name="distance_covered">distancia recorrida</string>
+    <string name="average_speed">velocidad promedio</string>
+    <string name="maximum_speed_reached">velocidad máxima alcanzada</string>
+
+    <string name="accept_terms_and_retry">Acepta los términos e intenta de nuevo</string>
+    <string name="must_accept_terms">Debes aceptar los términos y condiciones</string>
+    <string name="google_sign_in_error">Error al iniciar sesión con Google</string>
+    <string name="auth_error">Error de autenticación:</string>
+    <string name="must_accept_terms_and_conditions">Debes aceptar los Términos y Condiciones</string>
+    <string name="enter_valid_email">Ingresa un correo válido</string>
+    <string name="user_not_found">Usuario no encontrado</string>
+    <string name="password_reset_email_sent">Se ha enviado un correo a</string>
+    <string name="password_reset_email_reset">para restablecer tu contraseña</string>
+    <string name="error_sending_email">Error al enviar el correo</string>
+    <string name="error_finding_user">Error al buscar usuario</string>
+    <string name="user_creation_failed">No se pudo crear el usuario</string>
+
+    <string name="record_deleted">Registro eliminado</string>
+    <string name="error_deleting_record">Error al eliminar el registro</string>
+
+    <!-- Panel de Administración -->
+    <string name="users">Usuarios</string>
+    <string name="statistics">Estadísticas</string>
+    <string name="sign_out">Cerrar sesión</string>
+    <string name="admin_dashboard">Panel de Administración</string>
+    <string name="first_kpi">Total de carreras completadas por tipo</string>
+    <string name="second_kpi">Usuarios activos esta semana</string>
+    <string name="third_kpi">Kilómetros recorridos por deporte</string>
+    <string name="fourth_kpi">Tiempo total de ejercicio por día</string>
+    <string name="fifth_kpi">Distribución de carreras por modo</string>
+    <string name="sixth_kpi">Duración promedio por deporte</string>
+    <string name="seventh_kpi">Usuarios más activos</string>
+    <string name="eighth_kpi">Uso de metas en carreras</string>
+
+</resources>

@@ -1339,7 +1339,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun callClearPreferences() {
         editor.clear().apply()
-        Toast.makeText(this, "Tus ajustes han sido restablecidos :)", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, R.string.settings_reset, Toast.LENGTH_LONG).show()
     }
 
     private fun initStopWatch() {
@@ -1921,7 +1921,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         var CHANNEL_ID = "NEW $scope RECORD - $sportSelected"
         val CHANNEL_NAME = "Personal Records"
-        val CHANNEL_DESCRIPTION = "Notificaciones de nuevos récords personales"
+        val CHANNEL_DESCRIPTION = "New personal record notifications"
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -1945,11 +1945,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             "bronze" -> textNotification = "3"
         }
 
-        textNotification += "mejor marca personal en "
+        textNotification += R.string.personal_best_in
         when (category) {
-            "distance" -> textNotification += "distancia recorrida"
-            "avgSpeed" -> textNotification += "velocidad promedio"
-            "maxSpeed" -> textNotification += "velocidad maxima alcanzada"
+            "distance" -> textNotification += R.string.distance_covered
+            "avgSpeed" -> textNotification += R.string.average_speed
+            "maxSpeed" -> textNotification += R.string.maximum_speed_reached
         }
 
         var iconNotification: Int = 0
@@ -2452,12 +2452,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(this)
-            .setTitle("Exit App")
-            .setMessage("Are you sure you want to exit?")
-            .setPositiveButton("Yes") { _, _ ->
+            .setTitle(R.string.exit_title)
+            .setMessage(R.string.exit_message)
+            .setPositiveButton(R.string.positive_yes) { _, _ ->
                 signOut()
             }
-            .setNegativeButton("No", null)
+            .setNegativeButton(R.string.negative_no, null)
             .show()
     }
 

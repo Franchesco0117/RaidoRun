@@ -36,7 +36,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Admin Dashboard"
+                    android:text="@string/admin_dashboard"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -58,7 +58,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total de carreras por tipo de deporte"
+                            android:text="@string/first_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>
@@ -86,7 +86,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Usuarios activos esta semana"
+                            android:text="@string/second_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>
@@ -114,7 +114,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Kilómetros recorridos por deporte"
+                            android:text="@string/third_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>
@@ -142,7 +142,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Tiempo total de ejercicio por día"
+                            android:text="@string/fourth_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>
@@ -170,7 +170,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Distribución de carreras por modo"
+                            android:text="@string/fifth_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>
@@ -198,7 +198,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Duración promedio por deporte"
+                            android:text="@string/sixth_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>
@@ -226,7 +226,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Usuarios más activos"
+                            android:text="@string/seventh_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>
@@ -254,7 +254,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Uso de objetivos en carreras"
+                            android:text="@string/eighth_kpi"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp"/>

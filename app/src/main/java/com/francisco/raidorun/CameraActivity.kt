@@ -108,7 +108,7 @@ class CameraActivity : AppCompatActivity() {
             if (allPermissionsGranted()) {
                 startCamera()
             } else {
-                Toast.makeText(this, "Debes proporcionar los permisos", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.permissions_required, Toast.LENGTH_LONG).show()
                 finish()
             }
         }
@@ -126,7 +126,7 @@ class CameraActivity : AppCompatActivity() {
             lensFacing = when {
                 hasBackCamera() -> CameraSelector.LENS_FACING_BACK
                 hasFrontCamera() -> CameraSelector.LENS_FACING_FRONT
-                else -> throw IllegalStateException("No tienes ninguna camara")
+                else -> throw IllegalStateException("You have no camera")
             }
 
             manageSwitchButton()
@@ -141,7 +141,7 @@ class CameraActivity : AppCompatActivity() {
         try {
             switchButton.isEnabled = hasBackCamera() && hasFrontCamera()
         } catch (e: CameraInfoUnavailableException) {
-            Log.e("ConexionCamara", "Camara no disponible", e)
+            Log.e("CameraConnection", "Camera info is unavailable", e)
             switchButton.isEnabled = false
         }
     }
@@ -162,7 +162,7 @@ class CameraActivity : AppCompatActivity() {
         val screenAspectRatio = aspectRadio(metrics.widthPixels, metrics.heightPixels)
         val rotation = binding.viewFinder.display.rotation
 
-        val cameraProvider = cameraProvider ?: throw IllegalStateException("Fallo al iniciar la camara")
+        val cameraProvider = cameraProvider ?: throw IllegalStateException("Failed to bind camera")
 
         val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
@@ -183,7 +183,7 @@ class CameraActivity : AppCompatActivity() {
             cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture)
             preview?.setSurfaceProvider(binding.viewFinder.surfaceProvider)
         } catch (exc: Exception) {
-            Log.e("CameraRaidoRun", "Fallo al vincular la camara", exc)
+            Log.e("CameraRaidoRun", "Failed to bind camera", exc)
         }
     }
 
@@ -237,14 +237,14 @@ class CameraActivity : AppCompatActivity() {
                     }
 
                     var clMain = findViewById<ConstraintLayout>(R.id.clMain)
-                    Snackbar.make(clMain, "Imagen guardada", Snackbar.LENGTH_LONG).setAction("Ok") {
+                    Snackbar.make(clMain, R.string.image_saved, Snackbar.LENGTH_LONG).setAction(R.string.ok) {
                         clMain.setBackgroundColor(Color.CYAN)
                     }.show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
                     var clMain = findViewById<ConstraintLayout>(R.id.clMain)
-                    Snackbar.make(clMain, "Error al guardar la imagen", Snackbar.LENGTH_LONG).setAction("Ok") {
+                    Snackbar.make(clMain, R.string.image_save_error, Snackbar.LENGTH_LONG).setAction(R.string.ok) {
                         clMain.setBackgroundColor(Color.CYAN)
                     }.show()
                 }

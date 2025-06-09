@@ -105,7 +105,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private fun loadKpiRunsPieChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
-        val labels = listOf("Bicicleta", "Running", "RollerSkate")
+        val labels = listOf("Bike", "Running", "RollerSkate")
         val counts = mutableListOf(0, 0, 0)
 
         var loaded = 0
@@ -137,7 +137,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         data.setValueTextSize(16f)
         pieChartKpiRuns.data = data
         pieChartKpiRuns.description.isEnabled = false
-        pieChartKpiRuns.centerText = "Total de carreras"
+        pieChartKpiRuns.centerText = "Total runs"
         pieChartKpiRuns.animateY(1000)
         pieChartKpiRuns.invalidate()
     }
@@ -180,7 +180,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         val entries = ArrayList<BarEntry>()
         entries.add(BarEntry(0f, activeUsersCount.toFloat()))
 
-        val dataSet = BarDataSet(entries, "Usuarios activos")
+        val dataSet = BarDataSet(entries, "Active users")
         dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
         
         val data = BarData(dataSet)
@@ -201,7 +201,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private fun loadKilometersBarChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
-        val labels = listOf("Bicicleta", "Running", "RollerSkate")
+        val labels = listOf("Bike", "Running", "RollerSkate")
         val distances = mutableListOf(0.0, 0.0, 0.0)
         
         var loadedCollections = 0
@@ -237,7 +237,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             entries.add(BarEntry(i.toFloat(), roundedDistance.toFloat()))
         }
 
-        val dataSet = BarDataSet(entries, "Kilómetros")
+        val dataSet = BarDataSet(entries, "Kilometers")
         dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
         
         val data = BarData(dataSet)
@@ -362,7 +362,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             calendar.add(Calendar.DAY_OF_YEAR, i) // Restaurar la fecha
         }
 
-        val dataSet = BarDataSet(entries, "Tiempo de ejercicio")
+        val dataSet = BarDataSet(entries, "Exercise time")
         dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
         
         val data = BarData(dataSet)
@@ -448,8 +448,8 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             val intervalPercentage = (intervalModeCount.toFloat() / total) * 100
             val normalPercentage = (normalModeCount.toFloat() / total) * 100
             
-            entries.add(PieEntry(intervalPercentage, "Modo Intervalos"))
-            entries.add(PieEntry(normalPercentage, "Modo Normal"))
+            entries.add(PieEntry(intervalPercentage, "Interval mode"))
+            entries.add(PieEntry(normalPercentage, "Normal mode"))
             
             val dataSet = PieDataSet(entries, "")
             dataSet.colors = listOf(
@@ -470,7 +470,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 setEntryLabelTextSize(12f)
                 legend.textSize = 12f
                 legend.textColor = Color.BLACK
-                centerText = "Total: $total\ncarreras"
+                centerText = "Total: $total\nruns"
                 setCenterTextSize(14f)
                 setHoleColor(Color.TRANSPARENT)
                 animateY(1000)
@@ -478,7 +478,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             }
         } else {
             // Si no hay datos, mostrar un mensaje o gráfico vacío
-            pieChartIntervalMode.setNoDataText("No hay datos disponibles")
+            pieChartIntervalMode.setNoDataText("No data available")
             pieChartIntervalMode.invalidate()
         }
     }
@@ -486,7 +486,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private fun loadAverageDurationBarChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
-        val labels = listOf("Bicicleta", "Running", "RollerSkate")
+        val labels = listOf("Bike", "Running", "RollerSkate")
         val totalMinutes = mutableListOf(0L, 0L, 0L)
         val counts = mutableListOf(0, 0, 0)
         var loadedCollections = 0
@@ -528,13 +528,13 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             entries.add(BarEntry(i.toFloat(), averageMinutes[i]))
         }
 
-        val dataSet = BarDataSet(entries, "Duración promedio")
+        val dataSet = BarDataSet(entries, "Average duration")
         dataSet.colors = listOf(
             Color.rgb(233, 30, 99),  // Rosa para Bicicleta
             Color.rgb(156, 39, 176),  // Morado para Running
             Color.rgb(255, 193, 7)    // Amarillo para RollerSkate
         )
-        
+
         val data = BarData(dataSet)
         data.setValueTextSize(12f)
         data.setValueFormatter(object : com.github.mikephil.charting.formatter.ValueFormatter() {
@@ -625,7 +625,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             labels.add(entry.key.substringBefore("@"))
         }
 
-        val dataSet = BarDataSet(entries, "Carreras por usuario")
+        val dataSet = BarDataSet(entries, "Runs per user")
         dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
         
         val data = BarData(dataSet)
@@ -720,8 +720,8 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             val withTargetPercentage = (runsWithTarget.toFloat() / total) * 100
             val withoutTargetPercentage = (runsWithoutTarget.toFloat() / total) * 100
             
-            entries.add(PieEntry(withTargetPercentage, "Con objetivo"))
-            entries.add(PieEntry(withoutTargetPercentage, "Sin objetivo"))
+            entries.add(PieEntry(withTargetPercentage, "With target"))
+            entries.add(PieEntry(withoutTargetPercentage, "Without target"))
             
             val dataSet = PieDataSet(entries, "")
             dataSet.colors = listOf(
@@ -742,20 +742,20 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 setEntryLabelTextSize(12f)
                 legend.textSize = 12f
                 legend.textColor = Color.BLACK
-                centerText = "Total: $total\ncarreras"
+                centerText = "Total: $total\nruns"
                 setCenterTextSize(14f)
                 setHoleColor(Color.TRANSPARENT)
                 
                 // Agregar detalle en el texto central
-                val withTargetText = "${runsWithTarget} con objetivo"
-                val withoutTargetText = "${runsWithoutTarget} sin objetivo"
-                centerText = "Total: $total carreras\n$withTargetText\n$withoutTargetText"
+                val withTargetText = "${runsWithTarget} with target"
+                val withoutTargetText = "${runsWithoutTarget} without target"
+                centerText = "Total: $total runs\n$withTargetText\n$withoutTargetText"
                 
                 animateY(1000)
                 invalidate()
             }
         } else {
-            pieChartTargetUsage.setNoDataText("No hay datos disponibles")
+            pieChartTargetUsage.setNoDataText("No data available")
             pieChartTargetUsage.invalidate()
         }
     }
