@@ -31,6 +31,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.francisco.raidorun.LoginActivity.Companion.userEmail
 import com.google.android.material.snackbar.Snackbar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -208,11 +211,16 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-        FILE_NAME = getString(R.string.app_name) + dateRun + startTimeRun
-        FILE_NAME = FILE_NAME.replace(":", "")
-        FILE_NAME = FILE_NAME.replace("/", "")
+        // Generar un timestamp único para cada foto
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(Date())
+        var fileName = getString(R.string.app_name) + "_" + timeStamp
 
-        val photoFile = File(outPutDirectory, FILE_NAME + ".jpg")
+        // Limpiar caracteres especiales
+        fileName = fileName.replace(":", "")
+        fileName = fileName.replace("/", "")
+        fileName = fileName.replace(" ", "_")
+
+        val photoFile = File(outPutDirectory, fileName + ".jpg")
         val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
         imageCapture?.takePicture(
@@ -224,7 +232,7 @@ class CameraActivity : AppCompatActivity() {
                     val saveUri = Uri.fromFile(photoFile)
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        setGalleryThumbnail (saveUri)
+                        setGalleryThumbnail(saveUri)
                     }
 
                     val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(saveUri.toFile().extension)
@@ -233,22 +241,23 @@ class CameraActivity : AppCompatActivity() {
                         arrayOf(saveUri.toFile().absolutePath),
                         arrayOf(mimeType)
                     ) { _, uri ->
-
+                        // Callback cuando se escanea el archivo
                     }
 
-                    var clMain = findViewById<ConstraintLayout>(R.id.clMain)
-                    Snackbar.make(clMain, R.string.image_saved, Snackbar.LENGTH_LONG).setAction(R.string.ok) {
+                    val clMain = findViewById<ConstraintLayout>(R.id.clMain)
+                    Snackbar.make(clMain, "Imagen $fileName guardada", Snackbar.LENGTH_LONG).setAction("Ok") {
+                        // Opcional: remover este cambio de color o ajustarlo
                         clMain.setBackgroundColor(Color.CYAN)
                     }.show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    var clMain = findViewById<ConstraintLayout>(R.id.clMain)
-                    Snackbar.make(clMain, R.string.image_save_error, Snackbar.LENGTH_LONG).setAction(R.string.ok) {
+                    val clMain = findViewById<ConstraintLayout>(R.id.clMain)
+                    Snackbar.make(clMain, "Error al guardar la imagen: ${exception.message}", Snackbar.LENGTH_LONG).setAction("Ok") {
                         clMain.setBackgroundColor(Color.CYAN)
                     }.show()
+                    Log.e("TakePhoto", "Error al capturar imagen", exception)
                 }
-
             })
     }
 
