@@ -47,9 +47,6 @@ public class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     val ivMedalMaxSpeed: ImageView = itemView.findViewById<ImageView>(R.id.ivMedalMaxSpeed)
     val tvMedalMaxSpeedTitle: TextView = itemView.findViewById<TextView>(R.id.tvMedalMaxSpeedTitle)
 
-    val ivPicture: ImageView = itemView.findViewById<ImageView>(R.id.ivPicture)
-
-    val lyPicture: LinearLayout = itemView.findViewById<LinearLayout>(R.id.lyPicture)
     val tvPlay: TextView = itemView.findViewById<TextView>(R.id.tvPlay)
     val tvDelete: TextView = itemView.findViewById<TextView>(R.id.tvDelete)
 }

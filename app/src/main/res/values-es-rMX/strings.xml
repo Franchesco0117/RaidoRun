@@ -4,6 +4,7 @@
 
     <string name="games_app_id">363596102596</string>
 
+    <string name="welcome">Bienvenido</string>
     <string name="tv_login_title">¿Qué tan lejos eres capaz de llegar?</string>
     <string name="et_email">Ingresa tu correo electrónico</string>
     <string name="et_password">Ingresa tu contraseña</string>

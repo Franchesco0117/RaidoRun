@@ -36,7 +36,7 @@
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColorSecondary">@color/wii_gray_medium</item>
         <item name="android:textColorTertiary">@color/gray_strong</item>
-        
+
         <!-- Ripple effect -->
         <item name="colorControlHighlight">@color/wii_blue_light</item>
         

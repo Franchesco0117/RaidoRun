@@ -636,8 +636,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             var ivOpenClose = findViewById<ImageView>(R.id.ivOpenClose)
 
             if (lyMap.height == 0) {
-                setHeightLinearLayout(lyMap, 850)
-                animateViewOfFloat(lyFragmentMap, "translationY",0f, 100)
+                setHeightLinearLayout(lyMap, 733)
+                animateViewOfFloat(lyFragmentMap, "translationY",0f, 350)
                 ivOpenClose.setRotation(180f)
             } else {
                 setHeightLinearLayout(lyMap, 0)

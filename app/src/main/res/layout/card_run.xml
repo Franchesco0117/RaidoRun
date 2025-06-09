@@ -21,7 +21,7 @@
         <LinearLayout
             android:id="@+id/lyDataRunHeader"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
@@ -29,7 +29,7 @@
                 android:id="@+id/tvHeaderDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:fontFamily="sans-serif-light"
                 android:text="16-JUL-2004"
@@ -41,12 +41,13 @@
                 android:id="@+id/tvHeaderDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:background="@drawable/sport_data_background"
                 android:fontFamily="sans-serif-light"
                 android:padding="5dp"
-                android:elevation="5dp"
+                android:elevation="2dp"
                 android:text="01:00HH"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorPrimary"
@@ -56,12 +57,12 @@
                 android:id="@+id/tvHeaderDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/sport_data_background"
                 android:fontFamily="sans-serif-light"
                 android:padding="5dp"
-                android:elevation="5dp"
+                android:elevation="2dp"
                 android:text="12.5KM"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorPrimary"
@@ -71,12 +72,12 @@
                 android:id="@+id/tvHeaderAvgSpeed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/sport_data_background"
                 android:fontFamily="sans-serif-light"
                 android:padding="5dp"
-                android:elevation="5dp"
+                android:elevation="2dp"
                 android:text="12.5KM/H"
                 android:textAlignment="center"
                 android:textColor="?android:attr/textColorPrimary"
@@ -87,21 +88,24 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
+                android:padding="2dp"
                 android:src="@drawable/medal_null_dark" />
 
             <ImageView
                 android:id="@+id/ivHeaderMedalAvgSpeed"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
+                android:padding="2dp"
                 android:src="@drawable/medal_null_dark" />
 
             <ImageView
                 android:id="@+id/ivHeaderMedalMaxSpeed"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
+                android:padding="2dp"
                 android:src="@drawable/medal_null_dark" />
 
             <ImageView
@@ -109,7 +113,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
                 android:rotation="0"
                 android:src="@drawable/opener_icon" />
 
@@ -134,9 +138,9 @@
                     android:id="@+id/lyDataDateSport"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="10dp"
-                    android:gravity="top|right"
+                    android:gravity="top|center"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -144,8 +148,9 @@
                         android:layout_width="80dp"
                         android:layout_height="52dp"
                         android:layout_marginBottom="8dp"
+                        android:layout_margin="5dp"
                         android:gravity="center"
-                        android:elevation="5dp"
+                        android:elevation="2dp"
                         android:orientation="vertical">
 
                         <ImageView
@@ -158,13 +163,13 @@
 
                     <LinearLayout
                         android:id="@+id/lyDate"
-                        android:layout_width="80dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/sport_data_background"
                         android:gravity="top|right"
+                        android:layout_margin="5dp"
                         android:orientation="vertical"
-                        android:layout_marginBottom="8dp"
-                        android:elevation="5dp"
+                        android:elevation="2dp"
                         android:paddingBottom="5dp">
 
                         <TextView
@@ -191,29 +196,17 @@
                             android:textSize="11sp" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/lyPicture"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/ivPicture"
-                            android:layout_width="80dp"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
                     <TextView
                         android:id="@+id/tvPlay"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/delete_button_background"
+                        android:background="@drawable/replay_button_background"
                         android:fontFamily="sans-serif-light"
-                        android:elevation="3dp"
+                        android:elevation="2dp"
                         android:padding="5dp"
-                        android:textColor="@color/white"
+                        android:layout_marginTop="6dp"
                         android:text="REPRODUCIR"
+                        android:textColor="@color/gray_dark"
                         android:textAlignment="center"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -223,13 +216,14 @@
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/replay_button_background"
+                        android:layout_marginBottom="2dp"
+                        android:background="@drawable/delete_button_background"
                         android:fontFamily="sans-serif-light"
                         android:padding="5dp"
                         android:text="ELIMINAR"
+                        android:textColor="@color/white"
                         android:textAlignment="center"
-                        android:elevation="3dp"
-                        android:textColor="@color/gray_dark"
+                        android:elevation="2dp"
                         android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -239,20 +233,19 @@
                     android:id="@+id/lyDataDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:elevation="5dp"
                     android:gravity="top|end"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/lyDuration"
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_margin="3dp"
                         android:background="@drawable/sport_data_background"
                         android:gravity="top|end"
                         android:orientation="vertical"
-                        android:elevation="5dp"
+                        android:elevation="2dp"
                         android:paddingBottom="5dp">
 
                         <TextView
@@ -352,17 +345,15 @@
                     android:id="@+id/lyDataDistance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:elevation="5dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/lyDistance"
                         android:layout_width="90dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="5dp"
-                        android:elevation="5dp"
+                        android:layout_margin="3dp"
+                        android:elevation="2dp"
                         android:background="@drawable/sport_data_background"
                         android:gravity="top|end"
                         android:orientation="vertical"
@@ -573,7 +564,7 @@
                     android:id="@+id/lyDataSpeedMedals"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:elevation="5dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -584,7 +575,8 @@
                         android:layout_marginBottom="5dp"
                         android:background="@drawable/sport_data_background"
                         android:gravity="top|end"
-                        android:elevation="5dp"
+                        android:layout_margin="3dp"
+                        android:elevation="2dp"
                         android:layout_marginStart="5dp"
                         android:orientation="vertical"
                         android:paddingStart="10dp"

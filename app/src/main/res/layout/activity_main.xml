@@ -446,162 +446,162 @@
             android:layout_height="match_parent"
             android:layout_marginTop="287dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-                <!-- Map -->
+            <!-- Map -->
+            <LinearLayout
+                android:id="@+id/lyMapContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/map_background"
+                android:gravity="left"
+                android:orientation="vertical"
+                android:translationY="0dp">
+
                 <LinearLayout
-                    android:id="@+id/lyMapContainer"
+                    android:id="@+id/lyMap"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/map_background"
+                    android:layout_height="420dp"
+                    android:background="@color/transparent"
                     android:gravity="left"
                     android:orientation="vertical"
                     android:translationY="0dp">
 
                     <LinearLayout
-                        android:id="@+id/lyMap"
+                        android:id="@+id/lyFragmentMap"
                         android:layout_width="match_parent"
-                        android:layout_height="420dp"
-                        android:background="@color/transparent"
+                        android:layout_height="wrap_content"
                         android:gravity="left"
                         android:orientation="vertical"
-                        android:translationY="0dp">
+                        android:translationY="-300dp">
 
-                        <LinearLayout
-                            android:id="@+id/lyFragmentMap"
+                        <fragment
+                            android:id="@+id/fragmentMap"
+                            android:name="com.google.android.gms.maps.SupportMapFragment"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="left"
-                            android:orientation="vertical"
-                            android:translationY="-300dp">
+                            android:layout_height="420dp"
+                            tools:context=".MainActivity"
+                            map:mapType="normal"
+                            map:uiCompass="false"
+                            map:uiRotateGestures="true"
+                            map:uiScrollGestures="true"
+                            map:uiTiltGestures="true"
+                            map:uiZoomControls="true"
+                            map:uiZoomGestures="true"/>
 
-                            <fragment
-                                android:id="@+id/fragmentMap"
-                                android:name="com.google.android.gms.maps.SupportMapFragment"
-                                android:layout_width="match_parent"
-                                android:layout_height="420dp"
-                                tools:context=".MainActivity"
-                                map:mapType="normal"
-                                map:uiCompass="false"
-                                map:uiRotateGestures="true"
-                                map:uiScrollGestures="true"
-                                map:uiTiltGestures="true"
-                                map:uiZoomControls="true"
-                                map:uiZoomGestures="true"/>
-
-                            <TextView
-                                android:id="@+id/tvMapCenter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="50dp"
-                                android:layout_marginLeft="5dp"
-                                android:background="@color/blue"
-                                android:drawableStart="@drawable/centermap_icon"
-                                android:drawablePadding="10dp"
-                                android:onClick="callCenterMap"
-                                android:paddingLeft="20dp"
-                                android:paddingTop="15dp"
-                                android:paddingRight="20dp"
-                                android:paddingBottom="10dp"
-                                android:text="@string/map_center_location"
-                                android:textColor="@color/white"
-                                android:textSize="16sp"
-                                android:translationY="-57dp"
-                                android:translationZ="10dp" />
-
-                            <ImageView
-                                android:id="@+id/ivTypeMap"
-                                android:layout_width="55dp"
-                                android:layout_height="60dp"
-                                android:layout_gravity="end"
-                                android:layout_marginTop="-470dp"
-                                android:layout_marginRight="5dp"
-                                android:onClick="changeTypeMap"
-                                android:src="@drawable/ic_hybrid_map_type"
-                                android:translationZ="10dp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Open Map -->
-                    <LinearLayout
-                        android:id="@+id/lyOpenerMap"
-                        android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:background="@drawable/card_radius_top"
-                        android:gravity="left"
-                        android:orientation="vertical"
-                        android:translationZ="15dp">
-
-                        <LinearLayout
-                            android:id="@+id/lyOpenerButton"
+                        <TextView
+                            android:id="@+id/tvMapCenter"
                             android:layout_width="wrap_content"
-                            android:layout_height="20dp"
-                            android:onClick="callShowHideMap"
-                            android:orientation="horizontal">
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@color/blue"
+                            android:drawableStart="@drawable/centermap_icon"
+                            android:drawablePadding="10dp"
+                            android:onClick="callCenterMap"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="15dp"
+                            android:paddingRight="20dp"
+                            android:paddingBottom="10dp"
+                            android:text="@string/map_center_location"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:translationY="-57dp"
+                            android:translationZ="10dp" />
 
-                            <LinearLayout
-                                android:id="@+id/lyOpenStart"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginLeft="6dp"
-                                android:orientation="vertical"
-                                android:rotation="45"
-                                android:translationY="-30dp" />
-
-                            <LinearLayout
-                                android:id="@+id/lyOpenerTitle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="22dp"
-                                android:layout_marginLeft="-30dp"
-                                android:layout_marginTop="5dp"
-                                android:orientation="horizontal"
-                                android:translationZ="15dp">
-
-                                <ImageView
-                                    android:id="@+id/ivMapIcon"
-                                    android:layout_width="12dp"
-                                    android:layout_height="15dp"
-                                    android:layout_marginTop="2dp"
-                                    android:src="@drawable/map_icon" />
-
-                                <TextView
-                                    android:id="@+id/tvMapTitle"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="5dp"
-                                    android:gravity="center"
-                                    android:text="@string/title_map"
-                                    android:textAlignment="center"
-                                    android:textColor="?android:attr/textColorPrimary"
-                                    android:textSize="14sp" />
-
-                                <ImageView
-                                    android:id="@+id/ivOpenClose"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_marginLeft="10dp"
-                                    android:rotation="0"
-                                    android:src="@drawable/opener_icon_dark" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/lyOpenEnd"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginLeft="-30dp"
-                                android:orientation="vertical"
-                                android:rotation="45"
-                                android:translationY="-30dp"
-                                android:translationZ="0dp" />
-
-                        </LinearLayout>
+                        <ImageView
+                            android:id="@+id/ivTypeMap"
+                            android:layout_width="55dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="-470dp"
+                            android:layout_marginRight="5dp"
+                            android:onClick="changeTypeMap"
+                            android:src="@drawable/ic_hybrid_map_type"
+                            android:translationZ="10dp" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Start, Camara, Sports, Map -->
+                <!-- Open Map -->
+                <LinearLayout
+                    android:id="@+id/lyOpenerMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:background="@drawable/card_radius_top"
+                    android:gravity="left"
+                    android:orientation="vertical"
+                    android:translationZ="15dp">
+
+                    <LinearLayout
+                        android:id="@+id/lyOpenerButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:onClick="callShowHideMap"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/lyOpenStart"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="6dp"
+                            android:orientation="vertical"
+                            android:rotation="45"
+                            android:translationY="-30dp" />
+
+                        <LinearLayout
+                            android:id="@+id/lyOpenerTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="22dp"
+                            android:layout_marginLeft="-30dp"
+                            android:layout_marginTop="5dp"
+                            android:orientation="horizontal"
+                            android:translationZ="15dp">
+
+                            <ImageView
+                                android:id="@+id/ivMapIcon"
+                                android:layout_width="12dp"
+                                android:layout_height="15dp"
+                                android:layout_marginTop="2dp"
+                                android:src="@drawable/map_icon" />
+
+                            <TextView
+                                android:id="@+id/tvMapTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:gravity="center"
+                                android:text="@string/title_map"
+                                android:textAlignment="center"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/ivOpenClose"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginLeft="10dp"
+                                android:rotation="0"
+                                android:src="@drawable/opener_icon_dark" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/lyOpenEnd"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="-30dp"
+                            android:orientation="vertical"
+                            android:rotation="45"
+                            android:translationY="-30dp"
+                            android:translationZ="0dp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Start, Camara, Sports, Map -->
                 <LinearLayout
                     android:id="@+id/rlStart"
                     android:layout_width="match_parent"
@@ -1165,7 +1165,7 @@
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
+        </LinearLayout>
         </ScrollView>
 
         <TextView
@@ -1470,21 +1470,31 @@
                             </FrameLayout>
 
                             <androidx.cardview.widget.CardView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
                                 android:layout_margin="7dp"
                                 app:cardBackgroundColor="?attr/colorSurface"
                                 app:cardCornerRadius="12dp"
+                                android:layout_gravity="center"
                                 app:cardElevation="4dp">
 
-                                <ImageView
-                                    android:id="@+id/ivCurrentLevel"
-                                    android:layout_width="70dp"
-                                    android:layout_height="70dp"
-                                    android:elevation="4dp"
-                                    android:padding="8dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/level_1" />
+                                <androidx.cardview.widget.CardView
+                                    android:id="@+id/cviLevelRunning"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_margin="5dp"
+                                    android:translationZ="10dp"
+                                    app:cardBackgroundColor="@color/gray_strong"
+                                    app:cardCornerRadius="32.5dp">
+
+                                    <ImageView
+                                        android:id="@+id/ivCurrentLevel"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:layout_gravity="center"
+                                        android:src="@drawable/level_1" />
+
+                                </androidx.cardview.widget.CardView>
 
                             </androidx.cardview.widget.CardView>
 
