@@ -6,6 +6,28 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+/**
+ * MyViewHolder
+ *
+ * A custom ViewHolder used by a RecyclerView to display detailed information
+ * about a recorded exercise session, including summary statistics in a header
+ * and more detailed metrics in a collapsible body section.
+ *
+ * UI Components:
+ * - Header layout (lyDataRunHeader) shows date, duration, distance, average speed,
+ *   and medals for performance.
+ * - Body layout (lyDataRunBody) contains additional information such as start time,
+ *   challenge metrics (distance and duration), interval usage, unevenness data,
+ *   average/max speed, and action buttons (play, delete).
+ *
+ * This ViewHolder assumes a complex item layout supporting expandable/collapsible
+ * views for rich session summaries.
+ *
+ * Used with: RecyclerView displaying run session data.
+ *
+ * Author: [Francisco Castro]
+ * Created: [23/MAY/2025]
+ */
 public class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
     val lyDataRunHeader: LinearLayout = itemView.findViewById<LinearLayout>(R.id.lyDataRunHeader)

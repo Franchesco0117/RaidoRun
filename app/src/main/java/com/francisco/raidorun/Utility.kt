@@ -16,10 +16,25 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import java.util.concurrent.TimeUnit
 
+/**
+ * Utility
+ *
+ * Object containing helper methods for time formatting, animations,
+ * number rounding, total time formatting, and managing run deletions
+ * along with updating associated totals and records in Firestore.
+ *
+ * Author: Francisco Castro
+ * Created: 4/MAY/2025
+ */
 object Utility {
 
     private var totalsChecked: Int = 0
 
+    /**
+     * Converts milliseconds to a formatted string HH:mm:ss.
+     * @param ms time in milliseconds.
+     * @return formatted time string.
+     */
     fun getFormattedStopWatch(ms: Long): String {
         var milliSeconds = ms
 
@@ -37,8 +52,12 @@ object Utility {
 
     }
 
+    /**
+     * Converts a stopwatch string (HH:mm:ss or mm:ss) to total seconds.
+     * @param watch formatted stopwatch string.
+     * @return total seconds as Int.
+     */
     fun getSecFromWatch (watch: String): Int{
-
         var secs = 0
         var w: String = watch
         if (w.length == 5) w= "00:" + w
@@ -52,12 +71,25 @@ object Utility {
     }
 
     /* FUNCIONES DE ANIMACION Y CAMBIOS DE ATRIBUTOS */
+
+    /**
+     * Sets the height of a LinearLayout.
+     * @param ly target view.
+     * @param value new height in pixels.
+     */
     fun setHeightLinearLayout(ly: View, value: Int) {
         val params = ly.layoutParams
         params.height = value
         ly.layoutParams = params
     }
 
+    /**
+     * Animates an integer property of a view.
+     * @param v target view.
+     * @param attr property name.
+     * @param value target integer value.
+     * @param time duration in milliseconds.
+     */
     fun animateViewOfInt(v: View, attr: String, value: Int, time: Long){
         ObjectAnimator.ofInt(v, attr, value).apply{
             duration = time
@@ -65,6 +97,13 @@ object Utility {
         }
     }
 
+    /**
+     * Animates a float property of a view.
+     * @param v target view.
+     * @param attr property name.
+     * @param value target float value.
+     * @param time duration in milliseconds.
+     */
     fun animateViewOfFloat(v: View, attr: String, value: Float, time: Long){
         ObjectAnimator.ofFloat(v, attr, value).apply{
             duration = time
@@ -72,6 +111,12 @@ object Utility {
         }
     }
 
+    /**
+     * Rounds a decimal number represented as string to given decimals.
+     * @param data original string.
+     * @param decimals number of decimals to keep.
+     * @return truncated string representation.
+     */
     fun roundNumber(data: String, decimals: Int) : String {
         var d : String = data
         var p = d.indexOf(".", 0)
@@ -88,6 +133,11 @@ object Utility {
         return d
     }
 
+    /**
+     * Formats total time in seconds into years, months, days and HH:mm:ss.
+     * @param secs total time in seconds.
+     * @return formatted time string.
+     */
     fun getFormattedTotalTime(secs: Long): String {
         var seconds: Long = secs
         var total: String =""
@@ -115,6 +165,14 @@ object Utility {
     }
 
     /* FUNCIONES DE BORRADO DE CARRERA */
+
+    /**
+     * Deletes a run and its linked data, updates totals and records.
+     * @param idRun run ID.
+     * @param sport sport type.
+     * @param layout container layout for UI feedback.
+     * @param currentRun run data object.
+     */
     fun deleteRunAndLinkedData(idRun: String, sport: String, layout: LinearLayout, currentRun: Runs) {
         // If GPS On, deleting locations
         // If we had pictures, delete all of them
@@ -127,12 +185,24 @@ object Utility {
         deleteRun(idRun, sport, layout)
     }
 
+    /**
+     * Updates the totals by subtracting the values of the deleted run.
+     *
+     * @param currentRun The run that is being deleted.
+     */
     private fun updateTotals(currentRun: Runs) {
         totalsSelectedSport.totalDistance = totalsSelectedSport.totalDistance!! - currentRun.distance!!
         totalsSelectedSport.totalRuns = totalsSelectedSport.totalRuns!! - 1
         totalsSelectedSport.totalTime = totalsSelectedSport.totalTime!! - getSecFromWatch(currentRun.duration!!)
     }
 
+    /**
+     * Checks if the deleted run affects any existing records and updates them accordingly.
+     *
+     * @param currentRun The run that is being deleted.
+     * @param sport The sport associated with the run.
+     * @param user The user ID or email who owns the run.
+     */
     private fun checkRecords(currentRun: Runs, sport: String, user: String) {
         totalsChecked = 0
 
@@ -141,6 +211,13 @@ object Utility {
         checkMaxSpeedRecord(currentRun, sport, user)
     }
 
+    /**
+     * Checks and updates the distance record if the current run matches the saved record.
+     *
+     * @param currentRun The run being deleted or checked.
+     * @param sport The sport associated with the run (e.g., "Running", "Bike").
+     * @param user The email or ID of the user who owns the run.
+     */
     private fun checkDistanceRecord(currentRun: Runs, sport: String, user: String) {
         if (currentRun.distance!! == totalsSelectedSport.recordDistance) {
             var dbRecords = FirebaseFirestore.getInstance()
@@ -171,6 +248,13 @@ object Utility {
         }
     }
 
+    /**
+     * Checks and updates the average speed record if the current run matches the saved record.
+     *
+     * @param currentRun The run being deleted or checked.
+     * @param sport The sport associated with the run.
+     * @param user The email or ID of the user who owns the run.
+     */
     private fun checkAvgSpeedRecord(currentRun: Runs, sport: String, user: String) {
         if (currentRun.avgSpeed!! == totalsSelectedSport.recordAvgSpeed) {
             var dbRecords = FirebaseFirestore.getInstance()
@@ -202,6 +286,13 @@ object Utility {
         }
     }
 
+    /**
+     * Checks and updates the max speed record if the current run matches the saved record.
+     *
+     * @param currentRun The run being deleted or checked.
+     * @param sport The sport associated with the run.
+     * @param user The email or ID of the user who owns the run.
+     */
     private fun checkMaxSpeedRecord(currentRun: Runs, sport: String, user: String) {
         if (currentRun.maxSpeed!! == totalsSelectedSport.recordSpeed) {
             var dbRecord = FirebaseFirestore.getInstance()
@@ -233,6 +324,11 @@ object Utility {
         }
     }
 
+    /**
+     * Refreshes the totals UI or cache for the given sport after record updates.
+     *
+     * @param sport The sport category to refresh totals for (e.g., "Bike", "RollerSkate", "Running").
+     */
     private fun refreshTotalsSport(sport: String) {
         when (sport) {
             "Bike" -> totalsBike
@@ -241,6 +337,13 @@ object Utility {
         }
     }
 
+    /**
+     * Deletes a run document from Firestore and displays a Snackbar with feedback.
+     *
+     * @param idRun The ID of the run document to delete.
+     * @param sport The sport associated with the run.
+     * @param layout The layout to anchor the Snackbar to.
+     */
     private fun deleteRun(idRun: String, sport: String, layout: LinearLayout) {
         var dbRun = FirebaseFirestore.getInstance()
         dbRun.collection("runs$sport").document(idRun)

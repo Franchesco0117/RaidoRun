@@ -196,6 +196,10 @@
     <string name="record_deleted">Registro eliminado</string>
     <string name="error_deleting_record">Error al eliminar el registro</string>
 
+    <string name="error_saving_image">Error al guardar imagen:</string>
+    <string name="image">Imagen</string>
+    <string name="saved">guardada</string>
+
     <!-- Panel de Administración -->
     <string name="users">Usuarios</string>
     <string name="statistics">Estadísticas</string>

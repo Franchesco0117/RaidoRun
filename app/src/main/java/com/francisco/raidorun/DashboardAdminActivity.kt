@@ -32,6 +32,32 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
+/**
+ * DashboardAdminActivity
+ *
+ * This activity displays an administrative dashboard with visual statistics
+ * related to exercise sessions recorded by users in the following Firebase collections:
+ * runsBike, runsRunning, and runsRollerSkate.
+ *
+ * Includes the following charts:
+ * - Bar chart showing total exercise time per day over the last 7 days.
+ * - Pie chart displaying the proportion of interval mode usage.
+ * - Bar chart showing the average duration per exercise type.
+ * - Bar chart highlighting the top 10 most active users.
+ * - Pie chart showing the use of exercise targets (distance or duration).
+ *
+ * Also handles side navigation (NavigationDrawer) and allows the admin to sign out.
+ *
+ * Implements:
+ * - NavigationView.OnNavigationItemSelectedListener: to handle side menu item selection.
+ *
+ * Requirements:
+ * - Access to Firebase Firestore to retrieve activity data.
+ * - Access to FirebaseAuth to manage the administrator session.
+ *
+ * Author: [Francisco Castro]
+ * Created: [7/JUN/2025]
+ */
 class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var drawer: DrawerLayout
@@ -50,7 +76,6 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard_admin)
 
-        // Get current user email
         userEmail = FirebaseAuth.getInstance().currentUser?.email ?: ""
 
         initToolBar()
@@ -75,6 +100,9 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         loadTargetUsagePieChart()
     }
 
+    /**
+     * Initializes and configures the app toolbar with a navigation drawer toggle.
+     */
     private fun initToolBar() {
         val toolBar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolBar_admin)
         setSupportActionBar(toolBar)
@@ -88,11 +116,20 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         toggle.syncState()
     }
 
+    /**
+     * Sets up the navigation view and its item selection listener.
+     */
     private fun initNavigationView() {
         val navigationView: NavigationView = findViewById(R.id.nav_view_admin)
         navigationView.setNavigationItemSelectedListener(this)
     }
 
+    /**
+     * Handles navigation drawer item selection.
+     *
+     * @param item The selected menu item.
+     * @return True if the event was handled.
+     */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_item_signOut -> signOut()
@@ -102,6 +139,10 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         return true
     }
 
+    /**
+     * Loads and displays a pie chart representing the number of runs by type (Bike, Running, RollerSkate).
+     * Aggregates data from multiple Firestore collections.
+     */
     private fun loadKpiRunsPieChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
@@ -126,6 +167,12 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Displays the KPI pie chart using the provided labels and counts.
+     *
+     * @param labels List of labels for each chart segment.
+     * @param counts Corresponding run counts per label.
+     */
     private fun showPieChart(labels: List<String>, counts: List<Int>) {
         val entries = ArrayList<PieEntry>()
         for (i in labels.indices) {
@@ -142,6 +189,10 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         pieChartKpiRuns.invalidate()
     }
 
+    /**
+     * Loads and counts users active in the past 7 days from all run collections.
+     * Then renders a bar chart showing the total number of active users.
+     */
     private fun loadActiveUsersBarChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
@@ -176,6 +227,11 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Displays a bar chart with the total number of active users in the past 7 days.
+     *
+     * @param activeUsersCount The number of unique users.
+     */
     private fun showActiveUsersBarChart(activeUsersCount: Int) {
         val entries = ArrayList<BarEntry>()
         entries.add(BarEntry(0f, activeUsersCount.toFloat()))
@@ -198,6 +254,10 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Loads the total kilometers recorded in each run type collection (Bike, Running, RollerSkate),
+     * then displays them in a grouped bar chart.
+     */
     private fun loadKilometersBarChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
@@ -229,10 +289,15 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Displays a bar chart with total kilometers per sport type.
+     *
+     * @param labels Labels for each sport type.
+     * @param distances List of total distances in kilometers per sport.
+     */
     private fun showKilometersBarChart(labels: List<String>, distances: List<Double>) {
         val entries = ArrayList<BarEntry>()
         for (i in distances.indices) {
-            // Redondear a 1 decimal
             val roundedDistance = (distances[i] * 10.0).roundToInt() / 10.0
             entries.add(BarEntry(i.toFloat(), roundedDistance.toFloat()))
         }
@@ -253,19 +318,16 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             description.isEnabled = false
             legend.isEnabled = false
             setFitBars(true)
-            
-            // Configurar eje X
+
             xAxis.apply {
                 valueFormatter = IndexAxisValueFormatter(labels)
                 position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 setDrawGridLines(false)
             }
-            
-            // Configurar eje Y derecho
+
             axisRight.isEnabled = false
-            
-            // Configurar eje Y izquierdo
+
             axisLeft.apply {
                 axisMinimum = 0f
                 setDrawGridLines(true)
@@ -276,14 +338,17 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Loads data from Firebase for the past 7 days to calculate the total exercise time per day
+     * (in minutes), and displays this data in a bar chart.
+     */
     private fun loadExerciseTimeBarChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, -7)
         val sevenDaysAgo = SimpleDateFormat("yyyy/MM/dd").format(calendar.time)
-        
-        // Mapa para almacenar los minutos totales por día
+
         val dailyMinutes = TreeMap<String, Int>()
         var loadedCollections = 0
 
@@ -295,11 +360,9 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                     for (document in documents) {
                         val date = document.getString("date") ?: continue
                         val duration = document.getString("duration") ?: continue
-                        
-                        // Convertir duración HH:mm:ss a minutos
+
                         val minutes = durationToMinutes(duration)
-                        
-                        // Agregar al total del día
+
                         dailyMinutes[date] = (dailyMinutes[date] ?: 0) + minutes
                     }
                     
@@ -317,6 +380,12 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Converts a time duration string in "HH:mm:ss" format to its total equivalent in minutes.
+     *
+     * @param duration The duration string to convert.
+     * @return Total duration in minutes, or 0 if the input is invalid.
+     */
     private fun durationToMinutes(duration: String): Int {
         val parts = duration.split(":")
         if (parts.size != 3) return 0
@@ -332,6 +401,12 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Converts a number of minutes into a formatted string like "1h 30m" or "45m".
+     *
+     * @param minutes The total number of minutes.
+     * @return A human-readable string representing hours and minutes.
+     */
     private fun formatMinutesToHoursAndMinutes(minutes: Int): String {
         val hours = minutes / 60
         val mins = minutes % 60
@@ -342,11 +417,15 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Displays a bar chart of total daily exercise time using data from the last 7 days.
+     *
+     * @param dailyMinutes A map of dates to total exercise minutes per day.
+     */
     private fun showExerciseTimeBarChart(dailyMinutes: TreeMap<String, Int>) {
         val entries = ArrayList<BarEntry>()
         val dateLabels = ArrayList<String>()
-        
-        // Obtener los últimos 7 días
+
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
         val dayFormat = SimpleDateFormat("EEE", Locale("es", "ES"))
@@ -358,8 +437,8 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             
             entries.add(BarEntry((6 - i).toFloat(), (dailyMinutes[date] ?: 0).toFloat()))
             dateLabels.add(dayName)
-            
-            calendar.add(Calendar.DAY_OF_YEAR, i) // Restaurar la fecha
+
+            calendar.add(Calendar.DAY_OF_YEAR, i)
         }
 
         val dataSet = BarDataSet(entries, "Exercise time")
@@ -378,19 +457,16 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             description.isEnabled = false
             legend.isEnabled = false
             setFitBars(true)
-            
-            // Configurar eje X
+
             xAxis.apply {
                 valueFormatter = IndexAxisValueFormatter(dateLabels)
                 position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 setDrawGridLines(false)
             }
-            
-            // Configurar eje Y derecho
+
             axisRight.isEnabled = false
-            
-            // Configurar eje Y izquierdo
+
             axisLeft.apply {
                 axisMinimum = 0f
                 setDrawGridLines(true)
@@ -406,6 +482,10 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Queries Firebase to count how many times interval mode was used versus normal mode, then
+     * displays the results in a pie chart with percentages.
+     */
     private fun loadIntervalModePieChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
@@ -440,6 +520,13 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Displays a pie chart representing the percentage of exercise sessions
+     * that used interval mode vs. normal mode.
+     *
+     * @param intervalModeCount Number of sessions using interval mode.
+     * @param normalModeCount Number of sessions using normal mode.
+     */
     private fun showIntervalModePieChart(intervalModeCount: Int, normalModeCount: Int) {
         val entries = ArrayList<PieEntry>()
         val total = intervalModeCount + normalModeCount
@@ -453,8 +540,8 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             
             val dataSet = PieDataSet(entries, "")
             dataSet.colors = listOf(
-                Color.rgb(104, 159, 56),  // Verde para intervalos
-                Color.rgb(3, 169, 244)     // Azul para normal
+                Color.rgb(104, 159, 56),
+                Color.rgb(3, 169, 244)
             )
             
             val data = PieData(dataSet)
@@ -477,12 +564,15 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 invalidate()
             }
         } else {
-            // Si no hay datos, mostrar un mensaje o gráfico vacío
             pieChartIntervalMode.setNoDataText("No data available")
             pieChartIntervalMode.invalidate()
         }
     }
 
+    /**
+     * Calculates the average session duration for each activity type (Bike, Running, RollerSkate),
+     * and visualizes the results in a bar chart.
+     */
     private fun loadAverageDurationBarChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
@@ -522,6 +612,13 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Displays a bar chart showing the average exercise duration (in minutes)
+     * per activity type using distinct colors for each category.
+     *
+     * @param labels A list of activity labels (e.g., "Bike", "Running", "RollerSkate").
+     * @param averageMinutes A list of average durations in minutes for each activity type.
+     */
     private fun showAverageDurationBarChart(labels: List<String>, averageMinutes: List<Float>) {
         val entries = ArrayList<BarEntry>()
         for (i in averageMinutes.indices) {
@@ -530,9 +627,9 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
 
         val dataSet = BarDataSet(entries, "Average duration")
         dataSet.colors = listOf(
-            Color.rgb(233, 30, 99),  // Rosa para Bicicleta
-            Color.rgb(156, 39, 176),  // Morado para Running
-            Color.rgb(255, 193, 7)    // Amarillo para RollerSkate
+            Color.rgb(233, 30, 99),
+            Color.rgb(156, 39, 176),
+            Color.rgb(255, 193, 7)
         )
 
         val data = BarData(dataSet)
@@ -548,19 +645,16 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             description.isEnabled = false
             legend.isEnabled = false
             setFitBars(true)
-            
-            // Configurar eje X
+
             xAxis.apply {
                 valueFormatter = IndexAxisValueFormatter(labels)
                 position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 setDrawGridLines(false)
             }
-            
-            // Configurar eje Y derecho
+
             axisRight.isEnabled = false
-            
-            // Configurar eje Y izquierdo
+
             axisLeft.apply {
                 axisMinimum = 0f
                 setDrawGridLines(true)
@@ -576,6 +670,10 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Queries Firebase to count how many sessions each user has logged, and shows a bar chart with
+     * the top 10 most active users.
+     */
     private fun loadUserFrequencyBarChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
@@ -593,10 +691,9 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                     
                     loadedCollections++
                     if (loadedCollections == collections.size) {
-                        // Ordenar usuarios por cantidad de carreras (descendente)
                         val sortedUsers = userRunCounts.entries
                             .sortedByDescending { it.value }
-                            .take(10) // Mostrar solo los 10 usuarios más activos
+                            .take(10)
                         
                         showUserFrequencyBarChart(sortedUsers)
                     }
@@ -614,14 +711,18 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Displays a bar chart representing the most active users based on the number of recorded sessions.
+     * Only the email prefix (text before "@") is shown as the label for each user.
+     *
+     * @param sortedUsers A list of user-session count pairs sorted in descending order by frequency.
+     */
     private fun showUserFrequencyBarChart(sortedUsers: List<Map.Entry<String, Int>>) {
         val entries = ArrayList<BarEntry>()
         val labels = ArrayList<String>()
-        
-        // Crear entradas para el gráfico
+
         sortedUsers.forEachIndexed { index, entry ->
             entries.add(BarEntry(index.toFloat(), entry.value.toFloat()))
-            // Simplificar el correo para la visualización (quitar el dominio)
             labels.add(entry.key.substringBefore("@"))
         }
 
@@ -641,32 +742,28 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             description.isEnabled = false
             legend.isEnabled = false
             setFitBars(true)
-            
-            // Configurar eje X (vertical en gráfico horizontal)
+
             xAxis.apply {
                 position = XAxis.XAxisPosition.BOTTOM
                 valueFormatter = IndexAxisValueFormatter(labels)
                 granularity = 1f
                 setDrawGridLines(false)
-                labelRotationAngle = 45f // Rotar etiquetas para mejor lectura
+                labelRotationAngle = 45f
                 textSize = 10f
             }
-            
-            // Configurar eje Y (horizontal en gráfico horizontal)
+
             axisRight.isEnabled = false
             axisLeft.apply {
                 axisMinimum = 0f
                 setDrawGridLines(true)
                 granularity = 1f
-                // Asegurar que solo se muestren valores enteros
                 valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
                         return value.toInt().toString()
                     }
                 }
             }
-            
-            // Ajustar márgenes para las etiquetas
+
             setExtraOffsets(10f, 10f, 30f, 30f)
             
             animateY(1000)
@@ -674,6 +771,10 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Counts how many exercise sessions include a target (either distanceTarget or challengeDuration)
+     * and how many do not, then visualizes this in a pie chart.
+     */
     private fun loadTargetUsagePieChart() {
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
@@ -712,6 +813,13 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Generates and displays a pie chart showing the proportion of recorded sessions that had a target
+     * set versus those that did not. The chart uses distinct colors and displays a breakdown in the center.
+     *
+     * @param runsWithTarget Number of sessions that had a defined target.
+     * @param runsWithoutTarget Number of sessions without any defined target.
+     */
     private fun showTargetUsagePieChart(runsWithTarget: Int, runsWithoutTarget: Int) {
         val entries = ArrayList<PieEntry>()
         val total = runsWithTarget + runsWithoutTarget
@@ -725,8 +833,8 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             
             val dataSet = PieDataSet(entries, "")
             dataSet.colors = listOf(
-                Color.rgb(255, 193, 7),  // Amarillo para carreras con objetivo
-                Color.rgb(158, 158, 158)  // Gris para carreras sin objetivo
+                Color.rgb(255, 193, 7),
+                Color.rgb(158, 158, 158)
             )
             
             val data = PieData(dataSet)
@@ -745,8 +853,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 centerText = "Total: $total\nruns"
                 setCenterTextSize(14f)
                 setHoleColor(Color.TRANSPARENT)
-                
-                // Agregar detalle en el texto central
+
                 val withTargetText = "${runsWithTarget} with target"
                 val withoutTargetText = "${runsWithoutTarget} without target"
                 centerText = "Total: $total runs\n$withTargetText\n$withoutTargetText"
@@ -760,12 +867,19 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         }
     }
 
+    /**
+     * Logs the current user out of the app and redirects them to the login screen (LoginActivity).
+     */
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 
+    /**
+     * Handles the "back" button behavior: if the navigation drawer is open, it closes it;
+     * otherwise, it performs the default action.
+     */
     override fun onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)

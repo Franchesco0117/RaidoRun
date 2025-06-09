@@ -38,6 +38,10 @@ import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * CameraActivity handles capturing photos using the device's camera. It provides functionality to switch
+ * between front and back cameras, capture images, and save them with a timestamp-based filename.
+ */
 class CameraActivity : AppCompatActivity() {
 
     companion object {
@@ -65,6 +69,29 @@ class CameraActivity : AppCompatActivity() {
 
     private var FILE_NAME: String = ""
 
+    /**
+     * CameraActivity
+     *
+     * This activity manages the process of taking a photo using the device's camera.
+     * It is responsible for:
+     * - Initializing and opening the camera.
+     * - Displaying a camera preview on screen.
+     * - Capturing the image and saving it temporarily.
+     * - Returning the captured image back to the calling activity.
+     *
+     * Common use cases include profile picture updates or exercise evidence uploads.
+     *
+     * Permissions required:
+     * - CAMERA
+     * - WRITE_EXTERNAL_STORAGE (for older devices or if saving externally)
+     *
+     * Make sure to:
+     * - Declare this activity in AndroidManifest.xml.
+     * - Handle runtime permissions for Android 6.0 (API 23) and above.
+     *
+     * Author: [Francisco Castro]
+     * Created: [21/MAY/2025]
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraBinding.inflate(layoutInflater)
@@ -100,6 +127,15 @@ class CameraActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Handles the result of runtime permission requests.
+     * If all required permissions are granted, it proceeds to start the camera.
+     * Otherwise, it shows a message and closes the activity.
+     *
+     * @param requestCode The request code passed in requestPermissions().
+     * @param permissions The requested permissions.
+     * @param grantResults The grant results for the corresponding permissions.
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -117,10 +153,16 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks if all required permissions have been granted.
+     */
     private fun allPermissionsGranted() = REQUIRED_PERMISSION.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * Starts the camera by binding it to the lifecycle and selecting the proper lens.
+     */
     private fun startCamera() {
         val cameraProviderFinally = ProcessCameraProvider.getInstance(this)
         cameraProviderFinally.addListener(Runnable {
@@ -139,6 +181,9 @@ class CameraActivity : AppCompatActivity() {
         }, ContextCompat.getMainExecutor(this))
     }
 
+    /**
+     * Enables or disables the camera switch button based on available cameras.
+     */
     private fun manageSwitchButton() {
         val switchButton = binding.cameraSwitchButton
         try {
@@ -149,14 +194,23 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Checks if the device has a back camera.
+     */
     private fun hasBackCamera(): Boolean {
         return cameraProvider?.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA) ?: false
     }
 
+    /**
+     * Checks if the device has a front camera.
+     */
     private fun hasFrontCamera(): Boolean {
         return cameraProvider?.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA) ?: false
     }
 
+    /**
+     * Binds the selected camera to the lifecycle and prepares the preview and image capture use cases.
+     */
     private fun bindCamera() {
         val metrics = DisplayMetrics().also {
             binding.viewFinder.display.getRealMetrics(it)
@@ -190,6 +244,18 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Calculates and returns the closest standard camera aspect ratio (either 4:3 or 16:9)
+     * based on the given width and height of the screen.
+     *
+     * This method helps in selecting the best-suited aspect ratio for the camera preview
+     * by comparing the actual preview ratio to standard values.
+     *
+     * @param width The width of the screen or view.
+     * @param height The height of the screen or view.
+     * @return [AspectRatio.RATIO_4_3] if the preview ratio is closer to 4:3,
+     *         otherwise [AspectRatio.RATIO_16_9].
+     */
     private fun aspectRadio(width: Int, height: Int): Int {
         val previewRatio = max(width, height).toDouble() / min(width, height)
 
@@ -200,6 +266,10 @@ class CameraActivity : AppCompatActivity() {
         return AspectRatio.RATIO_16_9
     }
 
+    /**
+     * Returns the output directory for saved images.
+     * Falls back to internal storage if external directory is unavailable.
+     */
     private fun getOutPutDirectory(): File {
         val mediaDirectory = externalMediaDirs.firstOrNull()?.let {
             File(it, "RaidoRun").apply {
@@ -210,8 +280,10 @@ class CameraActivity : AppCompatActivity() {
         return if (mediaDirectory != null && mediaDirectory.exists()) mediaDirectory else filesDir
     }
 
+    /**
+     * Captures a photo, saves it to a file, updates the media scanner, and shows a confirmation Snackbar.
+     */
     private fun takePhoto() {
-        // Generar un timestamp único para cada foto
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault()).format(Date())
         var fileName = getString(R.string.app_name) + "_" + timeStamp
 
@@ -241,26 +313,31 @@ class CameraActivity : AppCompatActivity() {
                         arrayOf(saveUri.toFile().absolutePath),
                         arrayOf(mimeType)
                     ) { _, uri ->
-                        // Callback cuando se escanea el archivo
+
                     }
 
                     val clMain = findViewById<ConstraintLayout>(R.id.clMain)
-                    Snackbar.make(clMain, "Imagen $fileName guardada", Snackbar.LENGTH_LONG).setAction("Ok") {
-                        // Opcional: remover este cambio de color o ajustarlo
+                    Snackbar.make(clMain, "${R.string.image} $fileName ${R.string.saved}", Snackbar.LENGTH_LONG).setAction(R.string.ok) {
                         clMain.setBackgroundColor(Color.CYAN)
                     }.show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
                     val clMain = findViewById<ConstraintLayout>(R.id.clMain)
-                    Snackbar.make(clMain, "Error al guardar la imagen: ${exception.message}", Snackbar.LENGTH_LONG).setAction("Ok") {
+                    Snackbar.make(clMain, "${R.string.error_saving_image} ${exception.message}", Snackbar.LENGTH_LONG).setAction(R.string.ok) {
                         clMain.setBackgroundColor(Color.CYAN)
                     }.show()
-                    Log.e("TakePhoto", "Error al capturar imagen", exception)
+                    Log.e("TakePhoto", "Error saving image", exception)
                 }
             })
     }
 
+    /**
+     * Loads and displays the most recently taken photo as a circular thumbnail
+     * in the photo view button using Glide.
+     *
+     * @param uri The [Uri] of the image to be displayed as a thumbnail.
+     */
     private fun setGalleryThumbnail(uri: Uri) {
         var thumbnail = binding.photoViewButton
         thumbnail.post {

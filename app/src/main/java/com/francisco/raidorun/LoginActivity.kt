@@ -23,6 +23,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.properties.Delegates
 
+/**
+ * LoginActivity
+ *
+ * Activity responsible for handling user authentication through email/password
+ * and Google Sign-In using Firebase. Includes validation, UI initialization,
+ * Google sign-in setup, and navigation to the main screen after successful login.
+ *
+ * Requirements:
+ * - Firebase Authentication configured for email/password and Google.
+ * - Google Sign-In API client ID set in `strings.xml`.
+ *
+ * Author: [Francisco Castro]
+ * Created: [9/MAR/2025]
+ */
 class LoginActivity : AppCompatActivity() {
 
     companion object {
@@ -56,6 +70,10 @@ class LoginActivity : AppCompatActivity() {
         setupActivityResultLauncher()
     }
 
+    /**
+     * Initializes UI components from the layout and sets up the FirebaseAuth instance.
+     * Also hides the terms and conditions section initially.
+     */
     private fun initializeViews() {
         lyTermsConditions = findViewById(R.id.lyTemsConditions)
         lyTermsConditions.visibility = View.INVISIBLE
@@ -69,6 +87,11 @@ class LoginActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
     }
 
+
+    /**
+     * Configures Google Sign-In options and attempts a silent sign-in if available.
+     * On success, proceeds to authenticate with Firebase using the Google account's ID token.
+     */
     private fun setupGoogleSignIn() {
         try {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -79,7 +102,6 @@ class LoginActivity : AppCompatActivity() {
 
             googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-            // Verificar la configuración actual
             googleSignInClient.silentSignIn().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("GoogleSignIn", "Silent sign-in successful")
@@ -97,6 +119,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Registers an activity result launcher to handle the result of the Google Sign-In intent.
+     * Handles different result scenarios such as success, cancelation, or unexpected errors.
+     */
     private fun setupActivityResultLauncher() {
         signInLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             Log.d("GoogleSignIn", "Activity result received: ${result.resultCode}")
@@ -141,6 +167,10 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Sets up the listeners for login button, password recovery, terms and conditions,
+     * and Google Sign-In button. Ensures that terms are accepted before proceeding with Google Sign-In.
+     */
     private fun setupClickListeners() {
         btnLogin.setOnClickListener { loginUser() }
         tvForgotPassword.setOnClickListener { resetPassword() }
@@ -159,11 +189,18 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Adds listeners to email and password input fields to manage the login button state
+     * based on user input.
+     */
     private fun setupTextChangedListeners() {
         etEmail.doOnTextChanged { _, _, _, _ -> manageLoginButton() }
         etPassword.doOnTextChanged { _, _, _, _ -> manageLoginButton() }
     }
-
+    /**
+     * Launches the Google Sign-In intent after signing out any previously signed-in account.
+     * Ensures that the sign-in client is properly initialized before launching.
+     */
     private fun signInWithGoogle() {
         if (!::googleSignInClient.isInitialized) {
             Log.e("GoogleSignIn", "Google Sign-In client not initialized")
@@ -183,6 +220,12 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Authenticates the user with Firebase using the Google ID token.
+     * On successful authentication, saves the user to Firestore and redirects to the appropriate home screen.
+     *
+     * @param idToken The ID token obtained from the Google Sign-In process.
+     */
     private fun firebaseAuthWithGoogle(idToken: String) {
         Log.d("GoogleSignIn", "Starting Firebase auth with Google")
         val credential = GoogleAuthProvider.getCredential(idToken, null)
@@ -203,6 +246,13 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Saves a new user's data to the Firestore "users" collection, including email,
+     * registration date, and provider used for login.
+     *
+     * @param email The user's email address.
+     * @param provider The authentication provider (e.g., "Google", "email").
+     */
     private fun saveUserToFirestore(email: String, provider: String) {
         Log.d("GoogleSignIn", "Saving user to Firestore")
         val dateRegister = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
@@ -220,6 +270,10 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Enables or disables the login button depending on the validity of the email and password inputs.
+     * Also changes the button's background color to reflect its enabled state.
+     */
     private fun manageLoginButton() {
         val emailText = etEmail.text.toString()
         val passwordText = etPassword.text.toString()
@@ -232,6 +286,11 @@ class LoginActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Attempts to sign in the user using email and password credentials.
+     * If sign-in fails and the terms are accepted, it triggers user registration.
+     * Otherwise, prompts the user to accept the terms.
+     */
     private fun loginUser() {
         email = etEmail.text.toString()
         password = etPassword.text.toString()
@@ -254,6 +313,10 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Sends a password reset email to the user if the email exists in the Firestore "users" collection.
+     * Validates that the email field is not empty before proceeding.
+     */
     private fun resetPassword() {
         val emailText = etEmail.text.toString()
 
@@ -285,6 +348,12 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Registers a new user in Firebase Authentication using email and password.
+     * On success, the user is saved to Firestore and redirected to the onboarding activity.
+     *
+     * @param provider The authentication provider (should be "email" in this context).
+     */
     private fun register(provider: String) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -298,6 +367,14 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Navigates the user to the appropriate home screen depending on their role.
+     * If the email corresponds to the admin account, the admin dashboard is shown.
+     * Otherwise, redirects to the main user activity.
+     *
+     * @param email The authenticated user's email.
+     * @param provider The authentication provider.
+     */
     private fun goHome(email: String, provider: String) {
         userEmail = email
         providerSession = provider
@@ -315,6 +392,10 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
+    /**
+     * Overrides the default back button behavior to return to the device home screen
+     * instead of navigating back to previous activities.
+     */
     override fun onBackPressed() {
         super.onBackPressed()
         val startIntent = Intent(Intent.ACTION_MAIN).apply {

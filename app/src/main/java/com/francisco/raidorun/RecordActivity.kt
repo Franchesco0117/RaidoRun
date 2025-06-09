@@ -19,6 +19,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.local.QueryResult
 
+/**
+ * RecordActivity
+ *
+ * Activity responsible for displaying the user's sport activity history filtered by sport type
+ * (Running, Bike, or RollerSkate) and sorted by different fields like date, duration, distance,
+ * average speed, and max speed. Data is retrieved from Firebase Firestore.
+ *
+ * Requirements:
+ * - Firebase Firestore configured with collections: runsRunning, runsBike, and runsRollerSkate.
+ * - Each collection should include documents with fields like user, date, duration, distance, avgSpeed, and maxSpeed.
+ *
+ * Author: Francisco Castro
+ * Created: 30/APR/2025
+ */
 class RecordActivity : AppCompatActivity() {
 
     private var sportSelected: String = "Running"
@@ -59,28 +73,52 @@ class RecordActivity : AppCompatActivity() {
         recyclerView.adapter = myAdapter
     }
 
+    /**
+     * Loads the RecyclerView with the most recent sorting (default: by date descending)
+     * when the activity comes to the foreground.
+     */
     override fun onResume() {
         super.onResume()
         loadRecyclerView("date", Query.Direction.DESCENDING)
     }
 
+    /**
+     * Clears the run list to free memory when activity is paused.
+     */
     override fun onPause() {
         super.onPause()
         runsArrayList.clear()
     }
 
+    /**
+     * Handles back navigation using the toolbar back arrow.
+     */
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 
+    /**
+     * Inflates the menu containing sorting options.
+     *
+     * @param menu The options menu in which items are placed.
+     * @return True for the menu to be displayed; false otherwise.
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.order_records_by, menu)
         return true //super.onCreateOptionsMenu(menu)
     }
 
+    /**
+     * Handles menu item selection to toggle sorting order (ascending/descending)
+     * for the selected field, then reloads the RecyclerView data accordingly.
+     *
+     * Supported sort fields: date, duration, distance, avgSpeed, maxSpeed.
+     *
+     * @param item The selected menu item.
+     * @return True if the event was handled, otherwise delegates to superclass.
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         var order: Query.Direction = Query.Direction.DESCENDING
 
         when (item.itemId) {
@@ -152,6 +190,13 @@ class RecordActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Loads records from Firestore based on the current sportSelected value,
+     * filtering by the logged-in user and ordering by the specified field and direction.
+     *
+     * @param field The Firestore field to sort by.
+     * @param order The sorting direction (ASCENDING or DESCENDING).
+     */
     private fun loadRecyclerView(field: String, order: Query.Direction) {
         runsArrayList.clear()
 
@@ -171,6 +216,12 @@ class RecordActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Loads "Bike" sport records, updates button styles accordingly,
+     * and reloads the RecyclerView with runs sorted by date descending.
+     *
+     * @param v The view that triggered this function.
+     */
     fun loadRunsBike(v: View) {
         sportSelected = "Bike"
         ivBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.wii_blue))
@@ -180,6 +231,13 @@ class RecordActivity : AppCompatActivity() {
         loadRecyclerView("date", Query.Direction.DESCENDING)
     }
 
+
+    /**
+     * Loads "RollerSkate" sport records, updates button styles accordingly,
+     * and reloads the RecyclerView with runs sorted by date descending.
+     *
+     * @param v The view that triggered this function.
+     */
     fun loadRunsRollerSkate(v: View) {
         sportSelected = "RollerSkate"
         ivBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
@@ -189,6 +247,12 @@ class RecordActivity : AppCompatActivity() {
         loadRecyclerView("date", Query.Direction.DESCENDING)
     }
 
+    /**
+     * Loads "Running" sport records, updates button styles accordingly,
+     * and reloads the RecyclerView with runs sorted by date descending.
+     *
+     * @param v The view that triggered this function.
+     */
     fun loadRunsRunning(v: View) {
         sportSelected = "Running"
         ivBike.setBackgroundColor(ContextCompat.getColor(mainContext, R.color.gray_medium))
@@ -198,6 +262,11 @@ class RecordActivity : AppCompatActivity() {
         loadRecyclerView("date", Query.Direction.DESCENDING)
     }
 
+    /**
+     * Navigates the user back to the MainActivity screen.
+     *
+     * @param v The view that triggered this function.
+     */
     fun callHome(v: View) {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

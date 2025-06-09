@@ -12,6 +12,21 @@ import com.francisco.raidorun.Utility.setHeightLinearLayout
 import com.francisco.raidorun.Utility.animateViewOfFloat
 import com.francisco.raidorun.Utility.deleteRunAndLinkedData
 
+/**
+ * RunsAdapter
+ *
+ * Adapter for displaying a list of sport activities in a RecyclerView.
+ * Each item is represented as a card with expandable details and medals.
+ * Allows deletion of a run from the Firestore database and updates the UI accordingly.
+ *
+ * Features:
+ * - Card layout with collapsible/expandable details.
+ * - Displays formatted date, time, challenge/interval data, speeds, altitudes, and medals.
+ * - Handles deletion of run with confirmation dialog.
+ *
+ * Author: Francisco Castro
+ * Created: 23/MAY/2025
+ */
 class RunsAdapter(
     private val runsList: ArrayList<Runs>
 ): RecyclerView.Adapter<MyViewHolder>() {
@@ -20,6 +35,9 @@ class RunsAdapter(
 
     private var minimized = true
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type.
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -29,6 +47,17 @@ class RunsAdapter(
         return MyViewHolder(itemView)
     }
 
+    /**
+     * Binds data to the views in each item card. Also handles:
+     * - Formatting the date display
+     * - Assigning medals based on run performance
+     * - Managing visibility of interval/challenge indicators
+     * - Animating expansion and collapse of additional details
+     * - Handling deletion logic for runs
+     *
+     * @param holder The ViewHolder containing the views to bind data to.
+     * @param position The position of the item within the adapter's data set.
+     */
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val run: Runs = runsList[position]
 
@@ -195,8 +224,10 @@ class RunsAdapter(
         }
     }
 
+    /**
+     * Returns the total number of runs to display.
+     */
     override fun getItemCount(): Int {
         return runsList.size
     }
-
 }

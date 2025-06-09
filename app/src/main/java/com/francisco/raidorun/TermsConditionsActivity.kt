@@ -5,6 +5,15 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
+/**
+ * TermsConditionsActivity
+ *
+ * Activity responsible for displaying the Terms and Conditions screen.
+ * Initializes the toolbar with a back button and appropriate styling.
+ *
+ * Author: Francisco Castro
+ * Created: 9/MAR/2025
+ */
 class TermsConditionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +34,12 @@ class TermsConditionsActivity : AppCompatActivity() {
         toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.gray_dark))
     }
 
-    // Handle back button click
+    /**
+     * Handles the toolbar back button click event to navigate back to the previous screen.
+     *
+     * @param item The menu item that was selected.
+     * @return True if the back button was handled, false otherwise.
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {

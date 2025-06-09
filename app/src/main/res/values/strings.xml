@@ -195,6 +195,10 @@
     <string name="record_deleted">Record deleted</string>
     <string name="error_deleting_record">Error deleting record</string>
 
+    <string name="error_saving_image">Error saving image:</string>
+    <string name="image">Image</string>
+    <string name="saved">saved</string>
+
     <!-- Admin Dashboard -->
     <string name="users">Users</string>
     <string name="statistics">Statistics</string>

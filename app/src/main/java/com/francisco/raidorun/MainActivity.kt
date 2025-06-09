@@ -110,25 +110,35 @@ import kotlin.math.max
 import kotlin.math.round
 import kotlin.text.get
 
+/**
+ * Main activity for the app, responsible for initializing the UI, handling navigation,
+ * setting up permissions, and managing core functionality like GPS tracking, metrics,
+ * and interval mode logic.
+ *
+ * Implements several interfaces for navigation, map readiness, and location interactions.
+ *
+ * Author: Francisco Castro
+ * Created: 9/MAR/2025
+ */
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
 
     companion object {
         lateinit var mainContext: Context
 
+        /** Required GPS permissions for accessing device location. */
         val REQUIRED_PERMISSIONS_GPS =
             arrayOf(
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
             )
 
+        /** Total stats depending on selected sport or activity type. */
         lateinit var totalsSelectedSport: Totals
         lateinit var totalsBike: Totals
         lateinit var totalsRollerSkate: Totals
         lateinit var totalsRunning: Totals
 
-        var countPhotos : Int = 0
-        var lastImage: String = ""
     }
 
     private lateinit var drawer: DrawerLayout
@@ -263,6 +273,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private lateinit var listPoints: Iterable<LatLng>
 
+    /**
+     * Initializes the activity, setting up the toolbar, navigation drawer, permissions,
+     * and loading persisted data from the database.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -278,6 +292,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         loadFromDB()
     }
 
+    /**
+     * Initializes the chronometer display and stopwatch logic, as well as setting up
+     * the UI layout and reset behavior.
+     */
     private fun initChrono() {
         tvChrono = findViewById(R.id.tvChrono)
         tvChrono.setTextColor(ContextCompat.getColor(this, R.color.white))
@@ -302,6 +320,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fbCamera.isVisible = false
     }
 
+    /**
+     * Hides specific layout components off-screen to prepare the UI for later animations or states.
+     */
     private fun hideLayouts() {
         var lyMap = findViewById<LinearLayout>(R.id.lyMap)
         var lyFragmentMap = findViewById<LinearLayout>(R.id.lyFragmentMap)
@@ -321,6 +342,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lyChallenges.translationY = -300f
     }
 
+    /**
+     * Initializes UI elements for tracking various exercise metrics like distance,
+     * average speed, and maximum speed, and sets their default states.
+     */
     private fun initMetrics() {
         csbCurrentDistance = findViewById(R.id.csbCurrentDistance)
         csbChallengeDistance = findViewById(R.id.csbChallengeDistance)
@@ -350,11 +375,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvMaxSpeedRecord.text = ""
     }
 
+    /**
+     * Initializes toggle switches for interval mode and challenge mode features.
+     */
     private fun initSwitches() {
         swIntervalMode = findViewById(R.id.swIntervalMode)
         swChallenges = findViewById(R.id.swChallenges)
     }
 
+    /**
+     * Initializes the interval mode UI components including the duration picker, running and
+     * walking time displays, and the circular seek bar. Sets up listeners to update the interval
+     * duration, progress, and related UI elements, enforcing step increments and enabling/disabling
+     * controls based on the current interval values.
+     */
     private fun initIntervalMode() {
         npDurationInterval = findViewById(R.id.npDurationInterval)
 
@@ -446,8 +480,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         })
     }
 
-
-
+    /**
+     * Sets up the challenge mode UI components such as distance and duration pickers, and
+     * notification/autofinish checkboxes. Initializes value ranges and listeners to update
+     * challenge parameters dynamically as users adjust the controls.
+     */
     private fun initChallengeMode() {
         npChallengeDistance = findViewById(R.id.npChallengeDistance)
         npChallengeDurationHH = findViewById(R.id.npChallengeDurationHH)
@@ -508,6 +545,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         cbAutoFinish = findViewById<CheckBox>(R.id.cbAutoFinish)
     }
 
+    /**
+     * Calls all initialization functions to set up chronometer, UI layouts, metrics, switches,
+     * interval mode, challenge mode, map fragment, totals, levels, medals, preferences, and
+     * recovers saved preferences.
+     */
     private fun initObjects() {
         initChrono()
         hideLayouts()
@@ -528,6 +570,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recoveryPreferences()
     }
 
+    /**
+     * Prepares the map by clearing existing points, creating the map fragment, and enabling UI
+     * controls conditionally based on GPS permission status.
+     */
     private fun initMap() {
         listPoints = arrayListOf()
         (listPoints as ArrayList<LatLng>).clear()
@@ -542,19 +588,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Handles clicks on the map’s “My Location” button. Returns false to allow default behavior.
+     */
     override fun onMyLocationButtonClick(): Boolean {
         return false
     }
 
+    /**
+     * Callback triggered when the user’s location on the map is clicked. (Empty implementation)
+     *
+     * @param p0 The Location object representing the user's current location.
+     */
     override fun onMyLocationClick(p0: Location) {
 
     }
 
+    /**
+     * Creates and initializes the map fragment by obtaining it from the support fragment manager
+     * and setting the map ready callback.
+     */
     private fun createMapFragment() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.fragmentMap) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
     }
 
+    /**
+     * Called when the map is ready to be used. Sets map type, enables location, configures
+     * listeners for location buttons and map interactions, and centers the map on initial coordinates.
+     *
+     * @param googleMap The GoogleMap instance that is ready for use.
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
@@ -569,6 +633,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         centerMap (init_lt, init_ln)
     }
 
+    /**
+     * Handles the result of location permission requests. Enables or disables map-related UI
+     * components accordingly.
+     *
+     * @param requestCode The request code passed in requestPermissions().
+     * @param permissions The requested permissions.
+     * @param grantResults The grant results for the corresponding permissions, either
+     *                     PackageManager.PERMISSION_GRANTED or PackageManager.PERMISSION_DENIED.
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
@@ -596,6 +669,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Enables the user’s location display on the map if permissions are granted; otherwise,
+     * requests location permission.
+     */
     private fun enableMyLocation() {
         if (!::map.isInitialized) return
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -609,6 +686,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Toggles the map type between hybrid and normal views and updates the corresponding icon.
+     *
+     * @param v The view that triggered this method (typically a button or icon).
+     */
     fun changeTypeMap(v: View) {
         var ivTypeMap = findViewById<ImageView>(R.id.ivTypeMap)
         if (map.mapType == GoogleMap.MAP_TYPE_HYBRID){
@@ -620,6 +702,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Centers the map view on the current location if available; otherwise, centers on the
+     * default initial coordinates.
+     *
+     * @param v The view that triggered this method (typically a button).
+     */
     fun callCenterMap(v: View) {
         mapCentered = true
         if (latitude == 0.0) {
@@ -629,6 +717,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Shows or hides the map layout with animations based on current visibility and location
+     * permissions, requesting permission if necessary.
+     *
+     * @param v The view that triggered this method (typically a button).
+     */
     fun callShowHideMap(v: View) {
         if (allPermissionGrantedGPS()) {
             var lyMap = findViewById<LinearLayout>(R.id.lyMap)
@@ -649,11 +743,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Centers the map on the given latitude and longitude coordinates with animation.
+     *
+     * @param lt Latitude coordinate.
+     * @param ln Longitude coordinate.
+     */
     private fun centerMap(lt: Double, ln: Double) {
         val posMap = LatLng(lt, ln)
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(posMap, 16f), 1000, null)
     }
 
+    /**
+     * Initializes the totals data objects for Bike, RollerSkate, and Running activities,
+     * setting all counters and records to zero.
+     */
     private fun initTotals() {
         totalsBike = Totals()
         totalsRollerSkate = Totals()
@@ -681,6 +785,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         totalsRunning.recordAvgSpeed = 0.0
     }
 
+    /**
+     * Initializes level data objects and their corresponding target values for
+     * Bike, RollerSkate, and Running activities.
+     */
     private fun initLevels() {
         levelSelectedSport = Level()
         levelBike = Level()
@@ -712,6 +820,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         levelRunning.distanceTarget= 1
     }
 
+    /**
+     * Initializes and clears all medals lists for the selected sport and individual sports.
+     */
     private fun initMedals() {
         medalsListSportSelectedDistance = arrayListOf()
         medalsListSportSelectedAvgSpeed = arrayListOf()
@@ -742,6 +853,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         medalsListRunningMaxSpeed.clear()
     }
 
+    /**
+     * Resets all medal achievement flags for distance, average speed, and max speed.
+     */
     private fun resetMedals() {
         recDistanceGold = false
         recDistanceSilver = false
@@ -756,18 +870,29 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recMaxSpeedBronze = false
     }
 
+    /**
+     * Loads user data from the database, including totals and medals.
+     */
     private fun loadFromDB() {
         loadTotalUser()
         loadMedalsUser()
-
     }
 
+    /**
+     * Loads total statistics for each sport: Bike, RollerSkate, and Running.
+     */
     private fun loadTotalUser() {
         loadTotalSport("Bike")
         loadTotalSport("RollerSkate")
         loadTotalSport("Running")
     }
 
+    /**
+     * Loads total statistics from the database for a specific sport.
+     * Updates the corresponding totals object or initializes the database entry if missing.
+     *
+     * @param sport The sport type as a String ("Bike", "RollerSkate", or "Running").
+     */
     private fun loadTotalSport(sport: String) {
         var collection = "totals$sport"
         var dbTotalsUser = FirebaseFirestore.getInstance()
@@ -806,6 +931,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
     }
 
+    /**
+     * Retrieves and sets the level data for a specific sport from the database.
+     *
+     * @param sport The sport type as a String ("Bike", "RollerSkate", or "Running").
+     */
     private fun setLevelSport(sport: String) {
         val dbLevels: FirebaseFirestore = FirebaseFirestore.getInstance()
         dbLevels.collection("levels$sport")
@@ -830,6 +960,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
     }
 
+    /**
+     * Updates the UI and level data for the Bike sport based on the loaded totals
+     * and available levels.
+     */
     private fun setLevelBike() {
         var lyNavLevelBike = findViewById<LinearLayout>(R.id.lyNavLevelBike)
         if (totalsBike.totalTime!! == 0) {
@@ -893,6 +1027,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Updates the UI and progress indicators for the Roller Skate level based on the user's total 
+     * runs, total distance, and total time. It adjusts layout visibility, sets the current level, 
+     * updates images, progress bars, and textual information accordingly.
+     */
     private fun setLevelRollerSkate(){
         var lyNavLevelRollerSkate = findViewById<LinearLayout>(R.id.lyNavLevelRollerSkate)
         if (totalsRollerSkate.totalTime!! == 0) {
@@ -957,6 +1096,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Updates the UI and progress indicators for the Running level based on the user's total runs, 
+     * total distance, and total time. It adjusts layout visibility, sets the current level, 
+     * updates images, progress bars, and textual information accordingly.
+     */
     private fun setLevelRunning(){
         var lyNavLevelRunning = findViewById<LinearLayout>(R.id.lyNavLevelRunning)
         if (totalsRunning.totalTime!! == 0) {
@@ -1021,12 +1165,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Initiates loading of medals data for all sports (Bike, Roller Skate, Running)
+     * by fetching top distance, average speed, and max speed achievements from Firestore.
+     */
     private fun loadMedalsUser() {
         loadMedalsBike()
         loadMedalsRollerSkate()
         loadMedalsRunning()
     }
 
+    /**
+     * Loads the user's top 3 medals data for Bike runs from Firestore, including distance, 
+     * average speed, and max speed. Missing medals are filled with zero values.
+     */
     private fun loadMedalsBike() {
         var dbRecords = FirebaseFirestore.getInstance()
 
@@ -1098,6 +1250,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
     }
 
+    /**
+     * Loads the user's top 3 medals data for Roller Skate runs from Firestore, including distance,
+     * average speed, and max speed. Missing medals are filled with zero values.
+     */
     private fun loadMedalsRollerSkate() {
         var dbRecords = FirebaseFirestore.getInstance()
 
@@ -1168,6 +1324,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
     }
 
+    /**
+     * Loads the user's top 3 medals data for Running runs from Firestore, including distance,
+     * average speed, and max speed. Missing medals are filled with zero values.
+     */
     private fun loadMedalsRunning() {
         var dbRecords = FirebaseFirestore.getInstance()
 
@@ -1239,11 +1399,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
     }
 
+    /**
+     * Initializes SharedPreferences and its editor for the current user.
+     */
     private fun initPreferences() {
         sharedPreferences = getSharedPreferences("sharedPrefs_$userEmail", MODE_PRIVATE)
         editor = sharedPreferences.edit()
     }
 
+    /**
+     * Recovers saved user preferences such as selected sport, interval mode, challenge mode,
+     * notification settings, and updates the UI accordingly.
+     */
     private fun recoveryPreferences() {
         if (sharedPreferences.getString(key_userApp, "null") == userEmail) {
 
@@ -1290,6 +1457,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    /**
+     * Clears previous preferences, then stores updated values such as user email, provider,
+     * selected sport, interval mode settings, challenge mode settings, and UI component states.
+     */
     private fun savePreferences() {
         editor.clear()
 
@@ -1321,6 +1492,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }.apply()
     }
 
+    /**
+     * Shows an AlertDialog with "OK" and "Cancel" options.
+     * If the user confirms, preferences are cleared.
+     */
     private fun alertClearPreferences() {
         AlertDialog.Builder(this)
             .setTitle(R.string.alertClearPreferencesTitle)
@@ -1337,15 +1512,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .show()
     }
 
+    /**
+     * Shows a Toast notification confirming that settings have been reset.
+     */
     private fun callClearPreferences() {
         editor.clear().apply()
         Toast.makeText(this, R.string.settings_reset, Toast.LENGTH_LONG).show()
     }
 
+    /**
+     * Initializes the stopwatch display to its default start value.
+     */
     private fun initStopWatch() {
         tvChrono.text = getString(R.string.init_stop_watch_value)
     }
 
+    /**
+     * Inflates and animates the interval mode UI elements based on the toggle state.
+     *
+     * @param v The View that triggers this function (typically the interval mode switch).
+     */
     fun inflateIntervalMode(v: View) {
         val lyIntervalMode = findViewById<LinearLayout>(R.id.lyIntervalMode)
         val lyIntervalModeSpace = findViewById<LinearLayout>(R.id.lyIntervalModeSpace)
@@ -1381,6 +1567,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+
+    /**
+     * Inflates and animates the challenges UI elements based on the toggle state.
+     *
+     * @param v The View that triggers this function (typically the challenges switch).
+     */
     fun inflateChallenges(v: View) {
         val lyChallengesSpace = findViewById<LinearLayout>(R.id.lyChallengesSpace)
         val lyChallenges = findViewById<LinearLayout>(R.id.lyChallenges)
@@ -1403,6 +1595,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Updates the user's totals for the currently selected sport, including runs, distance,
+     * time, and personal records, then syncs the data with Firestore.
+     */
     private fun updateTotalsUsers() {
         totalsSelectedSport.totalRuns = totalsSelectedSport.totalRuns!! + 1
         totalsSelectedSport.totalDistance = totalsSelectedSport.totalDistance!! + distance
@@ -1463,6 +1659,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Converts hours, minutes, and seconds to a total challenge duration in seconds,
+     * formatting the time as a string in HH:MM:SS format before conversion.
+     *
+     * @param hh Hours part of challenge duration.
+     * @param mm Minutes part of challenge duration.
+     * @param ss Seconds part of challenge duration.
+     */
     private fun getChallengeDuration(hh: Int, mm: Int, ss: Int) {
         var hours: String = hh.toString()
         if (hh < 10) hours = "0" + hours
@@ -1474,6 +1678,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         challengeDuration = getSecFromWatch("${hours}:${minutes}:${seconds}")
     }
 
+    /**
+     * Shows and highlights the selected challenge option (duration or distance)
+     * and updates UI accordingly.
+     *
+     * @param option Either "duration" or "distance" to select the challenge type.
+     */
     private fun showChallenge(option: String) {
         var lyChallengeDuration = findViewById<LinearLayout>(R.id.lyChallengeDuration)
         var lyChallengeDistance = findViewById<LinearLayout>(R.id.lyChallengeDistance)
@@ -1515,18 +1725,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * UI onClick handler to show the challenge duration option.
+     *
+     * @param v The view that triggers this function.
+     */
     fun showDuration(v: View) {
         showChallenge("duration")
     }
 
+    /**
+     * UI onClick handler to show the challenge distance option.
+     *
+     * @param v The view that triggers this function.
+     */
     fun showDistance(v: View) {
         showChallenge("distance")
     }
 
+    /**
+     * Handles the click event for the start/stop button.
+     *
+     * @param v The view that triggers this function.
+     */
     fun startOrStopButtonClicked(v: View) {
         manageStartStop()
     }
 
+    /**
+     * Initializes GPS location permission by checking if permissions are granted.
+     * If granted, initializes the fused location client; otherwise requests permissions.
+     */
     private fun initPermissionGPS() {
         if (allPermissionGrantedGPS()) {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
@@ -1536,22 +1765,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    /**
+     * Checks if all required GPS permissions are granted.
+     *
+     * @return true if all permissions are granted, false otherwise.
+     */
     private fun allPermissionGrantedGPS() = REQUIRED_PERMISSIONS_GPS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
 
     }
 
+    /**
+     * Requests the necessary location permissions from the user.
+     */
     private fun requestPermissionLocation() {
         ActivityCompat.requestPermissions(this, arrayOf(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_IO)
     }
 
+    /**
+     * Opens the device's Location Settings screen to allow user to enable GPS.
+     */
     private fun activationLocation() {
         val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         startActivity(intent)
     }
 
+    /**
+     * Requests a single high-accuracy location update from the fused location provider.
+     * Requires location permissions to be granted.
+     */
     @SuppressLint("MissingPermission")
     private fun requestNewLocationData() {
         var myLocationRequest = LocationRequest()
@@ -1564,6 +1808,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fusedLocationClient.requestLocationUpdates(myLocationRequest, myLocationCallBack, Looper.myLooper())
     }
 
+    /**
+     * Calculates the distance in kilometers between the last known latitude/longitude
+     * and the new latitude/longitude provided.
+     * Only adds the distance to the total if it is below the accepted limit.
+     *
+     * @param n_lt new latitude in degrees
+     * @param n_lg new longitude in degrees
+     * @return distance calculated between points in kilometers
+     */
     private fun calculateDistance(n_lt: Double, n_lg: Double): Double{
         val radioTierra = 6371.0 //en kilómetros
 
@@ -1587,6 +1840,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return n_distance
     }
 
+    /**
+     * Updates the current speed, max speed, and average speed based on the distance covered
+     * during the last location interval.
+     *
+     * @param d Distance in kilometers covered during the last interval
+     */
     private fun updateSpeeds(d: Double) {
         //la distancia se calcula en km, asi que la pasamos a metros para el calculo de velocidadr
         //convertirmos m/s a km/h multiplicando por 3.6
@@ -1595,18 +1854,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         avgSpeed = ((distance * 1000) / timeInSeconds) * 3.6
     }
 
+    /**
+     * Sets the selected sport to "Bike" if the timer hasn't started.
+     *
+     * @param v The clicked view
+     */
     fun selectBike(v: View) {
         if (timeInSeconds.toInt() == 0) selectSport("Bike")
     }
 
+    /**
+     * Sets the selected sport to "RollerSkate" if the timer hasn't started.
+     *
+     * @param v The clicked view
+     */
     fun selectRollerSkate(v: View) {
         if (timeInSeconds.toInt() == 0) selectSport("RollerSkate")
     }
 
+    /**
+     * Sets the selected sport to "Running" if the timer hasn't started.
+     *
+     * @param v The clicked view
+     */
     fun selectRunning(v: View) {
         if (timeInSeconds.toInt() == 0) selectSport("Running")
     }
 
+    /**
+     * Updates UI, internal variables, and limits based on the selected sport.
+     *
+     * @param sport The sport selected by the user, e.g., "Bike", "RollerSkate", or "Running"
+     */
     private fun selectSport(sport: String) {
         sportSelected = sport
 
@@ -1662,6 +1941,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         refreshRecords()
     }
 
+    /**
+     * Updates circular progress bars based on the current selected sport's records.
+     */
     private fun refreshCircularSeekBarSport() {
         csbRecordDistance.max = totalsSelectedSport.recordDistance?.toFloat()!!
         csbRecordDistance.progress = totalsSelectedSport.recordDistance?.toFloat()!!
@@ -1680,6 +1962,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+
+    /**
+     * Updates text views showing record values for distance, average speed, and max speed.
+     */
     private fun refreshRecords() {
         if (totalsSelectedSport.recordDistance!! > 0) {
             tvDistanceRecord.text = totalsSelectedSport.recordDistance.toString()
@@ -1700,6 +1986,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Refreshes UI elements to display current distance, average speed, and speed,
+     * and updates progress bars accordingly.
+     */
     private fun refreshInterfaceData() {
         var tvCurrentDistance = findViewById<TextView>(R.id.tvCurrentDistance)
         var tvCurrentAvgSpeed = findViewById<TextView>(R.id.tvCurrentAvgSpeed)
@@ -1758,6 +2048,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         csbCurrentSpeed.progress = speed.toFloat()
     }
 
+    /**
+     * Processes a new location update, calculating distance, updating speeds,
+     * refreshing UI, saving location to database, and updating map polylines.
+     *
+     * @param location The new location update from GPS
+     */
     private fun registerNewLocation(location: Location) {
         var new_latitude: Double = location.latitude
         var new_longitude: Double = location.longitude
@@ -1812,6 +2108,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Draws a polyline on the map from a list of LatLng points.
+     *
+     * @param listPosition Iterable collection of LatLng points to be connected
+     */
     private fun createPolyLines(listPosition: Iterable<LatLng>) {
         val polyLineOptions = PolylineOptions()
             .width(25f)
@@ -1822,6 +2123,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         polyLine.startCap = RoundCap()
     }
 
+    /**
+     * Saves the current location data to Firebase Firestore under a path
+     * based on the user's email and the date/time of the run.
+     *
+     * @param location The location to save
+     */
     private fun saveLocation(location: Location) {
         var dirName = dateRun + startTimeRun
         dirName = dirName.replace("/", "")
@@ -1848,6 +2155,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         ))
     }
 
+    /**
+     * Checks if the user has reached any medal thresholds for distance, average speed, and max speed.
+     * Updates medal flags and triggers notifications accordingly.
+     *
+     * @param distance Current distance covered (in km)
+     * @param avgSpeed Current average speed (in km/h)
+     * @param maxSpeed Current max speed (in km/h)
+     */
     private fun checkMedals(distance: Double, avgSpeed: Double, maxSpeed: Double) {
         if (distance > 0) {
             if (distance >= medalsListSportSelectedDistance.get(0)) {
@@ -1917,6 +2232,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Creates and displays a notification about a new medal record.
+     *
+     * @param category The category of the record ("distance", "avgSpeed", or "maxSpeed")
+     * @param medal The medal level ("gold", "silver", or "bronze")
+     * @param scope The scope of the record, e.g., "personal"
+     */
     private fun notifyMedal(category: String, medal: String, scope: String) {
 
         var CHANNEL_ID = "NEW $scope RECORD - $sportSelected"
@@ -1925,6 +2247,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        // Create notification channel if running on Android Oreo or above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (notificationManager.getNotificationChannel(CHANNEL_ID) == null) {
                 val channel = NotificationChannel(
@@ -1938,6 +2261,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
 
+        // Prepare notification text based on medal and category
         var textNotification = ""
         when (medal) {
             "gold" -> textNotification = "1"
@@ -1952,6 +2276,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             "maxSpeed" -> textNotification += R.string.maximum_speed_reached
         }
 
+        // Select icon based on medal type
         var iconNotification: Int = 0
         when (medal) {
             "gold" -> iconNotification = R.drawable.medalgold
@@ -1965,6 +2290,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .setContentText(textNotification)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
+        // Unique notification ID per category and medal
         var notificationId = 0
         when (category) {
             "distance" ->
@@ -1987,6 +2313,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
         }
 
+        // Check notification permission and send notification
         with(NotificationManagerCompat.from(this)) {
             if (ActivityCompat.checkSelfPermission(
                     this@MainActivity,
@@ -2001,6 +2328,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Location callback used to receive location updates.
+     * When a new location is received, registers it if the timer is running.
+     */
     private val myLocationCallBack = object: LocationCallback () {
         override fun onLocationResult(locationResult: LocationResult) {
             var myLastLocation : Location = locationResult.lastLocation
@@ -2015,6 +2346,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+        /**
+     * Checks whether the app has the necessary location permissions.
+     *
+     * @return true if both coarse and fine location permissions are granted, false otherwise
+     */
     private fun checkPermission(): Boolean {
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED &&
@@ -2022,6 +2358,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 == PackageManager.PERMISSION_GRANTED)
     }
 
+    /**
+     * Manages location updates by checking permissions and whether location services are enabled.
+     * Requests location updates if everything is set, otherwise prompts the user to enable permissions or GPS.
+     */
     private fun manageLocation() {
         if (checkPermission()) {
 
@@ -2045,6 +2385,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Checks if either GPS or Network location providers are enabled.
+     *
+     * @return true if either GPS or Network provider is enabled, false otherwise
+     */
     private fun isLocationEnabled(): Boolean {
         var locationManager: LocationManager
         = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -2053,6 +2398,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
     }
 
+    /**
+     * Handles the logic when the user starts or stops the run.
+     * If GPS is disabled at start, prompts the user to enable it.
+     * Otherwise, starts or stops the run and updates UI accordingly.
+     */
     private fun manageStartStop() {
         if (timeInSeconds == 0L && isLocationEnabled() == false) {
             AlertDialog.Builder(this)
@@ -2074,6 +2424,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Starts or stops the running session.
+     * Initializes run data and disables UI elements when starting.
+     * Enables UI elements and stops timing when stopping.
+     */
     private fun manageRun() {
         if (timeInSeconds.toInt() == 0) {
 
@@ -2117,6 +2472,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Enables or disables the run-related buttons and updates their appearance accordingly.
+     *
+     * @param e_reset Whether the reset button should be enabled
+     * @param e_run Whether the start/stop run button should be enabled
+     */
     private fun manageEnableButtonRun(e_reset: Boolean, e_run: Boolean) {
         val tvReset = findViewById<TextView>(R.id.tvReset)
         val btStart = findViewById<LinearLayout>(R.id.btStart)
@@ -2144,18 +2505,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else {
             btStart.background = getDrawable(R.drawable.circle_background_todisable)
         }
-
     }
 
+    /**
+     * Starts the chronometer by scheduling the runnable that updates the timer.
+     */
     private fun startTime() {
         mHandler = Handler(Looper.getMainLooper())
         chronometer.run()
     }
 
+    /**
+     * Stops the chronometer by removing scheduled callbacks to the runnable.
+     */
     private fun stopTime() {
         mHandler?.removeCallbacks(chronometer)
     }
 
+    /**
+     * Runnable that increments the stopwatch timer every second,
+     * checks for location updates, and handles interval mode logic.
+     */
     private var chronometer: Runnable = object : Runnable {
         override fun run() {
             try {
@@ -2177,10 +2547,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Updates the stopwatch display text based on the current elapsed time.
+     */
     private fun updateStopWatch() {
         tvChrono.text = getFormattedStopWatch(timeInSeconds * 1000)
     }
 
+    /**
+     * Called when the reset button is clicked.
+     * Saves the run data, updates UI and internal variables to their initial state.
+     */
     private fun resetClicked() {
 
         savePreferences()
@@ -2196,6 +2573,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         resetMedals()
     }
 
+    /**
+     * Saves the current run data to the Firestore database.
+     * Includes duration, distance, speeds, GPS bounds, and medals earned.
+     */
     private fun saveDataRun() {
         var id: String = userEmail + dateRun + startTimeRun
         id = id.replace("/", "")
@@ -2268,6 +2649,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Deletes the current run and its linked data from Firestore.
+     *
+     * @param v The view that triggered the delete (usually a button)
+     */
     fun deleteRun(v: View) {
         var id: String = userEmail + dateRun + startTimeRun
         id = id.replace(":", "")
@@ -2287,6 +2673,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         closePopUpRun()
     }
 
+    /**
+     * Resets variables used during a running session to their initial default values.
+     */
     private fun resetVariablesRun() {
         timeInSeconds = 0
         rounds = 1
@@ -2312,6 +2701,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    /**
+     * Resets the stopwatch UI and disables reset button while enabling run button.
+     */
     private fun resetTimeView() {
         initStopWatch()
         manageEnableButtonRun(false, true)
@@ -2319,6 +2711,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvChrono.setTextColor(ContextCompat.getColor(this, R.color.white))
     }
 
+    /**
+     * Resets UI elements related to the running session, including distances, speeds, progress bars, and controls.
+     */
     private fun resetInterface() {
         fbCamera.isVisible = false
 
@@ -2355,6 +2750,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    /**
+     * Checks if the stopwatch is within the stopping time period and updates UI accordingly.
+     *
+     * @param secs Current stopwatch time in seconds
+     */
     private fun checkStopRun(secs: Long) {
         var secAux: Long = secs
         while (secAux.toInt() > ROUND_INTERVAL) {
@@ -2372,6 +2772,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Checks if a new round has started and updates UI for round count and progress bar.
+     *
+     * @param secs Current stopwatch time in seconds
+     */
     private fun checkNewRound(secs: Long) {
         if (secs.toInt() % ROUND_INTERVAL == 0 && secs.toInt() > 0) {
             val tvRounds: TextView = findViewById(R.id.tvRounds) as TextView
@@ -2387,6 +2792,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Updates the position of a round progress bar background based on the elapsed seconds.
+     * It calculates the translation movement depending on the current chrono color state
+     * (running or walking) and animates the background accordingly.
+     *
+     * @param secs The total elapsed time in seconds.
+     */
     private fun updateProgressBarRound(secs: Long) {
         var seconds = secs.toInt()
         while (seconds >= ROUND_INTERVAL) {
@@ -2408,6 +2820,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Initializes the navigation drawer view and sets up the header with the current user's email.
+     */
     private fun initNavigationView() {
         var navigationView: NavigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
@@ -2421,6 +2836,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         tvUser.text = userEmail
     }
 
+    /**
+     * Initializes the toolbar and sets up the drawer toggle to open/close the navigation drawer.
+     */
     private fun initToolBar() {
         val toolBar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolBar_main)
         setSupportActionBar(toolBar)
@@ -2434,6 +2852,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
     }
 
+    /**
+     * Handles navigation item selections from the drawer menu.
+     *
+     * @param item The selected menu item.
+     * @return True if the selection was handled.
+     */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_item_record -> callRecordActivity()
@@ -2445,11 +2869,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    /**
+     * Signs out the current Firebase user and navigates back to the LoginActivity.
+     */
     private fun signOut() {
         FirebaseAuth.getInstance().signOut()
         startActivity(Intent(this, LoginActivity::class.java))
     }
 
+    /**
+     * Shows a confirmation dialog asking the user if they want to exit (sign out).
+     */
     private fun showExitConfirmationDialog() {
         AlertDialog.Builder(this)
             .setTitle(R.string.exit_title)
@@ -2461,6 +2891,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .show()
     }
 
+    /**
+     * Handles the back button press behavior.
+     * Closes popups if visible, closes navigation drawer if open, resets running timer if active,
+     * or shows exit confirmation dialog.
+     */
     override fun onBackPressed() {
         //super.onBackPressed()
 
@@ -2479,6 +2914,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Navigates to the RecordActivity.
+     * If the start button is clicked and running, stops it before navigating.
+     */
     private fun callRecordActivity() {
         if (startButtonClicked) {
             manageStartStop()
@@ -2488,6 +2927,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         startActivity(intent)
     }
 
+    /**
+     * Hides the running popup by translating its window out of view and setting visibility to false.
+     */
     private fun hidePopUpRun() {
         var lyWindow = findViewById<LinearLayout>(R.id.lyWindow)
         lyWindow.translationX = 400f
@@ -2496,10 +2938,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         lyPopUpRun.isVisible = false
     }
 
+    /**
+     * Called when a generic popup close button is clicked.
+     */
     fun closePopUp(v: View) {
         closePopUpRun()
     }
 
+    /**
+     * Closes the running popup, enables main layout interaction, resets variables related to
+     * running, and reselects the current sport.
+     */
     private fun closePopUpRun() {
         hidePopUpRun()
         val rlMain = findViewById<RelativeLayout>(R.id.rlMain)
@@ -2509,6 +2958,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         selectSport(sportSelected)
     }
 
+    /**
+     * Shows the running popup, disables main layout interaction, animates the popup sliding in,
+     * and loads its data.
+     */
     private fun showPopUp() {
         val rlMain = findViewById<RelativeLayout>(R.id.rlMain)
         rlMain.isEnabled = false
@@ -2524,6 +2977,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         loadDataPopUp()
     }
 
+    /**
+     * Loads and displays all relevant data in the running popup:
+     * header info, medals, and run statistics.
+     */
     private fun loadDataPopUp() {
 
         showHeaderPopUp()
@@ -2531,6 +2988,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         showDataRun()
     }
 
+
+    /**
+     * Displays header information for the popup, including selected sport, current level, runs,
+     * distance progress, and total time.
+     */
     private fun showHeaderPopUp() {
         var csbRunsLevel = findViewById<CircularSeekBar>(R.id.csbRunsLevel)
         var csbDistanceLevel = findViewById<CircularSeekBar>(R.id.csbDistanceLevel)
@@ -2601,6 +3063,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    /**
+     * Displays medal icons and descriptions based on achieved records if GPS is activated,
+     * otherwise hides medal section.
+     */
     private fun showMedals() {
         if (activatedGPS) {
             val ivMedalDistance = findViewById<ImageView>(R.id.ivMedalDistance)
@@ -2641,6 +3107,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Displays run-specific data in the popup, such as duration, challenge duration, intervals,
+     * distance, unevenness, and speeds.
+     */
     private fun showDataRun() {
         var tvDurationRun = findViewById<TextView>(R.id.tvDurationRun)
         var lyChallengeDurationRun = findViewById<LinearLayout>(R.id.lyChallengeDurationRun)
@@ -2702,6 +3172,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    /**
+     * Starts the CameraActivity to take a picture associated with the current run.
+     *
+     * @param v The view triggering this action.
+     */
     fun takePicture(v: View) {
         val intent = Intent(this, CameraActivity::class.java)
         val inParameter = intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
