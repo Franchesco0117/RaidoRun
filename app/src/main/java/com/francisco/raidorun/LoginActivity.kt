@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.*  
 import kotlin.properties.Delegates
 
 /**
@@ -254,7 +254,6 @@ class LoginActivity : AppCompatActivity() {
      * @param provider The authentication provider (e.g., "Google", "email").
      */
     private fun saveUserToFirestore(email: String, provider: String) {
-        Log.d("GoogleSignIn", "Saving user to Firestore")
         val dateRegister = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
         FirebaseFirestore.getInstance().collection("users").document(email)
             .set(hashMapOf(
@@ -262,12 +261,6 @@ class LoginActivity : AppCompatActivity() {
                 "dateRegister" to dateRegister,
                 "provider" to provider
             ))
-            .addOnSuccessListener {
-                Log.d("GoogleSignIn", "User saved to Firestore successfully")
-            }
-            .addOnFailureListener { e ->
-                Log.e("GoogleSignIn", "Error saving user to Firestore", e)
-            }
     }
 
     /**

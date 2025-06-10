@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.francisco.raidorun.LoginActivity
 import com.francisco.raidorun.MainActivity
 import com.francisco.raidorun.R
+import com.google.firebase.auth.FirebaseAuth
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 
 class OnBoardingActivity : AppCompatActivity() {
@@ -42,6 +44,12 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun navigateToMainActivity() {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            LoginActivity.userEmail = currentUser.email ?: ""
+            LoginActivity.providerSession = currentUser.providerId
+        }
+
         // Save that user has seen onboarding
         getSharedPreferences("onboarding_pref", MODE_PRIVATE)
             .edit()
