@@ -132,6 +132,13 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
      */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.nav_item_statistics -> {
+                // Ya estamos en la pantalla de estadísticas, solo cerramos el drawer
+                drawer.closeDrawer(GravityCompat.START)
+            }
+            R.id.nav_item_users -> {
+                startActivity(Intent(this, UsersManagementActivity::class.java))
+            }
             R.id.nav_item_signOut -> signOut()
         }
 
@@ -577,7 +584,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         val db = FirebaseFirestore.getInstance()
         val collections = listOf("runsBike", "runsRunning", "runsRollerSkate")
         val labels = listOf("Bike", "Running", "RollerSkate")
-        val totalMinutes = mutableListOf(0L, 0L, 0L)
+        val totalMinutes = mutableListOf(0.0, 0.0, 0.0)
         val counts = mutableListOf(0, 0, 0)
         var loadedCollections = 0
 
@@ -586,10 +593,14 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 .get()
                 .addOnSuccessListener { documents ->
                     for (document in documents) {
-                        val duration = document.getString("duration") ?: continue
-                        val minutes = durationToMinutes(duration)
-                        totalMinutes[i] += minutes
-                        counts[i]++
+                        val duration = document.getString("duration")
+                        if (duration != null && duration.isNotEmpty()) {
+                            val minutes = durationToMinutes(duration)
+                            if (minutes > 0) {
+                                totalMinutes[i] += minutes.toDouble()
+                                counts[i]++
+                            }
+                        }
                     }
                     
                     loadedCollections++
@@ -622,10 +633,11 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
     private fun showAverageDurationBarChart(labels: List<String>, averageMinutes: List<Float>) {
         val entries = ArrayList<BarEntry>()
         for (i in averageMinutes.indices) {
-            entries.add(BarEntry(i.toFloat(), averageMinutes[i]))
+            val roundedValue = (averageMinutes[i] * 10).roundToInt() / 10f
+            entries.add(BarEntry(i.toFloat(), roundedValue))
         }
 
-        val dataSet = BarDataSet(entries, "Average duration")
+        val dataSet = BarDataSet(entries, "Average duration per sport")
         dataSet.colors = listOf(
             Color.rgb(233, 30, 99),
             Color.rgb(156, 39, 176),
@@ -636,14 +648,15 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
         data.setValueTextSize(12f)
         data.setValueFormatter(object : com.github.mikephil.charting.formatter.ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return formatMinutesToHoursAndMinutes(value.toInt())
+                return formatMinutesToHoursAndMinutes(value.roundToInt())
             }
         })
         
         barChartAverageDuration.apply {
             this.data = data
             description.isEnabled = false
-            legend.isEnabled = false
+            legend.isEnabled = true
+            legend.textSize = 12f
             setFitBars(true)
 
             xAxis.apply {
@@ -651,6 +664,7 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
                 position = XAxis.XAxisPosition.BOTTOM
                 granularity = 1f
                 setDrawGridLines(false)
+                textSize = 12f
             }
 
             axisRight.isEnabled = false
@@ -658,9 +672,10 @@ class DashboardAdminActivity : AppCompatActivity(), NavigationView.OnNavigationI
             axisLeft.apply {
                 axisMinimum = 0f
                 setDrawGridLines(true)
+                textSize = 12f
                 valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
-                        return formatMinutesToHoursAndMinutes(value.toInt())
+                        return formatMinutesToHoursAndMinutes(value.roundToInt())
                     }
                 }
             }

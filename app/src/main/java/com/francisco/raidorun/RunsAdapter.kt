@@ -66,7 +66,7 @@ class RunsAdapter(
 
         holder.ivHeaderOpenClose.setOnClickListener {
             if (minimized) {
-                setHeightLinearLayout(holder.lyDataRunBody, 600)
+                setHeightLinearLayout(holder.lyDataRunBody, 300)
                 animateViewOfFloat(holder.lyDataRunBodyContainer, "translationY", 0f, 300L)
                 holder.ivHeaderOpenClose.setRotation(180f)
                 minimized = false
